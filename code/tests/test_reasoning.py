@@ -33,9 +33,10 @@ class ReasoningTests(unittest.TestCase):
         (dataset/"deletion_rules.csv").write_text(
             "rule_id,data_category,condition,required_action\n"
             "r1,USER_PROFILE,Always,DELETE\n"
-            "r2,ACCOUNT_TOMBSTONE,Stable reference required,REDACT\n"
-            "r3,SECURITY_AUDIT_LOG,Within retention,RETAIN\n"
-            "r4,ANALYTICS_PROFILE,Attributable,ANONYMIZE\n")
+            "r2,ACCOUNT_TOMBSTONE,Always,REDACT\n"
+            "r3,SECURITY_AUDIT_LOG,Always,RETAIN\n"
+            "r4,ANALYTICS_PROFILE,Always,ANONYMIZE\n"
+            "r5,BACKUP_ARCHIVE,Always,RETAIN\n")
         by_token, by_resource = defaultdict(list), defaultdict(list)
         for obs in observations:
             by_resource[obs.key].append(obs)
@@ -75,7 +76,7 @@ class ReasoningTests(unittest.TestCase):
 
     def test_cutoff_inclusive_and_cases_independent(self):
         first = observation("account_7", "PRESENT")
-        later = observation("account_7", "ABSENT", available=T0+86400, observed=T0+86400)
+        later = observation("account_7", "ABSENT", available=T0+86400, observed=T0+86400,fields={'_covers_all_copies':True})
         auditor=self.make_auditor([first,later])
         row,_=auditor.audit(self.request())
         self.assertEqual(row["deletion_status"],"COMPLETE")
@@ -90,7 +91,7 @@ class ReasoningTests(unittest.TestCase):
             observation("tombstone_8","REDACTED",category="ACCOUNT_TOMBSTONE",system="identity_service"),
             observation("audit_record_9","PRESENT",category="SECURITY_AUDIT_LOG",system="security_service"),
             observation("data_flow_4","ACTIVE",category="DATA_FLOW",system="integration_service"),
-            observation("backup_5","ACTIVE",category="BACKUP_ARCHIVE",system="backup_service"),
+            observation("backup_5","ACTIVE",category="BACKUP_ARCHIVE",system="backup_service",fields={'archive_present':True}),
         ]
         row,diag=self.make_auditor(observations).audit(self.request())
         import json
@@ -176,7 +177,7 @@ class ReasoningTests(unittest.TestCase):
         self.assertFalse(diag['issues'])
 
     def test_retained_missing_record_does_not_get_invented_repair(self):
-        row,diag=self.make_auditor([observation('audit_record_2','ABSENT',category='SECURITY_AUDIT_LOG',system='security_service')]).audit(self.request())
+        row,diag=self.make_auditor([observation('audit_record_2','ABSENT',category='SECURITY_AUDIT_LOG',system='security_service',fields={'_covers_all_copies':True})]).audit(self.request())
         self.assertIn('RETAINED_RECORD_MISSING',[i['code'] for i in diag['issues']])
         self.assertEqual(row['steps_json'],'[]')
 

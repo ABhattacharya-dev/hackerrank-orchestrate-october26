@@ -112,10 +112,11 @@ all six log envelopes and invalid output/citations.
 
 ## Failures, corrections and remaining risks
 
-Initial sample status accuracy was 19/32, with 6/32 exact rows. Independent
-training examples, Unicode/contraction normalization, explicit scope guards,
-bounded document matching and structured source edges improved these to the
-scores above. Pure-ML training expansion introduced portability/negation
+Initial sample status accuracy was 19/32, with 6/32 exact rows. The current
+scores above include stricter temporal and conditional-policy proof requirements;
+they are not claimed to improve every metric over earlier provisional runs.
+Independent training examples, Unicode normalization, scope guards and grounded
+source edges were evaluated during development. Pure-ML training expansion introduced portability/negation
 regressions; generic consent/scope guards corrected those rather than memorizing
 sample answers. All final fixtures passed after the corrections.
 
@@ -132,6 +133,13 @@ or retained records do not establish primary deletion. Strict export now checks
 that coverage explicitly instead of relying on status scores or a nonempty ledger.
 
 Current blocker counts (overlap is possible): `{dict(codes)}`.
+
+Conditional policy facts are now evaluated explicitly. Unknown retention periods,
+attachment exclusivity, required reference context or restore-block capability
+are not assumed from category names. Unknown conditions block destructive actions
+and can reduce provisional sample recall; this limitation needs grounded evidence
+or extraction improvements, rather than weakening proof requirements. A complete
+obligation ledger and process/dependency analysis are retained in diagnostics.
 
 Investigated examples:
 

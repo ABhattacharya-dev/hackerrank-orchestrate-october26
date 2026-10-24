@@ -511,3 +511,47 @@ branch=work
 repo_root=/workspace/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+
+## [2026-10-24T19:43:10.941433+00:00] Milestone 4 policy and resurrection risk
+
+User Prompt (verbatim, secrets redacted):
+## Milestone 4 — Policy, proof obligations, and resurrection risk
+
+Implement policy evaluation driven by `deletion_rules.csv`.
+
+For each relevant resource, construct an internal ledger covering:
+
+- Identity linkage
+- Applicable policy rule
+- Required state
+- Observed state
+- Supporting evidence
+- Whether remediation is required
+- Verification obligation
+
+Include all required retained records and account tombstones.
+
+Build an active-process analysis for sync, import, indexing, replication, and restore risks.
+
+Distinguish historical processes from processes active at the audit cutoff.
+
+Create dependency-aware remediation decisions without violating the mandated output ordering.
+
+**Exit criterion:** Every known sample policy category is covered, and custom tests prove that required retained data is not incorrectly deleted.
+
+Agent Response Summary:
+Implemented conditional CSV-driven policy evaluation, per-resource proof-obligation ledgers with fact provenance, active-versus-historical process analysis and dependency-aware internal plans separate from canonical output ordering. All 76 software tests passed; 21 focused tests cover all 15 policy categories and prove that required security/legal/archive/tombstone data is preserved in an emitted end-to-end plan. The public run has 80 obligation entries across 11 recognized categories, and fresh-directory reproduction matched candidate bytes. Missing predicate facts and prior temporal/linkage gaps leave 490 full cases unresolved; lower public metrics are disclosed rather than presented as readiness.
+
+Actions:
+* Added policy.py, risks.py, policy tests, integration case and dedicated acceptance runner.
+* Added condition facts/provenance, retention/archive obligations and process execution preconditions.
+* Executed full software/public/candidate validation, policy acceptance and cold reproduction.
+* Documented rules/results/limitations in code/POLICY.md and updated reports/current status.
+
+Context:
+tool=Codex
+Model metadata limitation: exact engineering runtime identifier is not exposed; no value was fabricated.
+branch=work
+repo_root=/workspace/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none

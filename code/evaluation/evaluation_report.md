@@ -4,7 +4,7 @@
 
 The implemented pipeline executes and produces a **provisional 518-row candidate**.
 It is not a fully verified submission. Strict export refuses final `output.csv`
-because **457 cases have explicit proof/coverage gaps**.
+because **490 cases have explicit proof/coverage gaps**.
 The candidate's fallback statuses and partial plans must not be presented as
 certified deletion decisions. Additional authoritative subject/resource links or
 state evidence are needed; case-number inference and sample-label lookup are
@@ -19,15 +19,15 @@ not an independent held-out estimate. Samples contain no NOT_APPLICABLE cases.
 
 | Metric | Result |
 | --- | ---: |
-| Deletion-status accuracy | 29/32 (90.62%) |
-| Exact row accuracy (status and full step array) | 7/32 (21.88%) |
-| Exact sequence accuracy | 7/32 (21.88%) |
-| Step precision, including exact canonical citation | 152/155 (98.06%) |
-| Step recall, including exact canonical citation | 152/193 (78.76%) |
-| Structural step precision, ignoring citation | 98.06% |
-| Structural step recall, ignoring citation | 78.76% |
-| Field accuracy | 1005/1351 (74.39%) |
-| Canonical evidence-reference accuracy | 57/75 (76.00%) |
+| Deletion-status accuracy | 28/32 (87.50%) |
+| Exact row accuracy (status and full step array) | 1/32 (3.12%) |
+| Exact sequence accuracy | 1/32 (3.12%) |
+| Step precision, including exact canonical citation | 102/105 (97.14%) |
+| Step recall, including exact canonical citation | 102/193 (52.85%) |
+| Structural step precision, ignoring citation | 97.14% |
+| Structural step recall, ignoring citation | 52.85% |
+| Field accuracy | 660/1351 (48.85%) |
+| Canonical evidence-reference accuracy | 44/75 (58.67%) |
 
 Step precision/recall use multiset intersection over phase, system, resource,
 operation, state and (for exact matching) evidence ID; step number is evaluated
@@ -39,28 +39,28 @@ independent semantic-entailment judge and does not prove hidden correctness.
 
 ## Actual software and full-run checks
 
-- `55` unit/regression tests ran: `0` failures,
+- `76` unit/regression tests ran: `0` failures,
   `0` errors, `0` skipped; all passed.
 - All 94 manifest files processed: 26 logs, 28 JSON, 1 text, 11 PNG, 24 SQL,
   4 PDF. 2906 observations and
   116 SQL table scopes retained.
 - Candidate IDs/count/header/order, allowed enums, field sets, step numbers,
   duplicate detection and citation availability were validated for 518 rows.
-- 1006 cited candidate steps
+- 729 cited candidate steps
   matched internal ledger proofs with eligible timestamps and explicit linkage
   explanations. This is provenance validation, not a claim of full coverage.
 - Input hashes verified unchanged; supplied evidence and root AGENTS.md were not
-  edited. Candidate status counts: `{'INCOMPLETE': 355, 'COMPLETE': 153, 'NOT_APPLICABLE': 10}` (provisional).
-- Warm-cache full run: 6.654 seconds. A fresh source copy,
+  edited. Candidate status counts: `{'INCOMPLETE': 400, 'COMPLETE': 108, 'NOT_APPLICABLE': 10}` (provisional).
+- Warm-cache full run: 6.293 seconds. A fresh source copy,
   different working directory and empty extraction cache reproduced identical
-  candidate bytes in 33.076 seconds, executing
+  candidate bytes in 20.495 seconds, executing
   11 OCR calls and
   4 PDF extraction calls.
 - Strict refusal was exercised; it returned an evidence blocker and wrote no
   final output. Readiness verification exits 2 for that diagnosed blocker,
   distinct from unit-test failure (exit 1).
 
-Candidate SHA-256: `e9fa15edbb4dc1cf896b81beb524783f0034a85d7db03e19395f6c76c230792e`.
+Candidate SHA-256: `1adf3ec980597c4abbaea5cdaf0253dc708819ebeb4430e827cb8c3d711067be`.
 
 ## Independent adversarial cases executed
 
@@ -92,10 +92,11 @@ all six log envelopes and invalid output/citations.
 
 ## Failures, corrections and remaining risks
 
-Initial sample status accuracy was 19/32, with 6/32 exact rows. Independent
-training examples, Unicode/contraction normalization, explicit scope guards,
-bounded document matching and structured source edges improved these to the
-scores above. Pure-ML training expansion introduced portability/negation
+Initial sample status accuracy was 19/32, with 6/32 exact rows. The current
+scores above include stricter temporal and conditional-policy proof requirements;
+they are not claimed to improve every metric over earlier provisional runs.
+Independent training examples, Unicode normalization, scope guards and grounded
+source edges were evaluated during development. Pure-ML training expansion introduced portability/negation
 regressions; generic consent/scope guards corrected those rather than memorizing
 sample answers. All final fixtures passed after the corrections.
 
@@ -111,7 +112,14 @@ The final proof audit exposed a serious readiness weakness: compliant downstream
 or retained records do not establish primary deletion. Strict export now checks
 that coverage explicitly instead of relying on status scores or a nonempty ledger.
 
-Current blocker counts (overlap is possible): `{'NO_PRIMARY_PROFILE_PROOF': 368, 'COPY_COVERAGE_UNPROVEN': 112, 'UNVERIFIED_MUTATION_AFTER_OBSERVATION': 48, 'SCOPE_ALIGNMENT_UNKNOWN': 1, 'NO_LINKED_RESOURCE_PROOFS': 3, 'UNSUPPORTED_SCOPED_STATE': 1, 'NO_STATE_PROOF': 1}`.
+Current blocker counts (overlap is possible): `{'POLICY_CONDITION_UNKNOWN': 421, 'NO_PRIMARY_PROFILE_PROOF': 465, 'RETAINED_ARCHIVE_PRESENCE_UNKNOWN': 22, 'COPY_COVERAGE_UNPROVEN': 112, 'UNVERIFIED_MUTATION_AFTER_OBSERVATION': 48, 'SCOPE_ALIGNMENT_UNKNOWN': 1, 'NO_LINKED_RESOURCE_PROOFS': 3, 'UNSUPPORTED_SCOPED_STATE': 1, 'UNRESOLVED_PROCESS_PRECONDITION': 1, 'NO_STATE_PROOF': 1}`.
+
+Conditional policy facts are now evaluated explicitly. Unknown retention periods,
+attachment exclusivity, required reference context or restore-block capability
+are not assumed from category names. Unknown conditions block destructive actions
+and can reduce provisional sample recall; this limitation needs grounded evidence
+or extraction improvements, rather than weakening proof requirements. A complete
+obligation ledger and process/dependency analysis are retained in diagnostics.
 
 Investigated examples:
 

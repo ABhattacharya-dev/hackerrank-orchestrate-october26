@@ -5,8 +5,10 @@ from dataclasses import replace
 import json
 
 from .contract import ordered, read_csv, step, timestamp
-from .evidence import DEFAULTS, Observation, identities, prefix
+from .evidence import DEFAULTS, Observation, identities, prefix, truth
 from .temporal import reconstruct
+from .policy import PolicyEngine
+from .risks import process_analysis, plan_dependencies
 
 TREATMENTS = {
     "DELETE": ("REPORT_REMAINING_RECORD", "DELETE_RECORD", "VERIFY_RECORD_ABSENT", {"ABSENT"}),
@@ -21,7 +23,8 @@ TREATMENTS = {
 class Auditor:
     def __init__(self, store, identity, intent):
         self.store, self.identity, self.intent = store, identity, intent
-        self.rules = read_csv(store.dataset / "deletion_rules.csv")
+        self.policy_engine = PolicyEngine(store.dataset / "deletion_rules.csv")
+        self.rules = self.policy_engine.rules
         self.rule_by_category = {r["data_category"]: r for r in self.rules}
         if len(self.rule_by_category) != len(self.rules):
             raise ValueError("overlapping category rules need explicit condition resolution")
@@ -106,17 +109,8 @@ class Auditor:
         return selected, issues
 
     def treatment(self, obs, cutoff):
-        if obs.category == "DATA_FLOW": return "FLOW", "process configuration"
-        if obs.category == "BACKUP_ARCHIVE": return "RESTORE", "retained archive with restore controls"
-        rule = self.rule_by_category.get(obs.category)
-        if not rule: raise ValueError("no supplied policy for " + obs.category)
-        # Conditions are checked against observation structure where represented.
-        # Retaining a security/legal record is conservative when no expiry is given;
-        # no expiration period is invented and no retained record is deleted.
-        expiry = obs.fields.get("retention_until") or obs.fields.get("retained_until")
-        if rule["required_action"] == "RETAIN" and expiry and timestamp(expiry) < cutoff:
-            return None, "retention expired; supplied rules do not specify subsequent treatment"
-        return rule["required_action"], rule["rule_id"] + ": " + rule["condition"]
+        decision=self.policy_engine.evaluate(obs.category,obs.state,obs.fields,cutoff)
+        return decision.treatment, (decision.rule_id or 'process')+': '+decision.condition
 
     def audit(self, request):
         cutoff = timestamp(request["audit_at"])
@@ -141,32 +135,78 @@ class Auditor:
         diagnostics["issues"].extend(issues)
         diagnostics["temporal_ledger"]=[dict(system=k[0],resource=k[1],**v) for k,v in sorted(self.temporal.items())]
         findings, remediation, verification = [], [], []
-        for key, obs in ledger.items():
-            if obs.state == "UNKNOWN":
-                diagnostics["issues"].append({"code": "INSUFFICIENT_OBSERVED_FIELDS", "resource": obs.resource})
-                continue
-            action, policy = self.treatment(obs, cutoff)
-            if action is None:
-                diagnostics["issues"].append({"code": "POLICY_UNDERSPECIFIED", "resource": obs.resource})
-                continue
-            finding, remedy, verify, acceptable = TREATMENTS[action]
-            compliant = obs.state in acceptable
-            if action in {"REDACT", "ANONYMIZE"} and obs.state == "ABSENT":
-                # Missing records cannot be asserted to be redacted/retained.
-                diagnostics["issues"].append({"code": "REQUIRED_RECORD_MISSING", "resource": obs.resource})
-                continue
-            if action == "RETAIN" and not compliant:
-                diagnostics["issues"].append({"code": "RETAINED_RECORD_MISSING", "resource": obs.resource})
-                continue
-            if not compliant:
-                findings.append(step(finding, obs.system, obs.resource, obs.evidence_id))
-                remediation.append(step(remedy, obs.system, obs.resource))
-            verification.append(step(verify, obs.system, obs.resource, obs.evidence_id))
-            diagnostics["proofs"].append({"system": obs.system, "resource": obs.resource,
-                "category": obs.category, "state": obs.state, "policy": policy,
-                "source": obs.source, "locator": obs.locator, "evidence_id": obs.evidence_id,
-                "observed": obs.observed, "available": obs.available, "scope": obs.scope})
-            diagnostics["proofs"][-1]["subject_linkage"] = self.linkage.get(key, [])
+        relevant_observations=[o for key in self.linkage for o in self.store.by_resource.get(key,[])]
+        if hasattr(self.store,'claims_by_resource'):
+            relevant_claims=[c for key in self.linkage for c in self.store.claims_by_resource.get(key[1],[])]
+        else:relevant_claims=getattr(self.store,'claims',[])
+        risks=process_analysis(relevant_observations,self.temporal,relevant_claims,cutoff)
+        diagnostics['process_analysis']=risks
+        diagnostics['obligation_ledger']=[]
+        process_by_key={(r['system'],r['resource']):r for r in risks}
+        for key in sorted(set(self.linkage)|set(self.temporal)):
+            eligible=[o for o in self.store.by_resource.get(key,[]) if max(o.available,o.observed)<=cutoff]
+            obs=ledger.get(key)
+            representative=obs or (max(eligible,key=lambda o:o.observed) if eligible else None)
+            category=representative.category if representative else DEFAULTS.get(prefix(key[1]),(None,None))[1]
+            fields=dict(representative.fields) if representative else {}
+            fields['_subject_identifiers']=sorted(tokens)
+            condition_sources={}
+            state=self.temporal.get(key,{}).get('state','UNKNOWN')
+            process=process_by_key.get(key)
+            if process and process['issues']:
+                state='UNKNOWN'
+                diagnostics['issues'].extend(dict(code=i,resource=key[1]) for i in process['issues'])
+            # Explicit catalog exclusivity is a condition fact, not an ID heuristic.
+            for when,system,resource,linked,activity_id in self.store.links:
+                if resource!=key[1] or when>cutoff or not tokens & linked:continue
+                row=getattr(self.store,'source_rows',{}).get((activity_id,'system_activity.csv'),{})
+                detail=row.get('details','').lower()
+                if 'belongs only to' in detail and 'no other subject' in detail:
+                    fields['subject_only']=True
+                    condition_sources['subject_only']=[dict(evidence_id=activity_id,source='system_activity.csv',locator=resource,available=when)]
+            decision=self.policy_engine.evaluate(category,state,fields,cutoff)
+            entry=dict(system=key[0],resource=key[1],category=category,
+                category_source='observation' if representative else 'resource type pending state evidence',
+                identity_linkage=self.linkage.get(key,[]),
+                supporting_evidence=[ref for scope in self.temporal.get(key,{}).get('scopes',[]) for ref in scope['evidence']],
+                scoped_observed_state=obs.state if obs else None,**decision.explain())
+            condition_fields=['shared_context','order_reference','subject_only','subject_count','attributable','subject_email_present',
+                'email','recipient_email','retention_until','retained_until','retention_from','hold_active','hold_until','hold_from',
+                'restore_block_supported','archive_present','account_status','account_deleted','stable_reference_required']
+            entry['condition_facts']={name:dict(value=fields[name],provenance=condition_sources.get(name,
+                [dict(evidence_id=representative.evidence_id,source=representative.source,locator=representative.locator,available=representative.available)] if representative else []))
+                for name in condition_fields if name in fields}
+            diagnostics['obligation_ledger'].append(entry)
+            diagnostics['issues'].extend(dict(code=code,system=key[0],resource=key[1],rule_id=decision.rule_id) for code in decision.issues)
+            if obs is None or state in {'UNKNOWN','CONFLICT'}:continue
+            policy=(decision.rule_id or 'process')+': '+decision.condition
+            if decision.treatment is None:
+                # Process risk is observable even when safe record treatment or
+                # restore-block capability still needs proof. Do not invent a remedy.
+                if process and process['active_at_cutoff'] is True:
+                    operation='REPORT_RESTORE_RISK' if category=='BACKUP_ARCHIVE' else 'REPORT_ACTIVE_DATA_FLOW'
+                    findings.append(step(operation,obs.system,obs.resource,obs.evidence_id))
+                else:continue
+            else:
+                finding,remedy,verify,acceptable=TREATMENTS[decision.treatment]
+                if decision.remediation_required is None:continue
+                if decision.remediation_required:
+                    findings.append(step(finding,obs.system,obs.resource,obs.evidence_id))
+                    remediation.append(step(remedy,obs.system,obs.resource))
+                verification.append(step(verify,obs.system,obs.resource,obs.evidence_id))
+                if category=='BACKUP_ARCHIVE':
+                    if truth(fields.get('archive_present')) is True:
+                        verification.append(step('VERIFY_RECORD_PRESENT',obs.system,obs.resource,obs.evidence_id))
+                        diagnostics['proofs'].append(dict(system=obs.system,resource=obs.resource,category=category,
+                            state='PRESENT',policy=policy,source=obs.source,locator=obs.locator,evidence_id=obs.evidence_id,
+                            observed=obs.observed,available=obs.available,scope=obs.scope,subject_linkage=self.linkage.get(key,[])))
+                    else:diagnostics['issues'].append(dict(code='RETAINED_ARCHIVE_PRESENCE_UNKNOWN',resource=obs.resource))
+            diagnostics['proofs'].append(dict(system=obs.system,resource=obs.resource,category=obs.category,
+                state=obs.state,policy=policy,source=obs.source,locator=obs.locator,evidence_id=obs.evidence_id,
+                observed=obs.observed,available=obs.available,scope=obs.scope,subject_linkage=self.linkage.get(key,[])))
+        plan=plan_dependencies(remediation,list(ledger.values()),cutoff,risks)
+        diagnostics['remediation_plan']=plan
+        diagnostics['issues'].extend(dict(code=code) for code in plan['issues'])
         if not ledger:
             diagnostics["issues"].append({"code": "NO_LINKED_RESOURCE_PROOFS"})
         # A retained audit record or clean downstream copy does not establish

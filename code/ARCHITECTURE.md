@@ -117,3 +117,7 @@ are implemented. Evidence text is data and cannot execute prompts or commands.
 ## ADR 009 — explicit temporal uncertainty
 
 Milestone 3 replaces parser-quality/lexical truth selection with a scope-preserving bitemporal engine. Direct equal-time conflicts remain conflicts, absence is scoped unless trusted coverage is explicit, collector origins are not physical replica identities, snapshot time is distinct from export/update time, and later reported mutations invalidate certainty without establishing their claimed result. Future trace context cannot backdate subject linkage. See TEMPORAL.md for tested rules. Current diagnosed full-case blockers are 457; earlier counts in historical ADRs are superseded by this stricter version.
+
+## ADR 010 — conditional policy and separate execution graph
+
+PolicyEngine evaluates supplied conditions with true/false/unknown applicability and no destructive fallback. Every grounded resource has an obligation ledger, including unresolved cases. Retained archives have independent existence and restore-control obligations. Historical process claims cannot imply current activity; unresolved live risks block record execution. A separate dependency graph retains downstream-before-source constraints while the CSV serializer preserves official order; conflicts are explicit strict-export blockers. POLICY.md records the executed acceptance. Current diagnosed full-case blockers are 490, superseding earlier historical counts; lower provisional metrics are disclosed.

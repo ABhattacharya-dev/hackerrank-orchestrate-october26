@@ -2,7 +2,7 @@
 
 This report describes the actual 518-request run that produced
 `output.candidate.csv`; strict final `output.csv` remains blocked by
-457 proof/coverage gaps. It is not a claim that a final
+490 proof/coverage gaps. It is not a claim that a final
 submission run succeeded. Development/evaluation runs and the engineering
 assistant's own conversation usage are excluded; their provider billing is not
 available to the application.
@@ -30,9 +30,9 @@ texts reuse the same validated classification. No public output label trains it.
 - Estimated API cost: USD 0.00 total; USD 0.00/request. Per-model API totals are
   also zero because all components execute locally with no metered API calls.
 - Local compute/storage cost is unpriced and excluded, rather than invented.
-- Measured warm-cache runtime: 6.654 seconds,
-  0.012846 seconds/request averaged across the run.
-- Cold extraction reproducibility run: 33.076 seconds,
+- Measured warm-cache runtime: 6.293 seconds,
+  0.012149 seconds/request averaged across the run.
+- Cold extraction reproducibility run: 20.495 seconds,
   11 OCR and
   4 PDF extraction calls;
   identical candidate bytes. This separate validation run is not added to the
@@ -42,7 +42,7 @@ Training corpus SHA-256: `c61f2d25b193fa6713c9367e592751a0e5e792a937db1a51cde4c1
 Request-file SHA-256: `78464850941b84baecf9fee586208752521c4521d0c15c76f741516eb7f700d2`.
 Combined manifest/evidence/identity/policy/activity hash:
 `3b7030520f221ca63031f36ab5b72c3a139bb100e599476d003489014cccad7e`.
-Candidate SHA-256: `e9fa15edbb4dc1cf896b81beb524783f0034a85d7db03e19395f6c76c230792e`.
+Candidate SHA-256: `1adf3ec980597c4abbaea5cdaf0253dc708819ebeb4430e827cb8c3d711067be`.
 
 Prompts, training examples and response validation live in
 `code/ghostgraph/intent.py`. All retries are zero for this local deterministic
