@@ -4,7 +4,7 @@
 
 The implemented pipeline executes and produces a **provisional 518-row candidate**.
 It is not a fully verified submission. Strict export refuses final `output.csv`
-because **335 cases have explicit proof/coverage gaps**.
+because **457 cases have explicit proof/coverage gaps**.
 The candidate's fallback statuses and partial plans must not be presented as
 certified deletion decisions. Additional authoritative subject/resource links or
 state evidence are needed; case-number inference and sample-label lookup are
@@ -20,14 +20,14 @@ not an independent held-out estimate. Samples contain no NOT_APPLICABLE cases.
 | Metric | Result |
 | --- | ---: |
 | Deletion-status accuracy | 29/32 (90.62%) |
-| Exact row accuracy (status and full step array) | 9/32 (28.12%) |
-| Exact sequence accuracy | 9/32 (28.12%) |
-| Step precision, including exact canonical citation | 159/163 (97.55%) |
-| Step recall, including exact canonical citation | 159/193 (82.38%) |
-| Structural step precision, ignoring citation | 97.55% |
-| Structural step recall, ignoring citation | 82.38% |
-| Field accuracy | 1068/1351 (79.05%) |
-| Canonical evidence-reference accuracy | 59/75 (78.67%) |
+| Exact row accuracy (status and full step array) | 7/32 (21.88%) |
+| Exact sequence accuracy | 7/32 (21.88%) |
+| Step precision, including exact canonical citation | 152/155 (98.06%) |
+| Step recall, including exact canonical citation | 152/193 (78.76%) |
+| Structural step precision, ignoring citation | 98.06% |
+| Structural step recall, ignoring citation | 78.76% |
+| Field accuracy | 1005/1351 (74.39%) |
+| Canonical evidence-reference accuracy | 57/75 (76.00%) |
 
 Step precision/recall use multiset intersection over phase, system, resource,
 operation, state and (for exact matching) evidence ID; step number is evaluated
@@ -39,28 +39,28 @@ independent semantic-entailment judge and does not prove hidden correctness.
 
 ## Actual software and full-run checks
 
-- `38` unit/regression tests ran: `0` failures,
+- `55` unit/regression tests ran: `0` failures,
   `0` errors, `0` skipped; all passed.
 - All 94 manifest files processed: 26 logs, 28 JSON, 1 text, 11 PNG, 24 SQL,
   4 PDF. 2906 observations and
   116 SQL table scopes retained.
 - Candidate IDs/count/header/order, allowed enums, field sets, step numbers,
   duplicate detection and citation availability were validated for 518 rows.
-- 1030 cited candidate steps
+- 1006 cited candidate steps
   matched internal ledger proofs with eligible timestamps and explicit linkage
   explanations. This is provenance validation, not a claim of full coverage.
 - Input hashes verified unchanged; supplied evidence and root AGENTS.md were not
   edited. Candidate status counts: `{'INCOMPLETE': 355, 'COMPLETE': 153, 'NOT_APPLICABLE': 10}` (provisional).
-- Warm-cache full run: 6.016 seconds. A fresh source copy,
+- Warm-cache full run: 6.654 seconds. A fresh source copy,
   different working directory and empty extraction cache reproduced identical
-  candidate bytes in 19.478 seconds, executing
+  candidate bytes in 33.076 seconds, executing
   11 OCR calls and
   4 PDF extraction calls.
 - Strict refusal was exercised; it returned an evidence blocker and wrote no
   final output. Readiness verification exits 2 for that diagnosed blocker,
   distinct from unit-test failure (exit 1).
 
-Candidate SHA-256: `6113f1cfae238c24e89d9997533c174ab5f85cc8fdaf580efdedf1bf508ceeca`.
+Candidate SHA-256: `e9fa15edbb4dc1cf896b81beb524783f0034a85d7db03e19395f6c76c230792e`.
 
 ## Independent adversarial cases executed
 
@@ -111,7 +111,7 @@ The final proof audit exposed a serious readiness weakness: compliant downstream
 or retained records do not establish primary deletion. Strict export now checks
 that coverage explicitly instead of relying on status scores or a nonempty ledger.
 
-Current blocker counts (overlap is possible): `{'NO_PRIMARY_PROFILE_PROOF': 334, 'INSUFFICIENT_OBSERVED_FIELDS': 1, 'NO_STATE_PROOF': 1, 'NO_LINKED_RESOURCE_PROOFS': 1}`.
+Current blocker counts (overlap is possible): `{'NO_PRIMARY_PROFILE_PROOF': 368, 'COPY_COVERAGE_UNPROVEN': 112, 'UNVERIFIED_MUTATION_AFTER_OBSERVATION': 48, 'SCOPE_ALIGNMENT_UNKNOWN': 1, 'NO_LINKED_RESOURCE_PROOFS': 3, 'UNSUPPORTED_SCOPED_STATE': 1, 'NO_STATE_PROOF': 1}`.
 
 Investigated examples:
 

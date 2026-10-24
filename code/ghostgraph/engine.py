@@ -6,6 +6,7 @@ import json
 
 from .contract import ordered, read_csv, step, timestamp
 from .evidence import DEFAULTS, Observation, identities, prefix
+from .temporal import reconstruct
 
 TREATMENTS = {
     "DELETE": ("REPORT_REMAINING_RECORD", "DELETE_RECORD", "VERIFY_RECORD_ABSENT", {"ABSENT"}),
@@ -30,6 +31,7 @@ class Auditor:
     def ledger(self, tokens, cutoff, subject_id=None):
         selected = {}
         linkage = defaultdict(list)
+        self.temporal = {}
         def foreign_reference(obs):
             refs = identities({k: obs.fields[k] for k in
                 ["user_id", "customer_reference", "subject_reference", "subject_ref", "subject_selector"]
@@ -82,42 +84,24 @@ class Auditor:
                 compatible = scope["system"] == key[0]
                 category = DEFAULTS.get(prefix(key[1]), (None, None))[1]
                 policy = self.rule_by_category.get(category, {})
-                if compatible and scope["category"] == category and policy.get("required_action") == "DELETE":
+                if compatible and scope.get("exhaustive", False) and scope["category"] == category and policy.get("required_action") == "DELETE":
                     # Restrict absence to tables that actually cover that system/category.
                     # Generic replicas export all platform resource records; primary rows
                     # and replica rows remain separate scopes.
                     observations.append(Observation(scope["meta"]["file_id"], scope["meta"]["file_path"],
                         "table:" + scope["table"] + "/exhaustive-resource-lookup", timestamp(scope["meta"]["captured_at"]),
-                        timestamp(scope["meta"]["captured_at"]), key[0], key[1],
+                        scope.get("observed", timestamp(scope["meta"]["captured_at"])), key[0], key[1],
                         DEFAULTS[prefix(key[1])][1], "ABSENT", tokens,
                         {"exhaustive_lookup": True}, scope["table"], 4))
             if not observations:
                 issues.append(dict(code="NO_STATE_PROOF", system=key[0], resource=key[1]))
                 continue
-            # Different physical replicas must not erase one another. A later
-            # authoritative logical readback covers the canonical resource, while
-            # a physical replica remains evidence of a copy until its own removal.
-            physical = defaultdict(list)
-            for obs in observations:
-                physical[obs.scope].append(obs)
-            latest = []
-            for scope, items in physical.items():
-                newest_time = max(o.observed for o in items)
-                simultaneous = [o for o in items if o.observed == newest_time]
-                quality = max(o.quality for o in simultaneous)
-                simultaneous = [o for o in simultaneous if o.quality == quality]
-                if len({o.state for o in simultaneous}) > 1:
-                    issues.append(dict(code="CONFLICT", system=key[0], resource=key[1], scope=scope))
-                # Prefer violating state on unresolved equal-time disagreement;
-                # still flag it, and strict export refuses the unresolved case.
-                simultaneous.sort(key=lambda o: (o.state not in {"PRESENT", "IDENTIFIABLE", "ACTIVE"}, o.evidence_id, o.locator))
-                latest.append(simultaneous[0])
-            violating_copies = [o for o in latest if o.scope != "logical" and o.state in {"PRESENT", "IDENTIFIABLE", "ACTIVE"}]
-            if violating_copies:
-                obs = max(violating_copies, key=lambda o: (o.observed, o.quality, o.evidence_id))
-            else:
-                obs = max(latest, key=lambda o: (o.observed, o.quality, o.evidence_id))
-            selected[key] = obs
+            claims=getattr(self.store,'claims_by_resource',{}).get(key[1],getattr(self.store,'claims',[]))
+            result = reconstruct(observations,cutoff,claims)
+            self.temporal[key] = result.explain()
+            issues.extend(dict(item,system=key[0],resource=key[1]) for item in result.issues)
+            if result.witness is not None:
+                selected[key] = result.witness
         self.linkage = linkage
         return selected, issues
 
@@ -155,6 +139,7 @@ class Auditor:
                 return self.row(request,"INCOMPLETE",[]),diagnostics
         ledger, issues = self.ledger(tokens, cutoff, subject_id=uid)
         diagnostics["issues"].extend(issues)
+        diagnostics["temporal_ledger"]=[dict(system=k[0],resource=k[1],**v) for k,v in sorted(self.temporal.items())]
         findings, remediation, verification = [], [], []
         for key, obs in ledger.items():
             if obs.state == "UNKNOWN":

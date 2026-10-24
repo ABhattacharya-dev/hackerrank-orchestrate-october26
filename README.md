@@ -10,7 +10,7 @@ Architecture and prompts are submitted in `code/ARCHITECTURE.md` and
 `code/ghostgraph/intent.py`.
 
 **Current submission status: provisional.** The implementation processes all 518
-evaluation requests, but 335 cases have explicit proof or coverage gaps. Strict mode refuses
+evaluation requests, but 457 cases have explicit proof or coverage gaps. Strict mode refuses
 to write a final `output.csv`. `output.candidate.csv` is explicitly provisional;
 it must not be represented as a fully verified final submission. See
 `code/evaluation/evaluation_report.md` for actual scores, missing evidence and

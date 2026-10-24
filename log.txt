@@ -471,3 +471,43 @@ branch=work
 repo_root=/workspace/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+
+## [2026-10-24T19:08:45.462115+00:00] Milestone 3 temporal reconstruction
+
+User Prompt (verbatim, secrets redacted):
+## Milestone 3 — Temporal state reconstruction
+
+Implement a temporal state engine that determines each resource's state at `audit_at`.
+
+Consider event time, evidence-capture time, snapshot semantics, replicas, and historical changes.
+
+Separate direct observations from reported operation results.
+
+Resolve contradictory observations through explicit and tested precedence rules.
+
+Do not use future evidence.
+
+Do not assume a successful delete log means that the resource is absent.
+
+Do not assume a record is absent merely because one replica or database query cannot find it.
+
+Maintain explicit internal uncertainty for unsupported conclusions instead of inventing facts.
+
+**Exit criterion:** Temporal and replication edge cases pass repeatable tests, including same-user requests with different audit cutoffs.
+
+Agent Response Summary:
+Implemented an explicit bitemporal reducer preserving replica scopes, source uncertainty, equal-time conflicts and direct observations separately from reported operations. Fixed snapshot-time precedence and future trace-link leakage, and made later mutation claims invalidate certainty without asserting their result. All 55 tests passed, including 17 temporal tests and repeated-user/cutoff audit checks; full regression and fresh-directory reproduction completed. Strict mode now diagnoses 457 unresolved full audit cases; this milestone acceptance does not establish final submission readiness.
+
+Actions:
+* Added temporal.py, temporal regression tests and per-case temporal-ledger explanations.
+* Updated SQL snapshot/exhaustiveness metadata, trace-link availability and claim indexing.
+* Ran software tests, full candidate regression, strict refusal and cold reproduction.
+* Updated TEMPORAL.md, current status, architecture/progress and measured reports.
+
+Context:
+tool=Codex
+Model metadata limitation: exact engineering runtime identifier is not exposed; no value was fabricated.
+branch=work
+repo_root=/workspace/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none

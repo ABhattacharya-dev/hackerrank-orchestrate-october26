@@ -120,6 +120,7 @@ class EvidenceStore:
         self.hashes = {}
         self.by_token = defaultdict(list)
         self.by_resource = defaultdict(list)
+        self.claims_by_resource = defaultdict(list)
         self.warnings = []
         self.extraction_stats = Counter()
         self.failures = []
@@ -133,6 +134,7 @@ class EvidenceStore:
         if not resource or not RESOURCE.fullmatch(resource):
             self.unresolved.append(dict(evidence_id=meta["file_id"], locator=locator, reason="unsupported resource identifier"))
             return
+        fields = dict(fields, _source_origin=meta.get('origin','unspecified'))
         default_system, default_category = DEFAULTS[prefix(resource)]
         category = category or fields.get("record_type") or default_category
         system = system or fields.get("system") or default_system
@@ -148,6 +150,8 @@ class EvidenceStore:
         self.observations.append(obs)
         if fields.get("_catalog_event_time"):
             obs.available = max(obs.available, timestamp(fields["_catalog_event_time"]))
+        if fields.get('_trace_link_available'):
+            obs.available = max(obs.available,timestamp(fields['_trace_link_available']))
 
     @staticmethod
     def infer_state(data, category):
@@ -218,6 +222,8 @@ class EvidenceStore:
             self.by_resource[obs.key].append(obs)
             for token in obs.subject_tokens:
                 self.by_token[token].append(obs)
+        for claim in self.claims:
+            self.claims_by_resource[claim['resource_id']].append(claim)
         for report in self.coverage:
             report["observations"] = sum(o.evidence_id == report["evidence_id"] for o in self.observations)
         self._loaded = True
@@ -259,6 +265,7 @@ class EvidenceStore:
             self.unresolved.append(dict(evidence_id=meta["file_id"], locator=locator, reason="record has no resource identifier"))
             return
         fields = dict(data)
+        fields.pop('_covers_all_copies',None)  # reserved for validated adapter metadata
         category = fields.get("record_type")
         if "attachment" in collection or fields.get("storage_class") == "ticket_attachment":
             category = "SUPPORT_ATTACHMENT"
@@ -325,6 +332,9 @@ class EvidenceStore:
             conn.executescript(path.read_text())
             conn.row_factory = sqlite3.Row
             tables = [r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")]
+            declared = {r['origin_system']:r['captured_at'] for r in conn.execute('SELECT * FROM snapshot_scope')} if 'snapshot_scope' in tables else {}
+            match = re.search(r'-- Captured at:\s*(\S+)',path.read_text())
+            captured = match[1] if match else meta['captured_at']
             table_types = {"customer_profiles": "USER_PROFILE", "customer_search_documents": "SEARCH_INDEX_ENTRY",
                            "customer_analytics_profiles": "ANALYTICS_PROFILE", "support_records": "SUPPORT_MESSAGE",
                            "customer_exports": "USER_EXPORT", "connector_subscriptions": "DATA_FLOW",
@@ -347,11 +357,14 @@ class EvidenceStore:
                         record = dict(record, record_type=category)
                     self.record(record, meta, system=row.get("origin_system") or system,
                                 collection=row.get("collection_name", table),
+                                when=declared.get(row.get('origin_system') or system,captured),
                                 locator=f"table:{table}/resource:{row['resource_id']}", scope=table)
                     keys.add(row["resource_id"])
                 # Full exported table permits absence only for independently linked resources.
                 self.scopes.append(dict(meta=meta, table=table, resources=keys,
                                         system=system, category=category,
+                                        observed=timestamp(declared.get(system,captured)),
+                                        exhaustive=bool(system in declared or (match and not declared)),
                                         generic=any("record_json" in r for r in records)))
         finally:
             conn.close()
@@ -398,9 +411,13 @@ class EvidenceStore:
         is_readback = "readback" in content[:200]
         parsed = [(i, self.parse_line(line)) for i, line in enumerate(content.splitlines(), 1)]
         traces = defaultdict(set)
+        trace_times = {}
         for _, data in parsed:
             if data and data.get("trace_id"):
-                traces[data["trace_id"]].update(identities(data))
+                tokens=identities(data)
+                traces[data["trace_id"]].update(tokens)
+                if tokens:
+                    trace_times[data['trace_id']]=max(trace_times.get(data['trace_id'],data['event_time']),data['event_time'])
         for i, data in parsed:
             if not data or not data.get("resource_id"):
                 continue
@@ -444,6 +461,8 @@ class EvidenceStore:
             elif event == "audit_record_read_completed" and data.get("rows") == "1":
                 state = "PRESENT"
             if state:
+                if data.get('trace_id') in trace_times:
+                    data['_trace_link_available']=trace_times[data['trace_id']]
                 service = data.get("system") or data.get("service")
                 if service in {"profile_service", "support_replica"}: service = "account_service" if service == "profile_service" else "support_platform"
                 default = DEFAULTS.get(prefix(resource))

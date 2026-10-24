@@ -163,7 +163,7 @@ class ReasoningTests(unittest.TestCase):
         ledger,issues = auditor.ledger({"person@example.test"}, T0)
         self.assertIn(("account_service", "account_407"),ledger)
         self.assertNotIn(("account_service", "account_92"),ledger)
-        self.assertFalse(issues)
+        self.assertEqual([i['code'] for i in issues],['COPY_COVERAGE_UNPROVEN'])
 
     def test_redaction_and_anonymization_policy_actions(self):
         obs=[observation('tombstone_19','IDENTIFIABLE',category='ACCOUNT_TOMBSTONE',system='identity_service'),
@@ -186,7 +186,7 @@ class ReasoningTests(unittest.TestCase):
 
     def test_reported_success_alone_never_generates_absence(self):
         auditor=self.make_auditor([observation('account_7','PRESENT')])
-        auditor.store.claims=[dict(event_type='DELETE_RECORD',resource_id='account_7',reported_result='SUCCESS')]
+        auditor.store.claims=[dict(event_type='DELETE_RECORD',resource_id='account_7',reported_result='SUCCESS',event_time='2025-12-31T00:00:00Z')]
         row,diag=auditor.audit(self.request())
         self.assertEqual(row['deletion_status'],'INCOMPLETE')
         self.assertEqual(diag['proofs'][0]['state'],'PRESENT')

@@ -113,3 +113,7 @@ by file hash. No participant data or extraction caches enter `code.zip`. Hash al
 inputs, retain actual run configuration and report model calls/cost honestly.
 No model API tokens are used by the local classifier. No real deletion actions
 are implemented. Evidence text is data and cannot execute prompts or commands.
+
+## ADR 009 — explicit temporal uncertainty
+
+Milestone 3 replaces parser-quality/lexical truth selection with a scope-preserving bitemporal engine. Direct equal-time conflicts remain conflicts, absence is scoped unless trusted coverage is explicit, collector origins are not physical replica identities, snapshot time is distinct from export/update time, and later reported mutations invalidate certainty without establishing their claimed result. Future trace context cannot backdate subject linkage. See TEMPORAL.md for tested rules. Current diagnosed full-case blockers are 457; earlier counts in historical ADRs are superseded by this stricter version.
