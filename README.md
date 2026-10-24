@@ -39,6 +39,9 @@ PYTHONPATH=code python3 -m unittest discover -s code/tests -v
 python3 code/evaluation/main.py
 python3 code/evaluation/verify.py
 python3 code/evaluation/reproduce.py
+python3 code/evaluation/ai_ablation.py
+python3 code/evaluation/planning_acceptance.py
+python3 code/evaluation/optimization_report.py
 python3 code/evaluation/write_reports.py
 python3 code/package.py
 ```

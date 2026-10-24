@@ -32,6 +32,7 @@ not an independent held-out estimate. Samples contain no NOT_APPLICABLE cases.
 | Exact sequence accuracy | 2/32 (6.25%) |
 | Step precision, including exact canonical citation | 111/115 (96.52%) |
 | Step recall, including exact canonical citation | 111/193 (57.51%) |
+| Step F1, including exact canonical citation | 72.08% |
 | Structural step precision, ignoring citation | 96.52% |
 | Structural step recall, ignoring citation | 57.51% |
 | Field accuracy | 719/1351 (53.22%) |
@@ -45,9 +46,14 @@ expected cited steps, including omitted ones as incorrect. The provenance check
 independently verifies internal source/linkage/cutoff consistency, but is not an
 independent semantic-entailment judge and does not prove hidden correctness.
 
+`code/evaluation/mismatch_report.md` documents every mismatched sample, missing
+and extra operations, wrong states/citations, relative ordering and classification
+errors, plus a measured selective-AI ablation. The AI-only model and rules-only
+baseline are evaluated separately; guarded eager/selective decisions match.
+
 ## Actual software and full-run checks
 
-- `90` unit/regression tests ran: `0` failures,
+- `97` unit/regression tests ran: `0` failures,
   `0` errors, `0` skipped; all passed.
 - All 94 manifest files processed: 26 logs, 28 JSON, 1 text, 11 PNG, 24 SQL,
   4 PDF. 2906 observations and
@@ -59,9 +65,9 @@ independent semantic-entailment judge and does not prove hidden correctness.
   explanations. This is provenance validation, not a claim of full coverage.
 - Input hashes verified unchanged; supplied evidence and root AGENTS.md were not
   edited. Candidate status counts: `{'INCOMPLETE': 400, 'COMPLETE': 108, 'NOT_APPLICABLE': 10}` (provisional).
-- Warm-cache full run: 6.875 seconds. A fresh source copy,
+- Warm-cache full run: 6.196 seconds. A fresh source copy,
   different working directory and empty extraction cache reproduced identical
-  candidate bytes in 19.435 seconds, executing
+  candidate bytes in 22.829 seconds, executing
   11 OCR calls and
   4 PDF extraction calls.
 - Strict refusal was exercised; it returned an evidence blocker and wrote no

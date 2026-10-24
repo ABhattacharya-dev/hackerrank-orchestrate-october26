@@ -604,3 +604,51 @@ branch=work
 repo_root=/workspace/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+
+## [2026-10-24T23:56:22.933899+00:00] Milestone 6 measured AI ablation and mismatch analysis
+
+User Prompt (verbatim, secrets redacted):
+## Milestone 6 — AI integration and accuracy optimization
+
+Evaluate the full public sample set against `sample_output.csv`.
+
+Calculate and report:
+
+- Case-level status accuracy
+- Step precision, recall, and F1
+- Field-level accuracy
+- Evidence citation accuracy
+- Exact sequence accuracy
+
+Create a mismatch report identifying missing steps, extra steps, wrong states, wrong evidence, incorrect ordering, and incorrect classifications.
+
+Prioritize improvements based on measured error impact.
+
+Investigate whether selective AI inference improves ambiguous cases compared with deterministic baselines.
+
+Use caching and deduplication where appropriate.
+
+Do not overfit individual sample case IDs, hardcode public answers, or assume hidden cases share a particular pattern.
+
+Repeat regression tests after every significant change.
+
+**Exit criterion:** The system demonstrates measurable accuracy, all structural checks pass, and remaining mismatches have documented explanations.
+
+Agent Response Summary:
+Evaluated all 32 public samples, added exact step F1 and occurrence-aware mismatch alignment, and rendered every remaining mismatch with diagnosed ledger/policy/temporal gaps. Actual status accuracy is 87.5%, step precision/recall/F1 96.5217/57.5130/72.0779%, field accuracy 53.2198%, canonical citation accuracy 58.6667%, and exact sequence accuracy 6.25%. A frozen independent 24-probe AI ablation supports selective learned intent inference; routing and canonical cache keys reduce actual full-run model calls from 375 to 5 while preserving candidate bytes. All 97 final software tests pass; eight sample cases still have 13 structural violations, so Milestone 6 acceptance is not met and strict export still blocks 490 full cases.
+
+Actions:
+* Added F1, missing/extra/state/citation/order/classification diagnostics and evaluator regression tests.
+* Compared rule-only, raw ML, guarded eager and guarded selective intent on all public intents plus 24 independent authored probes; no training changes selected from labels/probes.
+* Tested and reverted document-role parsing because it added three extra operations with no recovered reference step; experimental fixture setup failures remain disclosed.
+* Added selective model routing, normalized deduplication, cache-copy isolation and actual scope/inference usage counters.
+* Repeated regressions after significant changes; verified cold extraction reproduces identical candidate bytes; regenerated mismatch/evaluation/usage reports and source archive.
+* Preserved root AGENTS.md and participant dataset; prepared authorized integration into repository main.
+
+Context:
+tool=Codex
+Model metadata limitation: exact engineering runtime identifier remains inaccessible; no value was fabricated. Root exact-model logging compliance remains incomplete.
+branch=work
+repo_root=/workspace/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none

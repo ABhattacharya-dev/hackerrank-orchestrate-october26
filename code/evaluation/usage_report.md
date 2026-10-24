@@ -9,8 +9,9 @@ available to the application.
 
 | Component | Provider / model | Actual final-run usage |
 | --- | --- | ---: |
-| Intent inference | local scikit-learn / ghostgraph-intent-hybrid-word-char-logreg-v4 | 375 inference calls |
+| Intent inference | local scikit-learn / ghostgraph-intent-hybrid-word-char-logreg-v5-selective | 5 inference calls |
 | Intent cache | same content/model/training-hash cache | 143 cache hits |
+| Deterministic intent scope | same consent/ambiguity guards | 370 unique scope decisions without ML calls |
 | Intent training | independently authored source examples | 296 examples; 1 fit |
 | OCR | local Tesseract English recognizer | 0 fresh calls |
 | PDF text extraction | local Poppler pdftotext | 0 fresh calls |
@@ -22,6 +23,12 @@ the learned model; model decisions are used for multilingual/implicit intent.
 Request decision sources: `{'explicit erasure or completion/audit of prior erasure': 446, 'semantic ML inference': 62, 'limited scope preserving the account': 3, 'explicit non-deletion scope': 5, 'access/correction/portability without erasure': 2}`. Cached repeated
 texts reuse the same validated classification. No public output label trains it.
 
+There were 375 unique normalized classifications;
+only 5 required learned inference. In the preceding
+M5 run, eager inference executed 375 calls for the same request set; selective
+routing preserves candidate bytes while avoiding those unnecessary model calls.
+Deterministic decisions have no model probability, rather than a fabricated one.
+
 - Requests processed: 518.
 - Input API tokens: 0; output API tokens: 0; total API tokens: 0.
 - Average API tokens/request: 0. Token units are **not applicable** to TF-IDF,
@@ -30,9 +37,9 @@ texts reuse the same validated classification. No public output label trains it.
 - Estimated API cost: USD 0.00 total; USD 0.00/request. Per-model API totals are
   also zero because all components execute locally with no metered API calls.
 - Local compute/storage cost is unpriced and excluded, rather than invented.
-- Measured warm-cache runtime: 6.875 seconds,
-  0.013272 seconds/request averaged across the run.
-- Cold extraction reproducibility run: 19.435 seconds,
+- Measured warm-cache runtime: 6.196 seconds,
+  0.011961 seconds/request averaged across the run.
+- Cold extraction reproducibility run: 22.829 seconds,
   11 OCR and
   4 PDF extraction calls;
   identical candidate bytes. This separate validation run is not added to the

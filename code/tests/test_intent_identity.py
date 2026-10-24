@@ -40,4 +40,30 @@ class IntentIdentityTests(unittest.TestCase):
     def test_uncertain_authorization_is_flagged(self):
         self.assertTrue(self.model.classify('I am not sure whether to delete my account.')['ambiguous'])
 
+    def test_selective_inference_skips_explicit_scope_and_uses_ml_fallback(self):
+        model=IntentClassifier()
+        explicit=model.classify('Delete my account permanently now.')
+        self.assertTrue(explicit['authorized']);self.assertIsNone(explicit['probability'])
+        self.assertEqual(model.calls,0)
+        semantic=model.classify('Je souhaite supprimer mon compte et toutes mes informations.')
+        self.assertTrue(semantic['authorized']);self.assertIsInstance(semantic['probability'],float)
+        self.assertEqual(model.calls,1)
+
+    def test_normalized_dedup_and_cached_result_mutation(self):
+        model=IntentClassifier()
+        result=model.classify('Je souhaite supprimer mon compte définitivement.')
+        expected=result['authorized'];result['authorized']=not expected
+        cached=model.classify('  JE souhaite  supprimer mon compte définitivement.  ')
+        self.assertEqual(cached['authorized'],expected);self.assertEqual(model.calls,1)
+        self.assertEqual(model.cache_hits,1)
+
+    def test_selective_eager_equivalence_for_scoped_and_uncertain_inputs(self):
+        selective=IntentClassifier();eager=IntentClassifier(selective=False)
+        for text in ['Delete my account.','Do not erase this profile.','I am not sure whether to delete my profile.',
+                     'アカウントと関連する情報を削除してください。']:
+            a,b=selective.classify(text),eager.classify(text)
+            self.assertEqual((a['authorized'],a['low_confidence'],a['ambiguous']),
+                             (b['authorized'],b['low_confidence'],b['ambiguous']))
+        self.assertLess(selective.calls,eager.calls)
+
 if __name__=='__main__':unittest.main()

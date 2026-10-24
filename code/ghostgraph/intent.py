@@ -14,7 +14,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from sklearn.pipeline import FeatureUnion
 
-MODEL_NAME = "ghostgraph-intent-hybrid-word-char-logreg-v4"
+MODEL_NAME = "ghostgraph-intent-hybrid-word-char-logreg-v5-selective"
 TASK_PROMPT = "Classify whether the speaker authorizes erasure of their account or personal data. Access, correction, export, marketing opt-out, questions and negated deletion do not authorize erasure. Return a validated authorization boolean and probability."
 
 # Independent, fictional examples describing intent, not challenge answers.
@@ -187,8 +187,12 @@ def explicit_scope(text):
     return None, "semantic ML inference"
 
 
+def is_ambiguous(text):
+    return bool(re.search(r"\b(?:not sure (?:whether|if|i want)|undecided|whether to (?:delete|erase)|maybe (?:delete|erase))\b",normalize(text).casefold()))
+
+
 class IntentClassifier:
-    def __init__(self):
+    def __init__(self, *, selective=True):
         # Fit from auditable source every run: no unsafe pickle/model downloads.
         self.model = make_pipeline(
             FeatureUnion([
@@ -201,20 +205,28 @@ class IntentClassifier:
         self.cache = {}
         self.calls = 0
         self.cache_hits = 0
+        self.selective = selective
+        self.scope_decisions = 0
         self.training_hash = hashlib.sha256(json.dumps([POSITIVE, NEGATIVE], ensure_ascii=False).encode()).hexdigest()
 
     def classify(self, text):
-        key = hashlib.sha256((MODEL_NAME + self.training_hash + text).encode()).hexdigest()
+        normalized = re.sub(r'\s+', ' ', normalize(text)).strip().casefold()
+        text = normalized
+        key = hashlib.sha256((MODEL_NAME + self.training_hash + normalized).encode()).hexdigest()
         if key in self.cache:
             self.cache_hits += 1
-            return self.cache[key]
-        probability = float(self.model.predict_proba([normalize(text)])[0, 1])
+            return dict(self.cache[key])
         explicit, reason = explicit_scope(text)
-        ambiguous = bool(re.search(r"\b(?:not sure (?:whether|if|i want)|undecided|whether to (?:delete|erase)|maybe (?:delete|erase))\b",normalize(text).casefold()))
+        probability = None
+        if explicit is None or not self.selective:
+            probability = float(self.model.predict_proba([normalize(text)])[0, 1])
+            self.calls += 1
+        if explicit is not None:
+            self.scope_decisions += 1
+        ambiguous = is_ambiguous(text)
         result = {"authorized": probability >= 0.5 if explicit is None else explicit,
                   "probability": probability, "decision_source": reason,
                   "model": MODEL_NAME, "ambiguous": ambiguous,
                   "low_confidence": ambiguous or (explicit is None and abs(probability - 0.5) < 0.04)}
         self.cache[key] = result
-        self.calls += 1
-        return result
+        return dict(result)

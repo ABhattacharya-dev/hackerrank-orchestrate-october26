@@ -143,3 +143,21 @@ records was caught and corrected. Future required checks improve exact rows from
 1/32 to 2/32 without copying labels. Remaining risks: full 490 unresolved cases,
 namespace/extraction limits and incomplete evidence linkage. **Exit criterion
 NOT MET**; no next milestone or final submission readiness is claimed.
+
+## Requested Milestone 6 — AI integration and accuracy optimization
+
+Objective: measure all sample errors and optimize inference based on experiments.
+Deliverables: full mismatch taxonomy/Markdown explanations, F1, frozen 24-probe
+four-arm AI ablation, selective routing/dedup and seven added regression tests.
+Dependencies: current pipeline and unresolved M5 foundation. Actual results:
+97 tests pass; sample status 28/32, step P/R/F1 96.5217/57.5130/72.0779 percent,
+field 53.2198%, citation 58.6667%, exact sequence 2/32. Guarded selective intent
+matches eager decisions (32/32 public, 24/24 authored probes), using 4 vs 32
+public model calls; full calls fall 375 to 5 with unchanged candidate bytes.
+Failures/corrections: rejected a document-role reclassification that added three
+extra operations; fixed evaluator alignment/multiplicity and isolated cached
+responses. Remaining risks: 82 missing/4 extra operations, eight structurally
+blocked sample cases and 490 unresolved full cases; remote vision unconfigured.
+**Exit criterion NOT MET** because generated all-case structural acceptance still
+fails. See OPTIMIZATION.md and evaluation/mismatch_report.md; no later milestone
+or final readiness is claimed.

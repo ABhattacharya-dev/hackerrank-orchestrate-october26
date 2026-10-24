@@ -46,6 +46,7 @@ def run(root, requests_path, output, *, allow_unresolved=False, tag="full"):
     usage = {"provider": "local scikit-learn", "model": MODEL_NAME,
              "request_count": len(requests), "inference_calls": intent.calls,
              "cache_hits": intent.cache_hits, "input_tokens": 0, "output_tokens": 0,
+             "unique_classifications": len(intent.cache), "scope_decisions": intent.scope_decisions,
              "token_units_applicable": False, "api_cost_usd": 0.0,
              "training_examples": len(POSITIVE) + len(NEGATIVE),
              "training_hash": intent.training_hash, "runtime_seconds": time.perf_counter() - started,

@@ -130,3 +130,16 @@ Future verification may test grounded required policy goals but never stand in
 for missing findings, unsupported actions or observed COMPLETE proofs. Explicit
 partial mode remains diagnostic. Strict sample validation detects eight blocked
 cases, so source packaging does not imply milestone acceptance. See PLANNING.md.
+
+## ADR 012 — measure AI coverage and avoid redundant inference
+
+A four-arm experiment separates deterministic scope, raw learned inference,
+guarded eager and guarded selective decisions. Selective routing preserves guarded
+outcomes while skipping inference for explicit consent/scope. Normalize cache keys
+and return isolated responses. Public intent coverage increases from 28/32 rule-only
+to 32/32 guarded selective; the prior hybrid already had that accuracy, so this is
+a call-count optimization (375 to 5 full-run calls), not an audit-accuracy gain.
+Keep temporal/policy/serialization deterministic. Reject the tested document-role
+change because it adds errors and lacks stronger evidence. Measured missing
+resource/proof coverage remains the next correctness priority; do not let a
+successful AI ablation conceal structural blockers. See OPTIMIZATION.md.

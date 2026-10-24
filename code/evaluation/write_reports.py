@@ -53,6 +53,7 @@ not an independent held-out estimate. Samples contain no NOT_APPLICABLE cases.
 | Exact sequence accuracy | {metrics['counts']['exact_sequences']}/32 ({pct('exact_sequence_accuracy')}) |
 | Step precision, including exact canonical citation | {metrics['counts']['exact_step_matches']}/{metrics['counts']['predicted_steps']} ({pct('step_precision')}) |
 | Step recall, including exact canonical citation | {metrics['counts']['exact_step_matches']}/{metrics['counts']['expected_steps']} ({pct('step_recall')}) |
+| Step F1, including exact canonical citation | {pct('step_f1')} |
 | Structural step precision, ignoring citation | {pct('structural_step_precision')} |
 | Structural step recall, ignoring citation | {pct('structural_step_recall')} |
 | Field accuracy | {metrics['counts']['field_matches']}/{metrics['counts']['expected_fields']} ({pct('field_accuracy')}) |
@@ -65,6 +66,11 @@ missing expected fields count wrong. Canonical reference accuracy compares
 expected cited steps, including omitted ones as incorrect. The provenance check
 independently verifies internal source/linkage/cutoff consistency, but is not an
 independent semantic-entailment judge and does not prove hidden correctness.
+
+`code/evaluation/mismatch_report.md` documents every mismatched sample, missing
+and extra operations, wrong states/citations, relative ordering and classification
+errors, plus a measured selective-AI ablation. The AI-only model and rules-only
+baseline are evaluated separately; guarded eager/selective decisions match.
 
 ## Actual software and full-run checks
 
@@ -188,6 +194,7 @@ available to the application.
 | --- | --- | ---: |
 | Intent inference | local scikit-learn / {usage['model']} | {usage['inference_calls']} inference calls |
 | Intent cache | same content/model/training-hash cache | {usage['cache_hits']} cache hits |
+| Deterministic intent scope | same consent/ambiguity guards | {usage['scope_decisions']} unique scope decisions without ML calls |
 | Intent training | independently authored source examples | {usage['training_examples']} examples; 1 fit |
 | OCR | local Tesseract English recognizer | {usage['document_extraction'].get('tesseract_calls',0)} fresh calls |
 | PDF text extraction | local Poppler pdftotext | {usage['document_extraction'].get('pdftotext_calls',0)} fresh calls |
@@ -198,6 +205,12 @@ not a hosted LLM. Generic deterministic English consent/scope guards complement
 the learned model; model decisions are used for multilingual/implicit intent.
 Request decision sources: `{usage['intent_decision_sources']}`. Cached repeated
 texts reuse the same validated classification. No public output label trains it.
+
+There were {usage['unique_classifications']} unique normalized classifications;
+only {usage['inference_calls']} required learned inference. In the preceding
+M5 run, eager inference executed 375 calls for the same request set; selective
+routing preserves candidate bytes while avoiding those unnecessary model calls.
+Deterministic decisions have no model probability, rather than a fabricated one.
 
 - Requests processed: {usage['request_count']}.
 - Input API tokens: 0; output API tokens: 0; total API tokens: 0.
