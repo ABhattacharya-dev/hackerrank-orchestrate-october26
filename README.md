@@ -1,5 +1,72 @@
 # HackerRank Orchestrate - October 2026
 
+## GhostGraph implementation
+
+GhostGraph is a Python command-line deletion auditor with a local supervised
+multilingual intent model, deterministic consent/scope guards, six evidence
+adapters, a temporal resource ledger, supplied-policy evaluation and canonical
+output validation. It generates plans; it never executes real deletion actions.
+Architecture and prompts are submitted in `code/ARCHITECTURE.md` and
+`code/ghostgraph/intent.py`.
+
+**Current submission status: provisional.** The implementation processes all 518
+evaluation requests, but 335 cases have explicit proof or coverage gaps. Strict mode refuses
+to write a final `output.csv`. `output.candidate.csv` is explicitly provisional;
+it must not be represented as a fully verified final submission. See
+`code/evaluation/evaluation_report.md` for actual scores, missing evidence and
+known recall limitations. No hidden-set accuracy is claimed.
+
+Requirements: Python 3.12, `pdftotext` (Poppler), Tesseract OCR with English data,
+and the pinned Python packages below. No API key, hosted model or service is
+required. On Debian/Ubuntu, system packages are `poppler-utils` and
+`tesseract-ocr`; use your system package manager if these are missing.
+
+From the repository root:
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+python3 -m pip install -r code/requirements.txt
+python3 code/main.py
+```
+
+The strict command currently exits 2 because evidence is unresolved, and writes
+diagnostics under ignored `.ghostgraph/`. To inspect all proposed rows explicitly:
+
+```bash
+python3 code/main.py --allow-unresolved
+PYTHONPATH=code python3 -m unittest discover -s code/tests -v
+python3 code/evaluation/main.py
+python3 code/evaluation/verify.py
+python3 code/evaluation/reproduce.py
+python3 code/evaluation/write_reports.py
+python3 code/package.py
+```
+
+`--allow-unresolved` defaults to `output.candidate.csv`. `--requests` and `--output`
+override file paths. Defaults resolve relative to the checkout, so the entry point
+also works from another working directory. The public evaluator reads labels
+only after prediction; public answers never train the model or feed predictions.
+The verification command returns 0 for complete readiness, 1 for failing software
+tests, or 2 when tests execute but unresolved evidence blocks strict final export.
+It validates schema, citation cutoffs and matching internal ledger provenance;
+these checks do not establish hidden canonical correctness.
+
+Extraction text and diagnostics in `.ghostgraph/` can contain fictional participant
+data and must stay outside submission archives and Git. The local model is
+trained from independently authored examples in source at every run, then performs
+actual inference. Its probabilities are similarity-based confidence signals, not
+calibrated guarantees. API token usage and API cost are zero; local compute is not
+priced. Full-run usage is documented in `code/evaluation/usage_report.md`.
+
+`code.zip` contains source, instructions, prompts and Markdown reports, excluding
+the dataset, caches, environments and nested archives. Root `log.txt` is the
+conversation-summary artifact. A full hosted session trace is not available from
+this environment; use the interface export if provided, following
+`agent_trace_instructions.md`, and keep any trace ZIP separate from `code.zip`.
+
+The original challenge reference follows.
+
 ## Ghost Data Still Exists
 
 Build an AI agent that audits whether a user's personal data was actually deleted.

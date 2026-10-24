@@ -1,0 +1,339 @@
+## [2026-10-24T17:48:20.313590+00:00] SESSION START
+
+tool=Codex
+Model metadata: Exact runtime model identifier is not exposed by the available session metadata; not guessed.
+branch=work
+repo_root=/workspace/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+Language: py
+Time Remaining: not configured
+
+## [2026-10-24T17:48:20.313590+00:00] Cloud environment setup
+
+User Prompt (verbatim, secrets redacted):
+{"repositories":[{"name":"ABhattacharya-dev/hackerrank-orchestrate-october26","ref":"main"}]}
+
+## My request:Use $cloud-environment-onboarding:setup to set up this cloud environment
+
+Agent Response Summary:
+Inspected repository instructions and verified Python 3.12.14, CSV/JSON/SQLite support, all 94 evidence paths, all SQL snapshots, PDF extraction and representative image OCR. Both documented Python entry points are empty and exit successfully without executing tests or producing predictions. No dependencies, services, or reusable setup changes are needed for this starter. Exact model logging is unavailable because the runtime does not expose an exact identifier.
+
+Actions:
+* Read setup skill, repository documentation and environment draft.
+* Ran documented entry points and dataset/evidence readiness checks.
+* Left tracked repository files unchanged.
+
+Context:
+tool=Codex
+Model metadata: Exact runtime model identifier is not exposed by the available session metadata; not guessed.
+branch=work
+repo_root=/workspace/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+
+
+## [2026-10-24T17:51:18.554285+00:00] Establish GhostGraph instructions
+
+User Prompt (verbatim, secrets redacted):
+# Task: Establish the GhostGraph Agent Instructions
+
+You are the lead AI systems architect and principal engineer for a 24-hour HackerRank Orchestrate hackathon.
+
+Your goal is to help build **GhostGraph**, an evidence-backed, temporal AI deletion-audit agent that maximizes correctness, reliability, reproducibility, and explainability under the official competition requirements.
+
+Repository:\
+[https://github.com/interviewstreet/hackerrank-orchestrate-october26](https://github.com/interviewstreet/hackerrank-orchestrate-october26)
+
+## 1. Initial instructions
+
+Before modifying any file:
+
+1. Read the existing root `AGENTS.md` completely.
+2. Read `problem_statement.md`, `README.md`, and `agent_trace_instructions.md`.
+3. Inspect `code/`, the participant-facing dataset schema, the evidence manifest, deletion rules, and sample outputs.
+4. Identify any conflicts, undocumented assumptions, or differences between the starter instructions and actual dataset.
+5. Follow the repository's required conversation logging protocol from the beginning.
+
+**Do not overwrite, replace, truncate, or weaken the existing root `AGENTS.md`.**
+
+Create a specialized `code/AGENTS.md`. Its rules must extend the root instructions, not contradict them. Ensure prompts and important architectural documentation are included in the submitted source code.
+
+## 2. Project objective
+
+Build a runnable AI-powered audit system that:
+
+- Determines whether a request genuinely authorizes deletion.
+- Resolves current and historical customer identifiers.
+- Reconstructs each resource's actual state at its case-specific `audit_at`.
+- Discovers relevant personal information across all supported evidence sources.
+- Identifies active synchronization, import, replication, and restore risks.
+- Applies `deletion_rules.csv` correctly, including retention requirements and account tombstones.
+- Generates every required finding, remediation step, and verification check.
+- Produces exactly valid, correctly ordered, evidence-backed outputs.
+- Runs reproducibly across all 518 evaluation requests.
+
+Treat reported workflow statuses and activity results as claims, not ground truth.
+
+## 3. Agent engineering principles
+
+Write the following requirements into `code/AGENTS.md`.
+
+### Accuracy over appearance
+
+Prioritize:
+
+1. Correct deletion status
+2. Complete evidence and resource discovery
+3. Accurate historical and temporal reconstruction
+4. Correct policy treatment
+5. Exact step sequencing and citations
+6. Robustness, runtime efficiency, and token efficiency
+7. Optional presentation features
+
+Do not build a frontend unless the critical submission pipeline is working and tested.
+
+### Evidence-first reasoning
+
+Never invent records, identifiers, timestamps, policy rules, resource states, or evidence IDs.
+
+Normalize observations into an internal evidence model containing the source, time, subject linkage, system, resource, observed state, relevant fields, and provenance.
+
+Distinguish actual observations from claimed operation results.
+
+Absence of a search result is not automatically proof of deletion.
+
+Build a resource-state ledger with explicit proof obligations.
+
+### Temporal correctness
+
+Every case is evaluated independently at its own `audit_at`.
+
+Never use later evidence to establish an earlier state.
+
+Handle repeated users, historical aliases, contradictory events, replicas, snapshot boundaries, and evidence-capture timestamps.
+
+Make temporal precedence rules explicit and testable.
+
+### Identity correctness
+
+Resolve historical identities through grounded links.
+
+Avoid false matches caused by shared names, partial identifiers, reused emails, or unrelated data.
+
+Do not assume a current identity snapshot describes the historical state at every audit timestamp.
+
+### Policy correctness
+
+Interpret policy from the supplied `deletion_rules.csv`.
+
+Respect DELETE, REDACT, ANONYMIZE, RETAIN, and account tombstone requirements.
+
+Preserve legally or policy-required records and stable internal references where permitted.
+
+Prevent dangerous data flows and restore paths from recreating prohibited information.
+
+### Selective AI
+
+Use genuine AI inference where it adds measurable value, especially semantic intent classification or ambiguous document/image extraction.
+
+Prefer deterministic parsing for structured evidence and deterministic logic for policy, temporal ordering, and final output.
+
+Do not delegate final JSON construction to an unconstrained LLM.
+
+Use structured model responses, validation, caching, retries, and a bounded fallback strategy.
+
+The AI component must actually participate in the implemented workflow, not merely appear in the architecture diagram.
+
+### Submission correctness
+
+Implement the exact output contract:
+
+`case_id,deletion_status,steps_json`
+
+Allowed statuses:
+
+- COMPLETE
+- INCOMPLETE
+- NOT_APPLICABLE
+
+Use only permitted operations, states, and phases.
+
+For NOT_APPLICABLE, produce an empty step array.
+
+For COMPLETE, use evidence-backed verification steps only.
+
+For INCOMPLETE, generate evidence-backed findings and proposed remediation and verification steps with the required empty evidence IDs.
+
+Order by phase, then the official operation precedence, then `system_id` and `resource_id`.
+
+Assign consecutive step numbers.
+
+### Evaluation discipline
+
+Use public sample answers for evaluation and regression testing, not as hardcoded predictions.
+
+Create an evaluator for status accuracy, step precision and recall, field accuracy, evidence correctness, and exact sequence accuracy.
+
+Create at least three independent adversarial evaluation cases.
+
+Track regressions after modifications.
+
+Do not fabricate metrics or claim tests passed unless they ran successfully.
+
+### Reproducibility and safety
+
+Use only participant-facing dataset files.
+
+Never inspect organizer-only truth or generators.
+
+Keep source and submission artifacts reproducible.
+
+Do not mutate the supplied evidence.
+
+Never execute real deletion actions against external systems; this project generates plans.
+
+Never store secrets or personal information in logs.
+
+Maintain actual model usage, tokens, and cost records.
+
+Follow the root `AGENTS.md` conversation logging requirements exactly.
+
+## 4. Agent autonomy
+
+You are authorized to choose and revise the implementation details, libraries, model integrations, and internal architecture based on repository inspection and experimental results.
+
+Prefer a Python solution with lightweight dependencies unless evidence justifies an alternative.
+
+Do not blindly follow a proposed design when there is a more accurate or simpler approach.
+
+If you discover a better solution, explain the evidence behind the change and adopt it.
+
+Avoid unnecessary abstractions, premature optimization, heavyweight infrastructure, and cosmetic work.
+
+## 5. Milestone-based development
+
+Require every implementation milestone to include:
+
+- Objective
+- Concrete deliverables
+- Dependencies
+- Acceptance tests
+- Actual test results
+- Failures discovered
+- Corrections made
+- Remaining risks
+
+Do not mark milestones complete based only on file creation.
+
+Do not advance past a broken foundational milestone.
+
+Maintain concise progress notes and an architecture decision log within the source tree.
+
+## 6. Required output of this task
+
+Create `code/AGENTS.md` with the complete specialized instructions.
+
+Read back the file and verify that it does not conflict with the official root instructions.
+
+Then report:
+
+1. The file created
+2. Critical requirements discovered from the repository
+3. Recommended architecture
+4. Identified technical risks
+5. Any changes you recommend to the proposed GhostGraph architecture
+
+**Do not implement the main application yet. This task is only to establish the agent instructions and validated architecture.**
+
+Agent Response Summary:
+Created code/AGENTS.md extending the root contract, with evidence/temporal/identity/policy rules, selective AI, exact output vocabulary, architecture, milestone gates and evaluation requirements. Inspected participant schemas, rules, samples and representative evidence structures; identified missing non-deletion sample coverage and ordering/report/trace ambiguities. Read the new file back and verified protected tracked files are unchanged; no application was implemented. Exact runtime model metadata remains unavailable, so logging cannot meet the root model identifier requirement and no identifier was invented.
+
+Actions:
+* Read root AGENTS.md, problem_statement.md, README.md and agent_trace_instructions.md.
+* Inspected code, participant CSV schemas/counts, rules and evidence structures.
+* Created and read back code/AGENTS.md; checked git diff for protected files.
+
+Context:
+tool=Codex
+Model metadata limitation: Exact runtime model identifier unavailable in accessible authoritative metadata; required model= field cannot be completed truthfully.
+branch=main
+repo_root=/workspace/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+
+## [2026-10-24T17:54:18.115026+00:00] Build GhostGraph autonomously
+
+User Prompt (verbatim, secrets redacted):
+# Build GhostGraph — Autonomous Milestone Execution
+
+You are now responsible for implementing, evaluating, optimizing, and packaging GhostGraph as a competitive HackerRank Orchestrate submission.
+
+Read the root `AGENTS.md`, `code/AGENTS.md`, `README.md`, and `problem_statement.md` before starting.
+
+Follow the previously established architecture, but challenge any implementation decision that experiments show to be incorrect, unnecessarily expensive, or unlikely to improve evaluation results.
+
+**You own the engineering decisions. I own the project objectives.**
+
+Do not ask for approval at every milestone. Execute autonomously, test your work, fix failures, and continue, provided you stay within the repository's instructions and submission rules.
+
+Do not stop after planning or generate placeholder files that merely look complete.
+
+
+
+Also merge the code with the existing GitHub repo i.e. [https://github.com/ABhattacharya-dev/hackerrank-orchestrate-october26](https://github.com/ABhattacharya-dev/hackerrank-orchestrate-october26)
+
+Agent Response Summary:
+Beginning autonomous milestone implementation, evidence-driven evaluation, packaging, and integration with the user repository. Verified existing Git read access and inspected available local ML libraries; no external model credential is injected. Exact runtime model identifier is not exposed, so the required model field remains a declared logging limitation rather than a fabricated identifier.
+
+Actions:
+* Read repository instructions and official contract.
+* Inspected evidence schemas and available ML runtimes.
+* Verified origin HEAD with git ls-remote.
+
+Context:
+tool=Codex
+Model metadata limitation: exact runtime model identifier not exposed.
+branch=work
+repo_root=/workspace/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+
+## [2026-10-24T18:35:35.208860+00:00] GhostGraph implementation and validation results
+
+User Prompt (verbatim, secrets redacted):
+# Build GhostGraph — Autonomous Milestone Execution
+
+You are now responsible for implementing, evaluating, optimizing, and packaging GhostGraph as a competitive HackerRank Orchestrate submission.
+
+Read the root `AGENTS.md`, `code/AGENTS.md`, `README.md`, and `problem_statement.md` before starting.
+
+Follow the previously established architecture, but challenge any implementation decision that experiments show to be incorrect, unnecessarily expensive, or unlikely to improve evaluation results.
+
+**You own the engineering decisions. I own the project objectives.**
+
+Do not ask for approval at every milestone. Execute autonomously, test your work, fix failures, and continue, provided you stay within the repository's instructions and submission rules.
+
+Do not stop after planning or generate placeholder files that merely look complete.
+
+
+
+Also merge the code with the existing GitHub repo i.e. [https://github.com/ABhattacharya-dev/hackerrank-orchestrate-october26](https://github.com/ABhattacharya-dev/hackerrank-orchestrate-october26)
+
+Agent Response Summary:
+Implemented a runnable local-ML temporal audit pipeline, six evidence adapters, identity ambiguity safeguards, policy planning, canonical validation, evaluator and deterministic source packaging. All 26 software tests passed; public status accuracy is 29/32, exact rows 9/32, step precision 159/163 and recall 159/193. The full run generated 518 explicitly provisional candidate rows; strict export blocks 335 cases, mostly missing primary-profile proof, and no final output.csv was created. Fresh-directory cold extraction reproduced identical candidate bytes; reports disclose the limitations and actual local model usage. Source and artifacts are prepared for the user-authorized GitHub integration, whose outcome is recorded separately after the push.
+
+Actions:
+* Implemented code/ghostgraph, CLI, evaluation, tests, source packaging, README and architecture/progress notes.
+* Executed 26 software tests, public sample evaluation, full candidate run, internal citation provenance checks and strict-refusal validation.
+* Verified unchanged input hashes and root AGENTS.md; dependency installation confirmed pinned packages already available.
+* Reproduced output from fresh source/dataset copies with empty extraction cache and a different working directory.
+* Created output.candidate.csv and source-only code.zip; kept caches and dataset out of the archive.
+
+Context:
+tool=Codex
+Model metadata limitation: exact engineering runtime model identifier is not exposed by accessible authoritative metadata. No identifier was fabricated; the mandatory root model field cannot be completed truthfully. The application model's exact name and usage are recorded in code/evaluation/usage_report.md.
+branch=work
+repo_root=/workspace/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
