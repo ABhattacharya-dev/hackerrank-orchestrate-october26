@@ -56,6 +56,7 @@ class Auditor:
             key = pending.pop()
             for obs in self.store.by_resource.get(key, []):
                 if max(obs.available, obs.observed) > cutoff: continue
+                if foreign_reference(obs):continue
                 for field in ("source_resource_id", "upstream_resource_id", "replica_of"):
                     target = obs.fields.get(field)
                     if not isinstance(target, str) or prefix(target) not in DEFAULTS: continue
@@ -139,14 +140,19 @@ class Auditor:
         diagnostics = {"case_id": request["case_id"], "intent": intent, "issues": [], "proofs": []}
         if intent["low_confidence"]:
             diagnostics["issues"].append({"code": "INTENT_LOW_CONFIDENCE"})
+        if intent.get('ambiguous'):
+            return self.row(request,"INCOMPLETE",[]),diagnostics
         if not intent["authorized"]:
             return self.row(request, "NOT_APPLICABLE", []), diagnostics
         tokens, uid, identity_issue = self.identity.resolve(request["email"], cutoff)
         diagnostics["subject_id"] = uid
+        if hasattr(self.identity,'explain'):
+            diagnostics['identity_provenance']=self.identity.explain(request['email'],cutoff)
         if identity_issue:
             diagnostics["identity_note"] = identity_issue
             if "multiple" in identity_issue:
                 diagnostics["issues"].append({"code": "AMBIGUOUS_IDENTITY"})
+                return self.row(request,"INCOMPLETE",[]),diagnostics
         ledger, issues = self.ledger(tokens, cutoff, subject_id=uid)
         diagnostics["issues"].extend(issues)
         findings, remediation, verification = [], [], []

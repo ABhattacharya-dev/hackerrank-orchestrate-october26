@@ -435,3 +435,39 @@ branch=work
 repo_root=/workspace/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+
+## [2026-10-24T18:55:01.214603+00:00] Milestone 2 intent and historical identity
+
+User Prompt (verbatim, secrets redacted):
+## Milestone 2 — Intent and historical identity resolution
+
+Implement deletion-intent classification.
+
+Distinguish true deletion from access requests, correction requests, marketing opt-outs, account recovery, or negated deletion instructions.
+
+Support multilingual and ambiguous requests using an actual AI component when beneficial.
+
+Build historical identity resolution using current identities, audit history, and grounded resource links.
+
+Handle emails that changed, hashes, aliases, duplicate names, and repeated requests for the same customer.
+
+Prevent cross-user contamination.
+
+**Exit criterion:** Public sample intent cases pass, identities are linked through defensible evidence, and adversarial false-identity tests pass.
+
+Agent Response Summary:
+Extended actual local ML intent classification with cancellation/hypothetical and explicit-ambiguity guards. Identity resolution now incorporates eligible structured resource/catalog links and exposes per-alias provenance, while ambiguous identities and foreign-owner dependency references cannot create deletion plans. All 32 public intent cases and all 32 stable-subject provenance checks passed, along with 38 software tests. Full-audit coverage blockers remain separate from this acceptance milestone.
+
+Actions:
+* Updated intent, identity, engine and CLI integration.
+* Added independent intent/identity tests and standalone public acceptance runner.
+* Executed software tests, public acceptance, full predictor regression and strict-export checks.
+* Documented acceptance and risks in code/INTENT_IDENTITY.md.
+
+Context:
+tool=Codex
+Model metadata limitation: exact engineering runtime identifier is not exposed; no value was fabricated.
+branch=work
+repo_root=/workspace/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none

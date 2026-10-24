@@ -196,5 +196,19 @@ class ReasoningTests(unittest.TestCase):
         self.assertIn('NO_PRIMARY_PROFILE_PROOF',[i['code'] for i in diag['issues']])
         self.assertTrue(diag['proofs'])  # Preserve partial proofs; strict CLI blocks.
 
+    def test_ambiguous_identity_emits_no_deletion_plan(self):
+        auditor=self.make_auditor([observation('account_7','PRESENT')])
+        auditor.identity.resolve=lambda email,cutoff:({email},None,'identifier belongs to multiple subjects; no automatic merge')
+        row,diag=auditor.audit(self.request())
+        self.assertEqual(row['steps_json'],'[]')
+        self.assertIn('AMBIGUOUS_IDENTITY',[i['code'] for i in diag['issues']])
+
+    def test_foreign_dependency_cannot_contaminate_resource_graph(self):
+        own=observation('account_7','PRESENT',fields={'user_id':'user_1'})
+        foreign=observation('account_7','PRESENT',fields={'user_id':'user_2','source_resource_id':'account_88'},available=T0+10,observed=T0+10)
+        unrelated=observation('account_88','PRESENT',subject_tokens=set())
+        ledger,issues=self.make_auditor([own,foreign,unrelated]).ledger({'person@example.test'},T0+20,subject_id='user_1')
+        self.assertNotIn(('account_service','account_88'),ledger)
+
 
 if __name__=='__main__':unittest.main()

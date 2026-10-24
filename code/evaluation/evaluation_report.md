@@ -39,7 +39,7 @@ independent semantic-entailment judge and does not prove hidden correctness.
 
 ## Actual software and full-run checks
 
-- `26` unit/regression tests ran: `0` failures,
+- `38` unit/regression tests ran: `0` failures,
   `0` errors, `0` skipped; all passed.
 - All 94 manifest files processed: 26 logs, 28 JSON, 1 text, 11 PNG, 24 SQL,
   4 PDF. 2906 observations and
@@ -51,9 +51,9 @@ independent semantic-entailment judge and does not prove hidden correctness.
   explanations. This is provenance validation, not a claim of full coverage.
 - Input hashes verified unchanged; supplied evidence and root AGENTS.md were not
   edited. Candidate status counts: `{'INCOMPLETE': 355, 'COMPLETE': 153, 'NOT_APPLICABLE': 10}` (provisional).
-- Warm-cache full run: 4.056 seconds. A fresh source copy,
+- Warm-cache full run: 6.016 seconds. A fresh source copy,
   different working directory and empty extraction cache reproduced identical
-  candidate bytes in 22.614 seconds, executing
+  candidate bytes in 19.478 seconds, executing
   11 OCR calls and
   4 PDF extraction calls.
 - Strict refusal was exercised; it returned an evidence blocker and wrote no

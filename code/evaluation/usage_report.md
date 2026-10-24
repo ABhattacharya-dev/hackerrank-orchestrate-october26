@@ -9,7 +9,7 @@ available to the application.
 
 | Component | Provider / model | Actual final-run usage |
 | --- | --- | ---: |
-| Intent inference | local scikit-learn / ghostgraph-intent-hybrid-word-char-logreg-v3 | 375 inference calls |
+| Intent inference | local scikit-learn / ghostgraph-intent-hybrid-word-char-logreg-v4 | 375 inference calls |
 | Intent cache | same content/model/training-hash cache | 143 cache hits |
 | Intent training | independently authored source examples | 296 examples; 1 fit |
 | OCR | local Tesseract English recognizer | 0 fresh calls |
@@ -30,9 +30,9 @@ texts reuse the same validated classification. No public output label trains it.
 - Estimated API cost: USD 0.00 total; USD 0.00/request. Per-model API totals are
   also zero because all components execute locally with no metered API calls.
 - Local compute/storage cost is unpriced and excluded, rather than invented.
-- Measured warm-cache runtime: 4.056 seconds,
-  0.007830 seconds/request averaged across the run.
-- Cold extraction reproducibility run: 22.614 seconds,
+- Measured warm-cache runtime: 6.016 seconds,
+  0.011614 seconds/request averaged across the run.
+- Cold extraction reproducibility run: 19.478 seconds,
   11 OCR and
   4 PDF extraction calls;
   identical candidate bytes. This separate validation run is not added to the

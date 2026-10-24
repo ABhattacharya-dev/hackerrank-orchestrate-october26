@@ -14,7 +14,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from sklearn.pipeline import FeatureUnion
 
-MODEL_NAME = "ghostgraph-intent-hybrid-word-char-logreg-v3"
+MODEL_NAME = "ghostgraph-intent-hybrid-word-char-logreg-v4"
 TASK_PROMPT = "Classify whether the speaker authorizes erasure of their account or personal data. Access, correction, export, marketing opt-out, questions and negated deletion do not authorize erasure. Return a validated authorization boolean and probability."
 
 # Independent, fictional examples describing intent, not challenge answers.
@@ -165,8 +165,12 @@ def explicit_scope(text):
     denied = denied or re.search(r"\bnot\s+(?:a\s+)?(?:asking|request(?:ing)?)\s+(?:for\s+|to\s+)?(?:deletion|delete|erase|erasure)\b", text)
     denied = denied or re.search(r"\bcancel\b.{0,35}\b(?:deletion|erasure)\s+request\b", text)
     denied = denied or re.search(r"\bwithout\s+(?:delet\w*|eras\w*|remov\w*)\s+any\s+(?:of\s+my\s+)?(?:records|data)\b", text)
+    denied = denied or re.search(r"\b(?:do not|don't)\s+(?:want|wish|intend)\s+to\s+(?:delete|erase|close)\b",text)
+    denied = denied or re.search(r"\bcancel\b.{0,30}\brequest\s+to\s+(?:erase|delete|close)\b",text)
     if denied:
         return False, "explicit non-deletion scope"
+    if re.search(r"\b(?:how (?:do|can|would) i|what would happen|if i (?:decide|were|wanted))\b",text):
+        return False,"hypothetical inquiry without authorization"
     if re.search(r"\b(?:how|explain|what would happen|before I decide)\b", text) and re.search(r"\b(?:deletion|erasure)\s+(?:works|procedures?|process)\b", text):
         return False, "procedure inquiry without authorization"
     action = re.search(r"\b(?:delet\w*|eras\w*|remov\w*|clos(?:e|ed|ing))\b", text)
@@ -206,9 +210,11 @@ class IntentClassifier:
             return self.cache[key]
         probability = float(self.model.predict_proba([normalize(text)])[0, 1])
         explicit, reason = explicit_scope(text)
+        ambiguous = bool(re.search(r"\b(?:not sure (?:whether|if|i want)|undecided|whether to (?:delete|erase)|maybe (?:delete|erase))\b",normalize(text).casefold()))
         result = {"authorized": probability >= 0.5 if explicit is None else explicit,
                   "probability": probability, "decision_source": reason,
-                  "model": MODEL_NAME, "low_confidence": explicit is None and abs(probability - 0.5) < 0.04}
+                  "model": MODEL_NAME, "ambiguous": ambiguous,
+                  "low_confidence": ambiguous or (explicit is None and abs(probability - 0.5) < 0.04)}
         self.cache[key] = result
         self.calls += 1
         return result

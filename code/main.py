@@ -33,7 +33,7 @@ def run(root, requests_path, output, *, allow_unresolved=False, tag="full"):
     if store.failures and not allow_unresolved:
         raise ValueError("evidence ingestion failures; inspect .ghostgraph/ingestion_report.json")
     intent = IntentClassifier()
-    auditor = Auditor(store, IdentityIndex(dataset), intent)
+    auditor = Auditor(store, IdentityIndex(dataset, store=store), intent)
     pairs = [auditor.audit(r) for r in sorted(requests, key=lambda r: r["case_id"])]
     rows, diagnostics = map(list, zip(*pairs))
     unresolved = [d for d in diagnostics if d["issues"]]
