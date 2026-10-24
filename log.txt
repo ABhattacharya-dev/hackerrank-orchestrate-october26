@@ -358,3 +358,45 @@ branch=work
 repo_root=/workspace/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+
+## [2026-10-24T18:40:37.700183+00:00] Milestone 0 reconnaissance and baseline
+
+User Prompt (verbatim, secrets redacted):
+## Milestone 0 — Repository reconnaissance and baseline
+
+Study the participant-facing data thoroughly.
+
+Inspect:
+
+- All CSV schemas and actual values
+- Deletion policy conditions
+- Historical identity records
+- Global activity records
+- Evidence manifest and directory structures
+- SQL snapshot tables and replica variants
+- Document, image, JSON, and log formats
+- All 32 public sample answers
+
+Create a concise technical inventory.
+
+Identify edge cases, ambiguities, data dependencies, and expected evidence-citation conventions.
+
+Build an initial validator for the output schema and ordering.
+
+**Exit criterion:** All major input formats and competition contracts are understood and documented. The validator runs.
+
+Agent Response Summary:
+Reviewed all participant CSVs, 94 evidence files via their adapters, 18 SQL table variants and all 32 public answers. Created code/INVENTORY.md with schemas/value profiles, verbatim policy conditions, format details, dependencies, ambiguities and sample citation inventory. Added a standalone output validator and two ordering regressions; all 32 sample rows and six validator tests passed. This completes reconnaissance acceptance, not semantic correctness or final submission readiness.
+
+Actions:
+* Created code/INVENTORY.md and code/evaluation/validate_output.py.
+* Ran standalone validation against all public samples and six validator regression tests.
+* Verified root AGENTS.md and dataset unchanged.
+
+Context:
+tool=Codex
+Model metadata limitation: exact engineering runtime model identifier remains unavailable; no identifier was fabricated.
+branch=work
+repo_root=/workspace/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none

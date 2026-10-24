@@ -108,3 +108,7 @@
 - Remaining risks: this milestone is not marked complete as a submission. No
   hosted full session trace is available, and exact engineering runtime model
   metadata is not exposed for the root log's model field.
+
+## Requested Milestone 0 — reconnaissance acceptance
+
+Objective: inventory all major participant inputs and verify the initial output contract. Deliverables: code/INVENTORY.md and standalone validate_output.py, extending the existing contract validator. Dependencies: existing read-only adapters and supplied data. Actual acceptance: all 32 sample rows pass; all six validator regression tests pass, including column order and operation-order rejection. The standalone entry point closes the previous CLI gap. No evidence or root instructions changed. Remaining risks: schema validity does not prove semantic correctness; previously reported linkage/coverage gaps remain outside this milestone. Reconnaissance exit criterion met.

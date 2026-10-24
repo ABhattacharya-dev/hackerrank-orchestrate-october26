@@ -33,5 +33,24 @@ class ValidationTests(unittest.TestCase):
         row['deletion_status']='NOT_APPLICABLE'
         with self.assertRaises(AssertionError):validate_rows([row],[request],times)
 
+    def test_step_operation_order_rejected_even_with_consecutive_numbers(self):
+        request,row,times=self.fixture()
+        steps=ordered([step('VERIFY_RECORD_ABSENT','account_service','account_91','evidence_1'),
+                       step('VERIFY_RECORD_PRESENT','security_service','audit_record_3','evidence_1')])
+        steps.reverse()
+        for i,item in enumerate(steps,1):item['step_no']=i
+        row['steps_json']=json.dumps(steps)
+        with self.assertRaises(AssertionError):validate_rows([row],[request],times)
+
+    def test_standalone_validator_rejects_reordered_csv_header(self):
+        from evaluation.validate_output import validate
+        from pathlib import Path
+        import tempfile
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)/'bad.csv'
+            path.write_text('deletion_status,case_id,steps_json\nNOT_APPLICABLE,x,[]\n')
+            with self.assertRaisesRegex(ValueError,'header'):
+                validate(path,Path(directory)/'unused.csv',Path(directory))
+
 
 if __name__=='__main__':unittest.main()
