@@ -14,6 +14,7 @@ from ghostgraph.evidence import EvidenceStore
 from ghostgraph.identity import IdentityIndex
 from ghostgraph.intent import IntentClassifier, MODEL_NAME
 from ghostgraph.intent import POSITIVE, NEGATIVE
+from ghostgraph.vision import from_environment
 
 
 def run(root, requests_path, output, *, allow_unresolved=False, tag="full"):
@@ -25,7 +26,12 @@ def run(root, requests_path, output, *, allow_unresolved=False, tag="full"):
         raise ValueError("request schema mismatch or empty requests")
     if len({r["case_id"] for r in requests}) != len(requests):
         raise ValueError("duplicate case IDs")
-    store = EvidenceStore(dataset, root / ".ghostgraph" / "extraction").load()
+    store = EvidenceStore(dataset, root / ".ghostgraph" / "extraction", vision_extractor=from_environment()).load()
+    report_path = root / ".ghostgraph" / "ingestion_report.json"
+    report_path.parent.mkdir(exist_ok=True)
+    report_path.write_text(json.dumps(store.ingestion_report(), indent=2))
+    if store.failures and not allow_unresolved:
+        raise ValueError("evidence ingestion failures; inspect .ghostgraph/ingestion_report.json")
     intent = IntentClassifier()
     auditor = Auditor(store, IdentityIndex(dataset), intent)
     pairs = [auditor.audit(r) for r in sorted(requests, key=lambda r: r["case_id"])]

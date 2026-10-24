@@ -20,7 +20,7 @@ def inspect(root):
     assert all(r["observations"] + r["scopes"] > 0 for r in store.coverage if r["format"] in {".json", ".sql", ".log", ".txt"})
     for obs in store.observations:
         assert obs.locator and obs.state and obs.system and obs.resource
-        assert obs.available == store.citation_times[obs.evidence_id]
+        assert obs.available >= store.citation_times[obs.evidence_id]
     print(json.dumps(store.summary(), indent=2))
     return store
 

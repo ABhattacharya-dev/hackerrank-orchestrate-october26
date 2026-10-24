@@ -107,7 +107,7 @@ class Observation:
 
 
 class EvidenceStore:
-    def __init__(self, dataset, cache_dir=None):
+    def __init__(self, dataset, cache_dir=None, vision_extractor=None):
         self.dataset = Path(dataset).resolve()
         self.cache_dir = Path(cache_dir) if cache_dir else None
         self.observations = []
@@ -122,16 +122,23 @@ class EvidenceStore:
         self.by_resource = defaultdict(list)
         self.warnings = []
         self.extraction_stats = Counter()
+        self.failures = []
+        self.unresolved = []
+        self.source_rows = {}
+        self.vision_extractor = vision_extractor
+        self._loaded = False
 
     def add(self, meta, resource, fields, *, system=None, category=None, state=None,
             observed=None, locator="", scope="logical", quality=2, extra_tokens=()):
         if not resource or not RESOURCE.fullmatch(resource):
+            self.unresolved.append(dict(evidence_id=meta["file_id"], locator=locator, reason="unsupported resource identifier"))
             return
         default_system, default_category = DEFAULTS[prefix(resource)]
         category = category or fields.get("record_type") or default_category
         system = system or fields.get("system") or default_system
         state = state or self.infer_state(fields, category)
         if state is None:
+            self.unresolved.append(dict(evidence_id=meta["file_id"], locator=locator, reason="resource state not established"))
             return
         when = observed or fields.get("observed_at") or fields.get("recorded_at") or meta["captured_at"]
         obs = Observation(meta["file_id"], meta["file_path"], locator,
@@ -139,6 +146,8 @@ class EvidenceStore:
                           category, state, identities(fields) | set(extra_tokens), fields,
                           scope, quality)
         self.observations.append(obs)
+        if fields.get("_catalog_event_time"):
+            obs.available = max(obs.available, timestamp(fields["_catalog_event_time"]))
 
     @staticmethod
     def infer_state(data, category):
@@ -161,30 +170,93 @@ class EvidenceStore:
         return "PRESENT"
 
     def load(self):
+        if self._loaded:
+            return self
         adapters = {".json": self.json_file, ".sql": self.sql_file, ".log": self.log_file,
-                    ".txt": self.text_file, ".pdf": self.document_file, ".png": self.document_file}
+                    ".txt": self.text_file, ".pdf": self.document_file, ".png": self.document_file,
+                    ".csv": self.csv_file}
         for meta in self.manifest:
             path = (self.dataset / meta["file_path"]).resolve()
-            if not path.is_relative_to(self.dataset / "evidence") or not path.is_file():
+            if not path.is_relative_to(self.dataset / "evidence"):
                 raise ValueError("manifest path outside evidence or missing: " + meta["file_id"])
+            if not path.is_file():
+                self.failures.append(dict(evidence_id=meta["file_id"], source=meta["file_path"], error_type="MissingFile"))
+                self.coverage.append(dict(evidence_id=meta["file_id"], format=path.suffix, status="failed", observations=0, scopes=0))
+                continue
             self.citation_times[meta["file_id"]] = timestamp(meta["captured_at"])
             self.hashes[meta["file_path"]] = hashlib.sha256(path.read_bytes()).hexdigest()
             before = len(self.observations)
             scopes_before = len(self.scopes)
-            adapters[path.suffix](path, meta)
+            unresolved_before = len(self.unresolved)
+            status = "processed"
+            try:
+                adapter = adapters.get(path.suffix.lower())
+                if adapter is None:
+                    raise ValueError("unsupported evidence format")
+                adapter(path, meta)
+            except Exception as exc:
+                # Transactional per artifact: partial facts from a failed adapter
+                # must not masquerade as complete ingestion. Do not log raw data.
+                del self.observations[before:]
+                del self.scopes[scopes_before:]
+                status = "failed"
+                self.failures.append(dict(evidence_id=meta["file_id"], source=meta["file_path"],
+                                          parser=path.suffix, error_type=type(exc).__name__))
+                if path.suffix.lower() in {".png", ".pdf"}:
+                    self.escalate(path, meta, "deterministic document extraction failed")
+            if status == "processed" and len(self.unresolved) > unresolved_before:
+                status = "processed_unresolved"
             self.coverage.append(dict(evidence_id=meta["file_id"], format=path.suffix,
+                                      status=status,
                                       observations=len(self.observations) - before,
                                       scopes=len(self.scopes) - scopes_before))
-        self.activity_file()
+        try:
+            self.activity_file()
+        except Exception as exc:
+            self.failures.append(dict(source=getattr(self, "_csv_loading", "global CSV"), error_type=type(exc).__name__))
         for obs in self.observations:
             self.by_resource[obs.key].append(obs)
             for token in obs.subject_tokens:
                 self.by_token[token].append(obs)
+        for report in self.coverage:
+            report["observations"] = sum(o.evidence_id == report["evidence_id"] for o in self.observations)
+        self._loaded = True
         return self
+
+    def csv_file(self, path, meta):
+        for i, row in enumerate(read_csv(path), 2):
+            self.source_rows[(meta["file_id"], f"row:{i}")] = row
+            if row.get("resource_id"):
+                self.record(row, meta, locator=f"row:{i}")
+            else:
+                self.unresolved.append(dict(evidence_id=meta["file_id"], locator=f"row:{i}", reason="no resource identifier"))
+
+    def escalate(self, path, meta, reason):
+        item = dict(evidence_id=meta["file_id"], source=meta["file_path"], reason=reason,
+                    status="vision_not_configured")
+        if self.vision_extractor is not None:
+            try:
+                result = self.vision_extractor.extract(path, meta, reason)
+                if not isinstance(result, dict) or not isinstance(result.get("text"), str) or type(result.get("uncertain")) is not bool:
+                    raise ValueError("invalid vision extraction schema")
+                item.update(status="vision_review_required", extraction=result)
+                # Vision output remains an attributed extraction, not a certified
+                # resource state. It cannot bypass temporal or identity validation.
+            except Exception as exc:
+                item.update(status="vision_failed", error_type=type(exc).__name__)
+        self.unresolved.append(item)
+
+    def trace(self, observation):
+        return dict(evidence_id=observation.evidence_id, source=observation.source,
+                    locator=observation.locator, available=observation.available,
+                    observed=observation.observed, system=observation.system,
+                    resource=observation.resource, fields=observation.fields,
+                    sha256=self.hashes.get(observation.source))
 
     def record(self, data, meta, *, system=None, collection="", when=None, locator="", scope="logical"):
         resource = data.get("resource_id")
         if not resource:
+            self.unresolved.append(dict(evidence_id=meta["file_id"], locator=locator, reason="record has no resource identifier"))
             return
         fields = dict(data)
         category = fields.get("record_type")
@@ -227,6 +299,8 @@ class EvidenceStore:
                                 collection=snapshot.get("collection", ""), when=snapshot.get("captured_at"),
                                 locator=f"snapshots/{si}/records/{i}")
         else:
+            if "records" not in data:
+                raise ValueError("unsupported JSON envelope")
             for i, record in enumerate(data.get("records", [])):
                 self.record(record, meta, collection=data.get("collection", ""),
                             when=data.get("captured_at") or data.get("exported_at"), locator=f"records/{i}")
@@ -405,6 +479,7 @@ class EvidenceStore:
         return result.stdout
 
     def document_file(self, path, meta):
+        before = len(self.observations)
         text = self.extracted_text(path)
         # Conservative document extraction: explicit resource identifiers plus business facts.
         # Catalog links may later connect document references that are not canonical resource IDs.
@@ -436,9 +511,15 @@ class EvidenceStore:
                      locator="document:explicit-resource-reference", quality=1)
         self.documents = getattr(self, "documents", [])
         self.documents.append((meta, text))
+        if len(self.observations) == before or any(o.state == "UNKNOWN" for o in self.observations[before:]):
+            self.escalate(path, meta, "text extraction does not establish unambiguous scoped resource state")
 
     def activity_file(self):
-        for row in read_csv(self.dataset / "system_activity.csv"):
+        self._csv_loading = "system_activity.csv"
+        activities = read_csv(self.dataset / "system_activity.csv")
+        activity_by_id = {r["activity_id"]: r for r in activities}
+        for row in activities:
+            self.source_rows[(row["activity_id"], "system_activity.csv")] = row
             when = timestamp(row["event_time"])
             self.citation_times[row["activity_id"]] = when
             if row["event_type"] == "LINK_RESOURCE_IDENTITY":
@@ -447,7 +528,7 @@ class EvidenceStore:
                 self.claims.append(row)
         # Catalog may supply a canonical ID for a document's explicit reference.
         for when, system, resource, tokens, evidence_id in self.links:
-            row = next(r for r in read_csv(self.dataset / "system_activity.csv") if r["activity_id"] == evidence_id)
+            row = activity_by_id[evidence_id]
             label = re.search(r"\(([^)]+)\)", row["details"])
             if not label: continue
             for meta, text in getattr(self, "documents", []):
@@ -459,12 +540,22 @@ class EvidenceStore:
                 if category == "BACKUP_ARCHIVE": continue
                 state = "PRESENT"
                 if category == "ACCOUNT_TOMBSTONE": state = "UNKNOWN"
-                self.add(meta, resource, {"document_reference": label[1]}, system=system,
+                self.add(meta, resource, {"document_reference": label[1], "_catalog_activity_id": evidence_id,
+                         "_catalog_event_time": row["event_time"]}, system=system,
                          category=category, state=state, locator="document:catalog-reference",
                          quality=1)
+        self._csv_loading = "user_audit_log.csv"
+        for row in read_csv(self.dataset / "user_audit_log.csv"):
+            self.source_rows[(row["audit_id"], "user_audit_log.csv")] = row
+            self.citation_times[row["audit_id"]] = timestamp(row["event_time"])
 
     def summary(self):
         return {"files": len(self.manifest), "formats": dict(Counter(r["format"] for r in self.coverage)),
                 "observations": len(self.observations), "file_coverage": self.coverage,
                 "sql_scopes": len(self.scopes), "activity_claims": len(self.claims),
                 "catalog_links": len(self.links)}
+
+    def ingestion_report(self):
+        return dict(summary=self.summary(), failures=self.failures, unresolved=self.unresolved,
+                    indexed_resources=len(self.by_resource), indexed_identifiers=len(self.by_token),
+                    source_rows=len(self.source_rows))

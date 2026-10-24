@@ -400,3 +400,38 @@ branch=work
 repo_root=/workspace/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+
+## [2026-10-24T18:47:44.681627+00:00] Milestone 1 ingestion and provenance
+
+User Prompt (verbatim, secrets redacted):
+## Milestone 1 — Evidence ingestion and provenance
+
+Build a global evidence-ingestion pipeline.
+
+Support appropriate parsers for CSV, SQL, JSON, text, logs, PDFs, and images.
+
+Use ordinary deterministic parsers where possible. Escalate genuinely ambiguous multimodal evidence to a configured AI/vision extractor.
+
+Normalize resource observations without losing original file IDs, activity IDs, audit IDs, timestamps, system IDs, or record identifiers.
+
+Create an efficient global index so the same evidence is not repeatedly parsed for every request.
+
+Record parser failures and unresolved artifacts explicitly.
+
+**Exit criterion:** Every manifest entry has been processed or has a documented, detectable parsing failure. Resource observations can be traced to their sources.
+
+Agent Response Summary:
+Implemented explicit artifact outcomes/failures, rollback, manifest CSV support, original activity/audit indexing, traceable derived observations, idempotent global loading and optional structured vision escalation. All 94 artifacts were processed: 89 processed and five processed_unresolved, with zero parser failures and 2,906 source-traceable observations. All 32 tests passed; eight ingestion tests passed after the final failure-reporting correction, and the public-sample regression ran. Remote vision credentials/model are absent; five review artifacts remain explicitly queued, and the live API is not claimed tested.
+
+Actions:
+* Updated evidence pipeline, main ingestion guard, provenance checks and source documentation.
+* Added ingestion CLI, optional vision adapter and four outcome regression tests.
+* Ran real ingestion and checked source hashes/locators for every normalized observation.
+
+Context:
+tool=Codex
+Model metadata limitation: exact engineering runtime identifier is not exposed; no value was fabricated.
+branch=work
+repo_root=/workspace/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
