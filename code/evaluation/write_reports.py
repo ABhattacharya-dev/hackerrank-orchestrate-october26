@@ -18,6 +18,7 @@ def write():
     assert repro['candidate_sha256']==hashlib.sha256((ROOT/'output.candidate.csv').read_bytes()).hexdigest()
     codes=Counter(i['code'] for d in verification['unresolved_cases'] for i in d['issues'])
     pct=lambda key:f"{metrics[key]:.2%}"
+    planning=load('planning_acceptance')
     report=f'''# GhostGraph evaluation report
 
 ## Submission acceptance: blocked
@@ -31,6 +32,14 @@ state evidence are needed; case-number inference and sample-label lookup are
 prohibited. No hidden-set accuracy is known.
 
 ## Actual public-sample results
+
+Milestone 5 strict planning acceptance: {planning['valid_subset_rows']}/32 generated
+rows pass the complete structural contract; {len(planning['generated_structural_violations'])}
+violations remain in {len(planning['blocked_cases'])} cases. All 32 public reference
+rows pass structural validation. The passing subset is diagnostic only and cannot
+replace the required full sample output. See `code/PLANNING.md`. Candidate checks
+below use an explicitly relaxed completeness mode; they do not establish that
+every incomplete case has a full plan. The milestone exit criterion is unmet.
 
 Command: `python3 code/evaluation/main.py`. Labels are loaded by the evaluator
 after predictions; they never enter intent training or prediction. These 32

@@ -555,3 +555,52 @@ branch=work
 repo_root=/workspace/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+
+## [2026-10-24T20:58:35.663163+00:00] Milestone 5 deterministic planner; acceptance blocked
+
+User Prompt (verbatim, secrets redacted):
+## Milestone 5 — Deterministic planning and submission generation
+
+Build the final decision and remediation planner.
+
+Produce COMPLETE, INCOMPLETE, or NOT_APPLICABLE.
+
+Generate the exact allowed step operations and states.
+
+Enforce:
+
+- Correct phase order
+- Official operation order
+- Lexicographic system/resource ordering
+- Consecutive step numbers
+- Correct citation rules
+- Valid resource/system IDs
+- No duplicate or contradictory steps
+- Exact JSON and CSV serialization
+
+For COMPLETE, generate verification-only output.
+
+For INCOMPLETE, generate supported findings and the full planned remediation and post-remediation verification sequence.
+
+For NOT_APPLICABLE, generate `[]`.
+
+Do not simulate that proposed remediation has already happened.
+
+**Exit criterion:** The sample pipeline produces valid output and the validator reports zero structural violations.
+
+Agent Response Summary:
+Implemented deterministic decision/plan assembly with complete obligation checks, canonical ordering and numbering, source namespaces, strict citations and contradiction detection. All 90 software tests pass, and a fresh-directory empty-cache run reproduces identical 518-row candidate bytes. All 32 public reference rows validate structurally, but the generated sample has 13 violations across eight cases, so the exit criterion is not met. Five cases lack supported findings and three lack supported full restore remediation; strict final export still refuses 490 unresolved full cases.
+
+Actions:
+* Added planner.py, planning acceptance runner and 14 planner tests; strengthened contract and standalone validation.
+* Ran full software/public/candidate verification and cold reproduction; corrected missing-retained-record obligation compilation regression.
+* Updated architecture, progress and judge-visible reports with actual metrics and explicit acceptance blockers.
+* Regenerated source-only package and provisional candidate for authorized repository integration.
+
+Context:
+tool=Codex
+Model metadata limitation: exact engineering runtime identifier is not exposed; no value was fabricated. Root exact-model logging compliance remains incomplete.
+branch=work
+repo_root=/workspace/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none

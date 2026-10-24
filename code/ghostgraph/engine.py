@@ -9,6 +9,7 @@ from .evidence import DEFAULTS, Observation, identities, prefix, truth
 from .temporal import reconstruct
 from .policy import PolicyEngine
 from .risks import process_analysis, plan_dependencies
+from .planner import build_decision
 
 TREATMENTS = {
     "DELETE": ("REPORT_REMAINING_RECORD", "DELETE_RECORD", "VERIFY_RECORD_ABSENT", {"ABSENT"}),
@@ -214,19 +215,11 @@ class Auditor:
         # when the available partial observations are all compliant.
         if not any(p["category"] in {"USER_PROFILE", "ACCOUNT_TOMBSTONE"} for p in diagnostics["proofs"]):
             diagnostics["issues"].append({"code": "NO_PRIMARY_PROFILE_PROOF"})
-        if findings:
-            status = "INCOMPLETE"
-            for item in verification: item["evidence_id"] = ""
-            steps = findings + remediation + verification
-        elif not verification:
-            # No unsupported status is exported as a trusted answer. The CLI may
-            # explicitly write a provisional candidate plus unresolved diagnostics.
-            status, steps = "INCOMPLETE", []
-        else:
-            # This is the best available provisional assessment, not certification
-            # of complete coverage. Any issue blocks strict export in the CLI.
-            status, steps = "COMPLETE", verification
-        return self.row(request, status, ordered(steps)), diagnostics
+        row,violations=build_decision(request['case_id'],True,findings,remediation,verification,
+                                     issues=diagnostics['issues'],obligations=diagnostics['obligation_ledger'],allow_partial=True)
+        diagnostics['planning_issues']=violations
+        diagnostics['issues'].extend(dict(item) for item in violations)
+        return row,diagnostics
 
     @staticmethod
     def row(request, status, steps):

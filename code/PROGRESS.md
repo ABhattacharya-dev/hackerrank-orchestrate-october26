@@ -128,3 +128,18 @@ Objective: defensible state at audit_at with explicit uncertainty. Deliverables:
 ## Requested Milestone 4 — policy, obligations and resurrection risk
 
 Objective: conditional policy decisions, complete known-resource obligations and safe resurrection controls. Deliverables: policy.py, risks.py, obligation ledgers, condition provenance, process histories/current state, dependency plans and dedicated acceptance runner. Dependencies: supplied CSV and prior temporal/identity layers. Actual results: all 76 tests pass; 21 focused acceptance tests cover all 15 supplied categories and emitted retained-record safety; 80 public ledger entries across 11 categories validate. Full regression and cold reproduction executed. Corrections: replaced category-only applicability, added independent retained-archive presence obligations, blocked clean-label contradictions and unmitigated process preconditions, and separated canonical order from execution dependencies. Remaining risks: missing predicate facts and prior temporal/linkage gaps leave 490 cases unresolved; current sample status 28/32 and exact rows 1/32. Exit criteria met for category coverage and custom preservation tests, not final submission acceptance.
+
+## Requested Milestone 5 — deterministic planning and generation
+
+Objective: assemble exact decisions/plans without inventing proof or execution.
+Deliverables: planner.py, stricter contract validator, source namespace checks,
+14 planner tests, planning_acceptance.py and PLANNING.md. Dependencies: preceding
+intent/identity/temporal/policy ledgers and their unresolved evidence conditions.
+Actual acceptance: 90 software tests pass; public reference 32/32 structurally
+valid; generated sample 24/32 valid with 13 violations across eight cases.
+Failures: five cases lack supported findings, three restore risks lack full
+supported remediation. An obligation-compilation regression for missing retained
+records was caught and corrected. Future required checks improve exact rows from
+1/32 to 2/32 without copying labels. Remaining risks: full 490 unresolved cases,
+namespace/extraction limits and incomplete evidence linkage. **Exit criterion
+NOT MET**; no next milestone or final submission readiness is claimed.

@@ -12,6 +12,14 @@ prohibited. No hidden-set accuracy is known.
 
 ## Actual public-sample results
 
+Milestone 5 strict planning acceptance: 24/32 generated
+rows pass the complete structural contract; 13
+violations remain in 8 cases. All 32 public reference
+rows pass structural validation. The passing subset is diagnostic only and cannot
+replace the required full sample output. See `code/PLANNING.md`. Candidate checks
+below use an explicitly relaxed completeness mode; they do not establish that
+every incomplete case has a full plan. The milestone exit criterion is unmet.
+
 Command: `python3 code/evaluation/main.py`. Labels are loaded by the evaluator
 after predictions; they never enter intent training or prediction. These 32
 public samples were used during development, so results are regression scores,
@@ -20,13 +28,13 @@ not an independent held-out estimate. Samples contain no NOT_APPLICABLE cases.
 | Metric | Result |
 | --- | ---: |
 | Deletion-status accuracy | 28/32 (87.50%) |
-| Exact row accuracy (status and full step array) | 1/32 (3.12%) |
-| Exact sequence accuracy | 1/32 (3.12%) |
-| Step precision, including exact canonical citation | 102/105 (97.14%) |
-| Step recall, including exact canonical citation | 102/193 (52.85%) |
-| Structural step precision, ignoring citation | 97.14% |
-| Structural step recall, ignoring citation | 52.85% |
-| Field accuracy | 660/1351 (48.85%) |
+| Exact row accuracy (status and full step array) | 2/32 (6.25%) |
+| Exact sequence accuracy | 2/32 (6.25%) |
+| Step precision, including exact canonical citation | 111/115 (96.52%) |
+| Step recall, including exact canonical citation | 111/193 (57.51%) |
+| Structural step precision, ignoring citation | 96.52% |
+| Structural step recall, ignoring citation | 57.51% |
+| Field accuracy | 719/1351 (53.22%) |
 | Canonical evidence-reference accuracy | 44/75 (58.67%) |
 
 Step precision/recall use multiset intersection over phase, system, resource,
@@ -39,7 +47,7 @@ independent semantic-entailment judge and does not prove hidden correctness.
 
 ## Actual software and full-run checks
 
-- `76` unit/regression tests ran: `0` failures,
+- `90` unit/regression tests ran: `0` failures,
   `0` errors, `0` skipped; all passed.
 - All 94 manifest files processed: 26 logs, 28 JSON, 1 text, 11 PNG, 24 SQL,
   4 PDF. 2906 observations and
@@ -51,16 +59,16 @@ independent semantic-entailment judge and does not prove hidden correctness.
   explanations. This is provenance validation, not a claim of full coverage.
 - Input hashes verified unchanged; supplied evidence and root AGENTS.md were not
   edited. Candidate status counts: `{'INCOMPLETE': 400, 'COMPLETE': 108, 'NOT_APPLICABLE': 10}` (provisional).
-- Warm-cache full run: 6.293 seconds. A fresh source copy,
+- Warm-cache full run: 6.875 seconds. A fresh source copy,
   different working directory and empty extraction cache reproduced identical
-  candidate bytes in 20.495 seconds, executing
+  candidate bytes in 19.435 seconds, executing
   11 OCR calls and
   4 PDF extraction calls.
 - Strict refusal was exercised; it returned an evidence blocker and wrote no
   final output. Readiness verification exits 2 for that diagnosed blocker,
   distinct from unit-test failure (exit 1).
 
-Candidate SHA-256: `1adf3ec980597c4abbaea5cdaf0253dc708819ebeb4430e827cb8c3d711067be`.
+Candidate SHA-256: `b83ff6a9b086a53ceda99b3f527eefda36ec49f69db392f84be51fdecb01e7c3`.
 
 ## Independent adversarial cases executed
 
@@ -112,7 +120,7 @@ The final proof audit exposed a serious readiness weakness: compliant downstream
 or retained records do not establish primary deletion. Strict export now checks
 that coverage explicitly instead of relying on status scores or a nonempty ledger.
 
-Current blocker counts (overlap is possible): `{'POLICY_CONDITION_UNKNOWN': 421, 'NO_PRIMARY_PROFILE_PROOF': 465, 'RETAINED_ARCHIVE_PRESENCE_UNKNOWN': 22, 'COPY_COVERAGE_UNPROVEN': 112, 'UNVERIFIED_MUTATION_AFTER_OBSERVATION': 48, 'SCOPE_ALIGNMENT_UNKNOWN': 1, 'NO_LINKED_RESOURCE_PROOFS': 3, 'UNSUPPORTED_SCOPED_STATE': 1, 'UNRESOLVED_PROCESS_PRECONDITION': 1, 'NO_STATE_PROOF': 1}`.
+Current blocker counts (overlap is possible): `{'POLICY_CONDITION_UNKNOWN': 421, 'NO_PRIMARY_PROFILE_PROOF': 465, 'NO_SUPPORTED_STEPS': 73, 'INCOMPLETE_WITHOUT_FINDING': 73, 'RETAINED_ARCHIVE_PRESENCE_UNKNOWN': 22, 'MISSING_REQUIRED_VERIFICATION': 83, 'COPY_COVERAGE_UNPROVEN': 112, 'FINDING_WITHOUT_FULL_REMEDIATION_AND_VERIFICATION': 25, 'UNVERIFIED_MUTATION_AFTER_OBSERVATION': 48, 'SCOPE_ALIGNMENT_UNKNOWN': 1, 'NO_LINKED_RESOURCE_PROOFS': 3, 'UNSUPPORTED_SCOPED_STATE': 1, 'UNRESOLVED_PROCESS_PRECONDITION': 1, 'NO_STATE_PROOF': 1}`.
 
 Conditional policy facts are now evaluated explicitly. Unknown retention periods,
 attachment exclusivity, required reference context or restore-block capability

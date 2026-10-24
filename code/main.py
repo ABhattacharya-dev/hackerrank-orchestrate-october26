@@ -8,7 +8,7 @@ from pathlib import Path
 import sys
 import time
 
-from ghostgraph.contract import read_csv, validate_rows, write_csv
+from ghostgraph.contract import read_csv, validate_rows, write_csv, resource_registry
 from ghostgraph.engine import Auditor
 from ghostgraph.evidence import EvidenceStore
 from ghostgraph.identity import IdentityIndex
@@ -57,7 +57,7 @@ def run(root, requests_path, output, *, allow_unresolved=False, tag="full"):
     (cache / (tag + "_run.json")).write_text(json.dumps(usage, indent=2))
     if unresolved and not allow_unresolved:
         raise ValueError(f"{len(unresolved)} unresolved cases; no final output written. Inspect .ghostgraph/{tag}_diagnostics.json. --allow-unresolved writes a PROVISIONAL candidate only.")
-    validate_rows(rows, requests, store.citation_times, require_proofs=not allow_unresolved)
+    validate_rows(rows, requests, store.citation_times, require_proofs=not allow_unresolved,known_resource_pairs=resource_registry(store))
     write_csv(output, rows)
     summary = {k: usage[k] for k in ["request_count", "inference_calls", "cache_hits", "runtime_seconds", "unresolved_cases", "status_counts"]}
     print(json.dumps(summary))

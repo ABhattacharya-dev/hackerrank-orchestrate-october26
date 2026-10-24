@@ -3,6 +3,7 @@
 import csv
 import json
 import os
+import re
 from datetime import datetime
 from pathlib import Path
 
@@ -55,41 +56,118 @@ def ordered(steps):
     return result
 
 
-def validate_rows(rows, requests, citation_times, *, require_proofs=True):
-    expected = {r["case_id"]: r for r in requests}
-    assert len(expected) == len(requests), "duplicate request IDs"
-    assert [r["case_id"] for r in rows] == sorted(expected), "output IDs/count/order differ"
+class ContractViolation(AssertionError):
+    def __init__(self,violations):
+        self.violations=violations
+        super().__init__('; '.join(f"{v['case_id']}: {v['code']}" for v in violations))
+
+
+def parse_steps(text):
+    def unique(pairs):
+        result={}
+        for key,value in pairs:
+            if key in result:raise ValueError('duplicate JSON key')
+            result[key]=value
+        return result
+    def finite(value):raise ValueError('non-finite JSON number')
+    return json.loads(text,object_pairs_hook=unique,parse_constant=finite)
+
+
+def plan_violations(status,steps,require_complete=True):
+    errors=[]
+    by_resource={}
+    for item in steps:
+        key=item['system_id'],item['resource_id']
+        by_resource.setdefault(key,set()).add(item['operation'])
+    for key,ops in sorted(by_resource.items()):
+        def fail(code):errors.append(dict(code=code,system=key[0],resource=key[1]))
+        treatments=ops & {'DELETE_RECORD','REDACT_RECORD','ANONYMIZE_RECORD'}
+        if len(treatments)>1:fail('CONTRADICTORY_REMEDIATION')
+        end_absent=bool(ops & {'DELETE_RECORD','VERIFY_RECORD_ABSENT'})
+        end_present=bool(ops & {'REDACT_RECORD','ANONYMIZE_RECORD','VERIFY_RECORD_PRESENT','VERIFY_RECORD_REDACTED','VERIFY_RECORD_ANONYMIZED'})
+        if end_absent and end_present:fail('CONTRADICTORY_FINAL_RECORD_STATE')
+        if {'VERIFY_RECORD_REDACTED','VERIFY_RECORD_ANONYMIZED'}<=ops:fail('CONTRADICTORY_RECORD_TREATMENT')
+        if not require_complete or status!='INCOMPLETE':continue
+        requirements={
+            'REPORT_REMAINING_RECORD':[('DELETE_RECORD','VERIFY_RECORD_ABSENT')],
+            'REPORT_EXPOSED_PII':[('REDACT_RECORD','VERIFY_RECORD_REDACTED'),('ANONYMIZE_RECORD','VERIFY_RECORD_ANONYMIZED')],
+            'REPORT_ACTIVE_DATA_FLOW':[('DISABLE_DATA_FLOW','VERIFY_DATA_FLOW_DISABLED')],
+            'REPORT_RESTORE_RISK':[('BLOCK_RESTORE','VERIFY_RESTORE_BLOCKED')],
+        }
+        for finding,alternatives in requirements.items():
+            if finding in ops and not any(set(pair)<=ops for pair in alternatives):fail('FINDING_WITHOUT_FULL_REMEDIATION_AND_VERIFICATION')
+        reverse={remedy:(finding,verify) for finding,pairs in requirements.items() for remedy,verify in pairs}
+        for remedy,(finding,verify) in reverse.items():
+            if remedy in ops and not {finding,verify}<=ops:fail('ORPHAN_REMEDIATION')
+    return errors
+
+
+def check_rows(rows,requests,citation_times,*,require_proofs=True,known_resource_pairs=None):
+    errors=[]
+    def error(cid,code,**fields):errors.append(dict(case_id=cid,code=code,**fields))
+    expected={r['case_id']:r for r in requests}
+    if len(expected)!=len(requests):error('*','DUPLICATE_REQUEST_IDS')
+    if [r.get('case_id') for r in rows]!=sorted(expected):error('*','OUTPUT_IDS_COUNT_OR_ORDER')
     for row in rows:
-        assert set(row) == set(FIELDS), "incorrect CSV columns"
-        status = row["deletion_status"]
-        assert status in {"COMPLETE", "INCOMPLETE", "NOT_APPLICABLE"}
-        steps = json.loads(row["steps_json"])
-        assert isinstance(steps, list)
-        if status == "NOT_APPLICABLE":
-            assert steps == []
-        elif require_proofs:
-            assert steps, f'{row["case_id"]}: no supported steps'
-        assert steps == sorted(steps, key=order_key)
-        semantic = set()
-        for i, item in enumerate(steps, 1):
-            assert set(item) == STEP_FIELDS
-            assert type(item["step_no"]) is int and item["step_no"] == i
-            assert all(isinstance(item[k], str) for k in STEP_FIELDS - {"step_no"})
-            assert item["system_id"] and item["resource_id"]
-            assert (item["phase"], item["state"]) == OPERATIONS[item["operation"]][:2]
-            key = item["phase"], item["operation"], item["system_id"], item["resource_id"]
-            assert key not in semantic, "duplicate semantic step"
+        cid=row.get('case_id','?')
+        if set(row)!=set(FIELDS):error(cid,'CSV_COLUMNS')
+        status=row.get('deletion_status')
+        if status not in {'COMPLETE','INCOMPLETE','NOT_APPLICABLE'}:error(cid,'STATUS')
+        try:steps=parse_steps(row.get('steps_json'))
+        except (ValueError,TypeError):error(cid,'INVALID_JSON');continue
+        if not isinstance(steps,list):error(cid,'STEPS_NOT_ARRAY');continue
+        if status=='NOT_APPLICABLE' and steps:error(cid,'NON_DELETION_HAS_STEPS')
+        if require_proofs and status!='NOT_APPLICABLE' and not steps:error(cid,'NO_SUPPORTED_STEPS')
+        valid=[];semantic=set()
+        for i,item in enumerate(steps,1):
+            if not isinstance(item,dict) or set(item)!=STEP_FIELDS:error(cid,'STEP_FIELDS',step=i);continue
+            if type(item['step_no']) is not int or item['step_no']!=i:error(cid,'STEP_NUMBER',step=i)
+            if not all(isinstance(item[k],str) for k in STEP_FIELDS-{'step_no'}):error(cid,'STEP_TYPES',step=i);continue
+            if item['operation'] not in OPERATIONS:error(cid,'OPERATION',step=i);continue
+            valid.append(item)
+            if (item['phase'],item['state'])!=OPERATIONS[item['operation']][:2]:error(cid,'PHASE_STATE',step=i)
+            for field in ['system_id','resource_id']:
+                if not re.fullmatch(r'[a-z][a-z0-9_]*',item[field]):error(cid,'INVALID_IDENTIFIER',step=i,field=field)
+            pair=item['system_id'],item['resource_id']
+            if known_resource_pairs is not None and pair not in known_resource_pairs:error(cid,'UNKNOWN_RESOURCE_SYSTEM_PAIR',step=i)
+            key=(item['phase'],item['operation'],*pair)
+            if key in semantic:error(cid,'DUPLICATE_STEP',step=i)
             semantic.add(key)
-            cited = status == "COMPLETE" or item["phase"] == "FINDING"
-            if status == "COMPLETE":
-                assert item["phase"] == "VERIFICATION"
+            cited=status=='COMPLETE' or item['phase']=='FINDING'
+            if status=='COMPLETE' and item['phase']!='VERIFICATION':error(cid,'COMPLETE_NOT_VERIFICATION_ONLY',step=i)
             if cited:
-                assert item["evidence_id"] in citation_times, "unknown citation"
-                assert citation_times[item["evidence_id"]] <= timestamp(expected[row["case_id"]]["audit_at"])
-            else:
-                assert item["evidence_id"] == ""
-        if status == "INCOMPLETE" and require_proofs:
-            assert any(s["phase"] == "FINDING" for s in steps), "incomplete without finding"
+                if item['evidence_id'] not in citation_times:error(cid,'UNKNOWN_OR_MISSING_CITATION',step=i)
+                elif cid in expected and citation_times[item['evidence_id']]>timestamp(expected[cid]['audit_at']):error(cid,'FUTURE_CITATION',step=i)
+            elif item['evidence_id']!='':error(cid,'PROPOSED_STEP_HAS_CITATION',step=i)
+        if len(valid)==len(steps) and valid!=sorted(valid,key=order_key):error(cid,'STEP_ORDER')
+        if require_proofs and status=='INCOMPLETE' and not any(s['phase']=='FINDING' for s in valid):error(cid,'INCOMPLETE_WITHOUT_FINDING')
+        for item in plan_violations(status,valid,require_proofs):
+            error(cid,item.pop('code'),**item)
+    return errors
+
+
+def validate_rows(rows,requests,citation_times,*,require_proofs=True,known_resource_pairs=None):
+    errors=check_rows(rows,requests,citation_times,require_proofs=require_proofs,known_resource_pairs=known_resource_pairs)
+    if errors:raise ContractViolation(errors)
+
+
+def canonical_json(steps):
+    # Stable object keys, compact UTF-8 JSON, no NaN or duplicate keys.
+    fields=['step_no','phase','system_id','resource_id','operation','state','evidence_id']
+    return json.dumps([{key:s[key] for key in fields} for s in steps],ensure_ascii=False,separators=(',',':'),allow_nan=False)
+
+
+def resource_registry(store):
+    from .evidence import DEFAULTS,prefix
+    pairs=set(store.by_resource)
+    for when,system,resource,tokens,eid in store.links:pairs.add((system,resource))
+    for row in store.claims:
+        if row.get('target_system') and row.get('resource_id'):pairs.add((row['target_system'],row['resource_id']))
+    for obs in store.observations:
+        for key in ['source_resource_id','upstream_resource_id','replica_of']:
+            value=obs.fields.get(key)
+            if isinstance(value,str) and prefix(value) in DEFAULTS:pairs.add((DEFAULTS[prefix(value)][0],value))
+    return pairs
 
 
 def write_csv(path, rows):

@@ -121,3 +121,12 @@ Milestone 3 replaces parser-quality/lexical truth selection with a scope-preserv
 ## ADR 010 — conditional policy and separate execution graph
 
 PolicyEngine evaluates supplied conditions with true/false/unknown applicability and no destructive fallback. Every grounded resource has an obligation ledger, including unresolved cases. Retained archives have independent existence and restore-control obligations. Historical process claims cannot imply current activity; unresolved live risks block record execution. A separate dependency graph retains downstream-before-source constraints while the CSV serializer preserves official order; conflicts are explicit strict-export blockers. POLICY.md records the executed acceptance. Current diagnosed full-case blockers are 490, superseding earlier historical counts; lower provisional metrics are disclosed.
+
+## ADR 011 — strict plan completeness separate from candidate grammar
+
+Centralize decisions, obligation checks, deduplication and canonical ordering in
+a deterministic planner. Reject contradictory goals even for partial candidates.
+Future verification may test grounded required policy goals but never stand in
+for missing findings, unsupported actions or observed COMPLETE proofs. Explicit
+partial mode remains diagnostic. Strict sample validation detects eight blocked
+cases, so source packaging does not imply milestone acceptance. See PLANNING.md.
