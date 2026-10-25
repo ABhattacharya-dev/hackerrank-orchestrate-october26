@@ -2307,3 +2307,219 @@ repo_root=/workspace/ghostgraph-v5
 worktree=/workspace/ghostgraph-v5
 shared_log=/workspace/hackerrank-orchestrate-october26/log.txt
 parent_agent=none
+
+
+## [2026-10-25T05:17:10.976635+00:00] SESSION START — V5.1 production readiness
+
+tool=Codex
+Model metadata limitation: exact runtime identifier is inaccessible; no value fabricated. Exact-model logging compliance remains incomplete.
+Repo Root: /workspace/ghostgraph-v5
+Branch: experiment/intent-safety-v5.1
+Worktree: /workspace/ghostgraph-v5
+Parent Agent: none
+Language: py
+Time Remaining: not configured
+
+
+## [2026-10-25T05:24:25.660861+00:00] V5.1 consent-contract repair and production cleanup
+
+User Prompt (verbatim, secrets redacted):
+# GhostGraph V5.1 — Production Readiness and Code ZIP Promotion
+
+Continue from commit `08e975b` on `experiment/intent-safety-v5`.
+
+Protected baseline: `submission-freeze-verified`, commit `3b942ac`.
+
+V5 demonstrated a substantial authorization-safety improvement, with no change to the competition CSV.
+
+**Objective: correct remaining integration risks, independently test the enhanced authorization logic, and determine whether V5 should replace the frozen Code ZIP.**
+
+Do not modify the frozen production artifacts or merge automatically.
+
+## Phase 1 — Audit ambiguous-intent handling
+
+There is a possible end-to-end contract bug.
+
+`Auditor.audit()` currently handles ambiguous intent by returning:
+
+`INCOMPLETE` with `steps_json=[]`.
+
+But the official structural validator may reject an INCOMPLETE case without supported findings.
+
+Reproduce this issue using an independent, fictional conditional deletion request.
+
+Test through the actual CLI, not only `AuthorizationIntent.classify()`.
+
+Investigate the correct competition interpretation of:
+
+- Explicitly unfulfilled conditional consent
+- Hypothetical deletion inquiry
+- Unverified third-party authorization
+- Genuine uncertainty about present deletion consent
+- Authorized deletion with uncertain resource ownership
+
+Distinguish an unauthorized/non-applicable deletion request from an authorized deletion with insufficient evidence.
+
+Do not automatically equate every unknown with INCOMPLETE.
+
+Implement a defensible, contract-compliant behavior according to the official problem statement.
+
+Preserve uncertainty in internal diagnostics.
+
+Never create invented findings to make an invalid row pass validation.
+
+## Phase 2 — Production architecture cleanup
+
+Move the runtime authorization implementation from:
+
+`code/research/v5_intent.py`
+
+into the production `code/ghostgraph/` package.
+
+Keep a compatibility import if required by existing evaluation scripts.
+
+Update `code/main.py` to import from the production package.
+
+Ensure the code being evaluated is precisely the implementation packaged for submission.
+
+Keep research experiments and historical evaluation records clearly identified as research, not production dependencies.
+
+Avoid unnecessary changes to the evidence, identity, temporal, policy, and planning modules.
+
+## Phase 3 — Independent authorization tests
+
+Retain all 144 existing tests.
+
+Add end-to-end tests covering:
+
+1. Unfulfilled deletion conditions.
+2. Hypothetical and quoted deletion instructions.
+3. Unauthorized third-party requests.
+4. Legitimate authorized deletion.
+5. Ambiguous requester consent.
+6. Separate authorized and refused actions within one request.
+7. Multilingual non-deletion and deletion requests.
+8. Continuation of a previously authorized erasure.
+9. Unexpected novel sentence structure.
+10. Full official structural validation of generated rows.
+
+Use independent fictional test data.
+
+Do not modify test expectations merely to make the implementation pass.
+
+Check that improvements aren't specific to the previously inspected V5 probes.
+
+## Phase 4 — Regression verification
+
+Compare V5.1 against the frozen baseline and final V5.
+
+Run:
+
+- All software tests
+- Full 32-case public evaluation
+- Full 518-case prediction
+- Official structural validation
+- Clean-cache reproduction
+- Exact output byte comparison
+- Packaging verification
+
+Required competition baseline:
+
+- 518 correctly keyed rows
+- Zero structural violations
+- 9/32 exact public rows or better
+- 29/32 correct public statuses or better
+- Byte-identical full CSV unless a separately justified correction improves it
+
+Do not claim higher Output CSV accuracy if the output remains unchanged.
+
+## Phase 5 — Code ZIP scoring readiness
+
+Review source structure, dependencies, README, documentation, and evaluation reports from a judge's perspective.
+
+Verify:
+
+- Production logic is not dependent on experiment-only code.
+- The source ZIP includes everything needed for execution.
+- Installation and inference run without a paid API key.
+- AI participation is correctly documented.
+- Actual model usage is reported.
+- Strict certification and prediction modes are clearly distinguished.
+- Known limitations and uncertainty remain honestly disclosed.
+- No secrets, training leakage, or excluded datasets are packaged.
+- The exported code reproduces the submitted CSV.
+
+Do not pad the ZIP with redundant experimental scripts just to increase apparent complexity.
+
+Preserve the most useful research reports demonstrating real failures, corrections, and evaluation.
+
+## Phase 6 — Promotion decision
+
+Produce a final review comparing:
+
+- Frozen production
+- V5
+- V5.1
+
+Rate each implementation's safety, maintainability, reproducibility, accuracy, and Code ZIP submission readiness.
+
+Recommend promotion only if V5.1:
+
+1. Fixes the ambiguous-intent output problem.
+2. Preserves the complete 518-row competition contract.
+3. Passes end-to-end authorization tests.
+4. Retains the demonstrated authorization improvements.
+5. Preserves source reproducibility.
+6. Does not introduce new unsupported evidence or decisions.
+
+If successful, produce a **proposed** replacement ZIP, without overwriting the protected baseline.
+
+Do not merge into main until the promotion assessment is complete.
+
+Document tests executed, observed limitations, exact file checksums, and remaining risks.
+
+**Begin by reproducing and resolving the ambiguous-intent structural issue.**
+
+Agent Response Summary:
+Reproduced the ambiguous-intent CLI failure using entirely fictional data: exit2, unsupported empty INCOMPLETE row and no export. Moved runtime consent logic into ghostgraph.authorization with a research compatibility import, separated pending consent from classifier uncertainty, and preserved authorized ownership ambiguity as an evidence blocker. Added12 independent CLI/integration tests while retaining all144 original tests; first run exposed a prefatory-sentence miss, corrected generically without changing expectations. Three-source regression, pinned fresh-venv installation and final proposed ZIP reproduction are being verified; no merge or production-artifact replacement is performed.
+
+Actions:
+* Read root/code instructions, README, problem statement and trace protocol; continued on experiment/intent-safety-v5.1 from08e975b.
+* Added fictional dataset/CLI tests covering conditional, hypothetical, quoted, third-party, multilingual, own-scope and prior-erasure cases plus classifier fault injection.
+* Preserve consent uncertainty in diagnostics; export NOT_APPLICABLE only when present consent is not established by the request, not on classifier uncertainty. Classifier uncertainty writes blocked-case diagnostics and preserves existing output.
+* No changes to evidence, identity, temporal, policy or planning logic. Authorized ownership ambiguity is never converted to NOT_APPLICABLE.
+* Normal CLI imports only production authorization; four redundant historical snapshot/runner files are excluded from proposed packages while remaining in Git.
+* Frozen output.csv/code.zip, original V5 proposed ZIP, official instructions, datasets and frozen tag remain unchanged.
+
+Context:
+tool=Codex
+Model metadata limitation: exact runtime identifier is inaccessible; no value fabricated. Exact-model logging compliance remains incomplete.
+branch=experiment/intent-safety-v5.1
+repo_root=/workspace/ghostgraph-v5
+worktree=/workspace/ghostgraph-v5
+shared_log=/workspace/hackerrank-orchestrate-october26/log.txt
+parent_agent=none
+
+
+## [2026-10-25T05:32:37.826838+00:00] V5.1 final acceptance and promotion assessment
+
+Agent Response Summary:
+V5.1 is recommended for reviewed Code ZIP-only promotion, with no automatic merge or replacement. The ambiguous-consent CLI reproduction now exits0 with NOT_APPLICABLE,[] and retained consent diagnostics; actual classifier uncertainty blocks export and preserves an existing destination. Frozen,V5,V5.1 all reproduce the identical518 CSV and unchanged32 public predictions; full structural errors are zero. Original source suites115/144 and V5.1's156 tests pass; final ZIP fresh-venv/cold-cache reproduction and runtime-without-research checks pass, while strict certification still exits2 with490 unresolved evidence cases.
+
+Actions:
+* Installed pinned requirements into a fresh virtualenv, ran pip check, and verified the actual sys.prefix. Acceptance initially resolved the venv executable symlink into the base interpreter; fixed the verification helper and reran using the actual venv before claiming fresh-environment execution.
+* Ran all original/new suites, independent fictional real-CLI cases, baseline/V5/V5.1 full/sample comparison and known V5 intent regressions.
+* Produced proposals/code-v51.zip with87 source/documentation files; CRC, explicit exclusions, member/source byte equality, known secret-pattern scan and deterministic repack passed.
+* Final proposed ZIP SHA256:ab0c7e15ffb5e3529e3366a16a999406b665c46501146ab10729b6cb681a204a; unchanged frozen output SHA256:61c7563f3ffa04edb7ab18532f9d31b49fe316c52a5d013f80412e0b458a9891.
+* Final archive prediction:five local learned inferences,143 cache hits; no paid API calls/tokens/cost. Local token units are inapplicable and local compute is unpriced. No higher Output CSV accuracy claimed.
+* Preserved root production CSV/ZIP, original V5 proposed ZIP, official instructions,datasets and frozen tag. Only research branch experiment/intent-safety-v5.1 is to be committed/pushed; no main merge.
+* Authored comparative review, actual metrics/usage, installation/reproduction instructions and final checksums. Structured hosted traces and exact engineering-runtime model identifier remain inaccessible; neither was invented.
+
+Context:
+tool=Codex
+Model metadata limitation: exact runtime identifier is inaccessible; no value fabricated. Exact-model logging compliance remains incomplete.
+branch=experiment/intent-safety-v5.1
+repo_root=/workspace/ghostgraph-v5
+worktree=/workspace/ghostgraph-v5
+shared_log=/workspace/hackerrank-orchestrate-october26/log.txt
+parent_agent=none

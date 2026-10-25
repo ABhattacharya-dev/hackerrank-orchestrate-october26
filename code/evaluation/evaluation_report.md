@@ -1,3 +1,15 @@
+# V5.1 final prediction and authorization integration
+
+The proposed source reproduces all518 frozen prediction rows byte for byte with zero full-dataset official structural violations. All32 public predictions remain identical:29/32 statuses,9/32 exact rows and sequences,159/193 exact matching steps,97.55% precision,82.38% recall,89.33% F1,79.05% field accuracy and78.67% canonical citation accuracy. Sample-only generation retains six pre-existing structural violations in three public cases; do not confuse this with the validated full518 export. No hidden accuracy or Output CSV improvement is claimed.
+
+All156 tests pass, retaining the original144. Independent fictional CLI cases include: (1) unfulfilled conditional consent→NOT_APPLICABLE with pending-consent diagnostics, (2) quoted/hypothetical/third-party instruction→no deletion plan, (3) real own-profile erasure→exact evidence-backed finding/delete/future-verification triple, (4) multilingual refusal versus deletion, (5) refused invoices plus separately authorized profile cleanup, (6) prior-erasure continuation, (7) novel topic-prefaced instruction, (8) ambiguous authorized ownership→blocked export, (9) fault-injected classifier uncertainty→blocked export preserving an existing destination. Nineteen ordinary fictional request texts and two failure paths run through the actual CLI; generated rows undergo full official structural validation. Expectations were not changed to accommodate failures.
+
+The novel-preface test first failed and drove a bounded grammar fix. Pending consent originally produced invalid INCOMPLETE,[]; V5.1 produces NOT_APPLICABLE,[] without fabricating findings. Model uncertainty is distinct and blocks export. Frozen/V5/V5.1 source suites were rerun:115/144/156 tests pass respectively. Full-source comparison preserves every sample/full row. Clean dependency/source/ZIP verification and remaining risks are detailed in v51_review.md and the proposed archive's external checksum record. Strict evidence certification remains unresolved in490 cases.
+
+Promotion recommendation: reviewed Code ZIP-only replacement, never automatic merge. Runtime authorization is in ghostgraph/authorization.py; research imports are compatibility-only and inference works with the research tree absent. Historical V5 safety scores and later regression-driven corrections below remain historical measurements, not new held-out V5.1 claims.
+
+## Earlier evaluation records
+
 # V5 proposed source — final prediction evaluation
 
 This is an unmerged code-quality proposal. All 518 predictions are byte-identical to the frozen `3b942ac` submission; zero full-dataset official structural violations. Public results are unchanged: 29/32 statuses, 9/32 exact rows/sequences, 159/193 exact steps, 97.55% precision, 82.38% recall, 89.33% F1, 79.05% field accuracy and 78.67% canonical citation accuracy. Sample-only generation still has six pre-existing structural errors across three samples; the submitted full-set rows have none.
