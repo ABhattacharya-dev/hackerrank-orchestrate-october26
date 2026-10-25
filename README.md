@@ -1,3 +1,5 @@
+> V5 research proposal on `experiment/intent-safety-v5`; not merged or promoted. Frozen production artifacts are unchanged. This source uses the authorization-aware intent layer in both modes. Competition predictions remain byte-identical on the supplied 518 requests. See [V5 report](code/research/v5_report.md) for safety evaluation and limitations.
+
 # HackerRank Orchestrate - October 2026
 
 ## GhostGraph implementation

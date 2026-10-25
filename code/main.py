@@ -12,7 +12,8 @@ from ghostgraph.contract import read_csv, validate_rows, write_csv, resource_reg
 from ghostgraph.engine import Auditor
 from ghostgraph.evidence import EvidenceStore
 from ghostgraph.identity import IdentityIndex
-from ghostgraph.intent import IntentClassifier, MODEL_NAME
+from ghostgraph.intent import MODEL_NAME
+from research.v5_intent import AuthorizationIntent as IntentClassifier, VERSION
 from ghostgraph.intent import POSITIVE, NEGATIVE
 from ghostgraph.vision import from_environment
 
@@ -45,7 +46,7 @@ def run(root, requests_path, output, *, allow_unresolved=False, tag="full", mode
     input_hashes = dict(store.hashes)
     for name in ["user_identities.csv", "user_audit_log.csv", "system_activity.csv", "deletion_rules.csv", "evidence_files.csv"]:
         input_hashes[name] = hashlib.sha256((dataset / name).read_bytes()).hexdigest()
-    usage = {"mode": mode, "provider": "local scikit-learn", "model": MODEL_NAME,
+    usage = {"authorization_layer": VERSION, "mode": mode, "provider": "local scikit-learn", "model": MODEL_NAME,
              "request_count": len(requests), "inference_calls": intent.calls,
              "cache_hits": intent.cache_hits, "input_tokens": 0, "output_tokens": 0,
              "unique_classifications": len(intent.cache), "scope_decisions": intent.scope_decisions,

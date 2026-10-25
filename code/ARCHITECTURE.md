@@ -193,3 +193,8 @@ applicable restore-request controls and eligible catalog ownership. Authorizatio
 is not directly observed. Without those controls, an older drill supplies no
 active-risk inference. The independent chronology test verifies both outcomes.
 All 115 tests pass; full output remains byte-identical to b513080.
+
+
+## V5 experimental authorization safety
+
+Objective: reduce false authorization without changing competition output. Deliverables: consent-layer wrapper, pre-authored probes, failure analysis and reproducible evaluation. Dependencies: existing local sklearn model and participant-facing data. Acceptance: complete regression, baseline public metrics and byte-identical 518 predictions with zero full structural errors. Failures: neutral follow-up conditions, own-account modifier attribution and sample-only completion-audit deferrals; corrected through explicit clause/request scope. Actual results and remaining uncertainty are in research/v5_report.md and v5_results.md. Production artifacts and frozen tags are preserved; no automatic merge.

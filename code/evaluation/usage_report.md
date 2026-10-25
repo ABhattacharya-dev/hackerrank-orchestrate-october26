@@ -1,3 +1,13 @@
+# V5 final prediction usage
+
+Provider: local scikit-learn, frozen TF-IDF logistic regression with authorization-scope-v5-research-3 gates. Training: unchanged 296 authored examples. Full518 evaluation: 5 learned inference calls, 143 classification cache hits, 6.580s prediction evaluation excluding shared ingestion. Five genuine learned inferences participate in the workflow. No hosted AI or paid inference was used; API calls/tokens and API cost are zero. Local sklearn has no provider token units; local compute cost is unpriced, not asserted free.
+
+The V4 comparison was actually replayed using local LinearSVC (32 alternative learned calls); it did not outperform the frozen model. No alternative weights or new LLM were adopted. Research benchmark runs and their individual call counts/runtimes are recorded in research/v5_results.md. These per-run counts must not be mistaken for a total across all development reruns; exact aggregate development inference counts were not instrumented. Clean package CLI usage is recorded separately in research/v5_reproduction.md.
+
+No production CSV gain is claimed. This is a proposed Code ZIP-only quality improvement. Hosted session structured rollouts and exact engineering-runtime model metadata are unavailable locally; no trace files or identifiers were invented. Root log.txt preserves the actual append-only development transcript; a hosted-interface export is still needed for complete structured traces.
+
+## Historical usage record below (not V5 headline)
+
 # Actual final prediction-run usage
 
 This is the 518-request prediction run that produced root output.csv, not the
