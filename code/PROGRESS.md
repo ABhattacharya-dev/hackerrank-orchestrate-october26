@@ -224,3 +224,18 @@ structural violations; cold reproduction matches original output bytes. Public
 metrics unchanged. Local structured trace locations checked: no sessions present;
 agent-trace.zip cannot be honestly exported. Source package regenerated for
 chronology correctness, clear documentation and test coverage, not scoring changes.
+
+## V3 experimental research (not promoted)
+
+Base 3b942ac protected in separate worktree/branch. Rebuilt current prediction
+mismatches and all-518 unlabeled coverage. Implemented staged source graph and
+corroborated temporal candidate investigation across five windows, with ambiguity,
+foreign-subject and cutoff rejection. A/B/C/D/F remain 9/32 exact and 159/193 steps,
+zero full-row changes and zero full structural errors. D is a documented planner
+no-op audit; E hosted review unrun because credentials/model are unavailable.
+130/130 tests pass (15 new), and cold combination output matches frozen bytes.
+A temporary metadata-edit syntax error was caught by regression checks and fixed
+before all tests and experiments were rerun. Reject promotion: no measured gain;
+C/F add runtime in this single measured run. Main code and protected artifacts
+unchanged; no new competition package. Details in research/results.md, DECISIONS.md
+and the fresh evaluation/mismatch_report.md.

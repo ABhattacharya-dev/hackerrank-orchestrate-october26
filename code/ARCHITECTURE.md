@@ -193,3 +193,15 @@ applicable restore-request controls and eligible catalog ownership. Authorizatio
 is not directly observed. Without those controls, an older drill supplies no
 active-risk inference. The independent chronology test verifies both outcomes.
 All 115 tests pass; full output remains byte-identical to b513080.
+
+## Experimental ADR V3 — temporal candidates are not ownership
+
+Isolated branch only. The 300-second search yields 118 unique and two multiple
+candidate full cases, but no independently corroborated ownership in that window.
+Independent readback absence proves target state, not a request-to-target edge.
+Require explicit scoped identifier/catalog/source proofs, reject conflicting
+subjects and unavailable workflow times, and preserve actual replicas. A wider
+360-second public candidate with a structured source pointer is already known to
+the frozen engine. New graph/temporal code changes no predicted rows. Keep these
+research modules out of production until meaningful evidence-backed accuracy
+gain is demonstrated. Hosted review remains unmeasured; no promotion recommended.
