@@ -2737,3 +2737,303 @@ branch=main
 repo_root=/workspace/hackerrank-orchestrate-october26
 worktree=main checkout
 parent_agent=none
+
+
+## [2026-10-25T06:39:51.919177+00:00] SESSION START — V6 activity assignment research
+
+tool=Codex
+Model metadata limitation: exact runtime identifier is inaccessible; no value fabricated. Exact-model logging compliance remains incomplete.
+Repo Root: /workspace/hackerrank-orchestrate-october26
+Branch: experiment/activity-assignment-v6
+Worktree: main checkout, isolated experimental branch
+Parent Agent: none
+Language: py
+Time Remaining: not configured
+
+
+## [2026-10-25T07:06:58.984957+00:00] V6 activity-assignment experiment and safety correction
+
+User Prompt (verbatim, secrets redacted):
+# GhostGraph V6 Research — Activity-Anchored Assignment
+
+Repository:
+https://github.com/ABhattacharya-dev/hackerrank-orchestrate-october26
+
+Protected production release:
+- Commit: `7a18c2e`
+- Tag: `submission-v5.1`
+
+You are conducting a final, high-value accuracy experiment before an irreversible HackerRank competition submission.
+
+**Do not merge changes, overwrite submission artifacts, or modify the protected release.**
+
+Create a separate experimental branch named `experiment/activity-assignment-v6`.
+
+## Background
+
+An independent reviewer proposed linking deletion requests to otherwise anonymous account resources through the global worker activity stream.
+
+The current implementation requires grounded subject identifiers or explicit resource relationships.
+
+A competing hypothesis is that status-compatible worker activities near a request's `reported_at` time can identify candidate account resources.
+
+Independent checks found:
+
+- 508 deletion requests in the 518-row submission.
+- 342 currently lack any account_service step.
+- 108 of those 342 have one status-compatible account DELETE_RECORD candidate within −120/+30 minutes.
+- 73 of the 108 are currently INCOMPLETE.
+- 35 of the 108 are currently COMPLETE.
+- On public cases, 13 unique candidates matched 13 canonical account IDs.
+- Among existing full-dataset account relationships, 57 unique candidates agreed with all 57 current account IDs.
+
+These findings justify investigation, but **time/status matching is not definitive ownership proof**.
+
+A separate five-minute investigation found eight unique candidates that disagreed with already-linked account IDs.
+
+Previous V3 temporal research rejected weak candidates because they lacked independent ownership corroboration. V6 is testing whether carefully constrained assignment can improve competition predictions without introducing unacceptable false attribution.
+
+## Experiment 0 — Reproduce the reviewer's claims
+
+Before modifying any production code:
+
+1. Recompute all candidate counts from source CSVs.
+2. Independently verify status/result mapping.
+3. Compare narrow and wide time windows.
+4. Reproduce the 13 public unique matches and 57 full-dataset corroborated matches.
+5. Identify the eight narrow-window conflicting matches.
+6. Investigate whether window choices were tuned to public examples.
+7. Check worker events against requested_at and audit_at.
+8. Produce per-candidate provenance and rejection reasons.
+
+Report discrepancies with the external review.
+
+Do not use canonical output labels inside the prediction algorithm.
+
+## Experiment 1 — Implement candidate-only matching
+
+Create a research-only request/activity bipartite candidate graph.
+
+Use:
+
+- Worker event time
+- Workflow reported time
+- Worker event type
+- Target system and resource ID
+- Worker reported result
+- Workflow reported status
+- Request window
+- Explicit identity relationships where available
+- Historical identity conflicts
+- Existing resource assignments
+
+Do not use numeric suffix equality between case IDs, users and accounts.
+
+Do not assume one event must correspond to one request unless that exclusivity is actually justified.
+
+Allow unrelated activities, repeated requests, and multiple legitimate resources per subject.
+
+Separate four concepts:
+
+1. Directly evidenced relationship.
+2. Independently corroborated inferred relationship.
+3. Time/status-based candidate.
+4. Rejected or conflicting candidate.
+
+Keep candidate relationships out of the strict certification engine.
+
+Never use worker SUCCESS as independent proof that a record is absent.
+
+## Experiment 2 — Compare isolated inference strategies
+
+Implement separate experimental variants:
+
+A. Frozen V5.1 baseline.
+
+B. Unique time/status match only, with independent consistency checks.
+
+C. Constrained bipartite assignment with collision rejection.
+
+D. Assignment plus source-grounded account verification planning.
+
+Do not implement analytics attribution until account assignment demonstrates a real benefit.
+
+Record exactly which request-to-resource edges each variant adds.
+
+Never silently remove existing grounded edges.
+
+Do not assume additive steps cannot reduce exact-row accuracy or precision.
+
+## Experiment 3 — Preserve the hard temporal boundary
+
+The official problem states that evidence created after audit_at must not change the answer.
+
+Therefore:
+
+- Do not admit late-captured evidence merely because it describes an earlier event.
+- Do not use late files for identity inference or state verification.
+- Do not cite late-captured files.
+- Do not backdate source availability.
+- Do not use future observations to infer resource IDs.
+- Do not infer deletion success from reported_status or reported_result alone.
+
+Evaluate the external reviewer's case_09 claim separately.
+
+Find out whether its account and retained-audit obligations can be recovered from genuinely eligible sources.
+
+Reject any approach that requires violating the audit cutoff.
+
+Citation clamping alone is not an acceptable substitute for source eligibility.
+
+## Experiment 4 — Add verification safely
+
+For an inferred account resource:
+
+- Check that the resource exists in the participant-visible resource registry.
+- Validate any explicit ownership information against historical identities.
+- Inspect eligible independent readbacks and complete snapshot scopes.
+- Reject known foreign-user conflicts.
+- Establish actual state independently of the worker's reported result.
+
+For a COMPLETE case, emit a verification only when an eligible source genuinely supports the required state, with the correct citation.
+
+For an INCOMPLETE case, proposed future verification may have an empty citation, but the target resource and planning obligation must still be defensible and structurally compliant.
+
+Do not mark an entire deletion COMPLETE merely because an account record is absent; other relevant copies, retention requirements and resurrection risks still matter.
+
+Do not invent findings to satisfy structural validation.
+
+## Experiment 5 — Generalization and negative controls
+
+The 32 public canonical answers are already known development examples. Do not treat improvements on them as independent proof.
+
+Use the existing independently grounded resources as positive controls.
+
+Construct mutation and negative-control tests for:
+
+- Two requests with the same reported status and overlapping time windows.
+- An unrelated worker event that becomes the only candidate.
+- Workflow status/result mismatches.
+- Missing worker events.
+- Multiple operations for the same customer.
+- A worker event that might belong to two requests.
+- An account resource independently linked to another user.
+- Historical email reassignment.
+- A current account and a deleted earlier account for one person.
+- Account absent from primary but present on a replica.
+- An operation occurring after audit_at.
+- Evidence captured after audit_at.
+- Unrelated batch activity.
+- Changes in timestamp clustering.
+
+Use placebo time shifts or status permutations to estimate accidental matching rates.
+
+Do not use test labels to tune exact resource-ID conventions.
+
+## Experiment 6 — Evaluate the complete system
+
+For each variant, report:
+
+- Public exact rows (baseline 9/32)
+- Correct statuses (baseline 29/32)
+- Matching canonical steps (baseline 159/193)
+- Step precision (baseline 97.55%)
+- Step recall (baseline 82.38%)
+- Step F1
+- Citation accuracy
+- Additional correct operations
+- Additional incorrect operations
+- Incorrect resource assignments
+- Full 518-row changes
+- Official structural violations
+- Independent mutation/adversarial results
+- Runtime and inference usage
+
+Evaluate the 108 initially unique unlabeled account candidates separately.
+
+For every COMPLETE case that changes, identify the independent evidence actually proving the additional verification.
+
+For every INCOMPLETE case that changes, document the basis for the newly proposed resource verification.
+
+Measure the effect of changed step ordering and numbering.
+
+## Experiment 7 — Promotion decision
+
+Recommend promotion only if:
+
+1. Public exact-row accuracy genuinely improves.
+2. Step F1 improves without unacceptable precision loss.
+3. No new incorrect account IDs appear in public cases.
+4. Independent grounded-link and adversarial tests support the inference.
+5. No post-cutoff evidence influences decisions.
+6. All 518 rows pass official structural validation.
+7. Full reproducibility passes.
+8. Every changed row can be explained from source evidence and explicitly identified inference assumptions.
+9. The improvement is not merely tuned to the public examples.
+
+If the experiment increases raw step recall but relies on unjustified ownership, reject it.
+
+If the experiment cannot produce a defensible improvement, retain V5.1.
+
+## Deliverables
+
+Produce:
+
+- `code/research/v6_candidate_audit.md`
+- `code/research/v6_assignment_results.md`
+- Candidate-edge provenance and conflicts
+- Baseline-versus-variant metrics
+- False-assignment and negative-control analysis
+- Exact list of changed full-dataset rows
+- Temporal compliance audit
+- Promotion or rejection recommendation
+
+Do not automatically update main, output.csv, or code.zip.
+
+Do not assume the other AI's prototype is correct.
+
+**Start with independent reproduction of its claims, then run the constrained assignment experiments. The objective is a measurable, contract-compliant accuracy improvement—not merely adding more steps.**
+
+Agent Response Summary:
+Reproduced every reviewer count exactly, including508 authorized/342 without accounts,108 unique wide-window candidates (73 INCOMPLETE/35 COMPLETE),13/13 public IDs,57/57 grounded full IDs and all eight narrow-window disagreements. Implemented research-only unique/collision/corroborated variants, per-edge provenance, independent state planning and temporal filters; production modules and artifacts are untouched. Initial apparent public gains included two forbidden account-only whole-case upgrades; added a generic status-preservation guard and an independent fictional test rather than invent findings or retain those gains. Final weak B reaches10/32 exact and165/193 matching steps but fails ownership negative controls; positively corroborated D adds no rows and no accuracy, so promotion is rejected.
+
+Actions:
+* Created only experiment/activity-assignment-v6 from protected7a18c2e; no worktree, main update, artifact overwrite or analytics attribution.
+* Compared five windows, enforced requested/report/audit boundaries, and recorded original source event IDs/locators/times and explicit rejection reasons.
+* Implemented pure candidate graph and separate prediction-only ablation ledger; existing grounded resources delegate without replacement. All old account resource sets are preserved.
+* Independent controls expose unrelated singleton false assignments in B/C; explicit foreign/history conflicts, shared events, repeated subjects, multiple accounts, replicas and future sources/requests are tested. Fixed-seed611 permutations and six schedule shifts quantify accidental-match/disagreement behavior without hidden labels.
+* case_09 has an eligible SQL absence lookup but no eligible positive ownership link; retained-audit identity/readback exists only in late evidence_06 and is not admitted. No time clamping or future trace bridging.
+* Final run has173 passing software tests (156 existing plus17 controls). B/C's known safety failures are measured explicitly, not described as passing generalization.
+* Reports list exact changed full rows, all108 singleton candidates/state witnesses, every in-window candidate source and B/C/D decision, temporal checks and actual local inference/runtime counters.
+* Reproducibility and protected-hash verification are being finalized; no promotion is proposed. Hosted AI/API cost is zero; local model calls are recorded per run, local tokens are inapplicable, and session-wide uninstrumented totals are not fabricated.
+
+Context:
+tool=Codex
+Model metadata limitation: exact runtime identifier is inaccessible; no value fabricated. Exact-model logging compliance remains incomplete.
+branch=experiment/activity-assignment-v6
+repo_root=/workspace/hackerrank-orchestrate-october26
+worktree=main checkout, isolated experimental branch
+parent_agent=none
+
+
+## [2026-10-25T07:10:44.340402+00:00] V6 final guarded results and rejection
+
+Agent Response Summary:
+Reject V6 promotion and retain production7a18c2e/submission-v5.1. Final B has10/32 exact public rows,29/32 statuses,165/193 exact steps,97.63% precision,85.49% recall and91.16% F1, but all108 new target links lack independent ownership; C has9/32 exact and164/193 steps, while corroborated D remains9/32 and159/193 with no new rows. Full B/C change107/93 rows (only account verification additions), all full518 structural checks pass, and no original resource is removed.173 software tests pass, explicitly measuring B/C's false-attribution weakness rather than declaring those variants safe.
+
+Actions:
+* All eight final guarded sample/full CSVs reproduced byte for byte; source/worker/owner/state temporal audit found0 violations. Baseline A and corroborated D reproduce the protected full CSV.
+* Fixed reporting-generator multiline-string error and executed the report builder successfully; report metrics now distinguish rejected exploratory12/32 and11/32 account-only upgrades from final guarded10/32 and9/32 results.
+* Fixed-seed611 status permutations yielded142–178 singleton candidates and956/1570 grounded-resource disagreements; six schedule shifts exposed accidental matches. These are stress/disagreement rates, not hidden accuracy estimates.
+* Verified each changed COMPLETE source/state/citation/cutoff and each INCOMPLETE future policy check; all108 new candidate assumptions and every in-window event rejection have explicit provenance. No late capture, timestamp clamping, future identity or SUCCESS-as-state inference.
+* Main and protected tag remain7a18c2e. output.csv SHA256:61c7563f3ffa04edb7ab18532f9d31b49fe316c52a5d013f80412e0b458a9891; code.zip SHA256:1681ba4bd15187cc87512c4ba1cb10b03e1ac4fc2229d2632daf7723c63fd312. Production code/inputs and artifact bytes are unchanged.
+* Local frozen intent AI participates in the measured ablation pipeline (26 learned calls per complete sample/full four-arm run); no hosted/API inference or paid API cost. Local token units are inapplicable; aggregate development/test calls remain uninstrumented and are not fabricated.
+* Only experiment/activity-assignment-v6 research files/tests/docs/transcript will be committed/pushed. No main merge, submission artifact update, analytics attribution or fabricated structured trace/model metadata.
+
+Context:
+tool=Codex
+Model metadata limitation: exact runtime identifier is inaccessible; no value fabricated. Exact-model logging compliance remains incomplete.
+branch=experiment/activity-assignment-v6
+repo_root=/workspace/hackerrank-orchestrate-october26
+worktree=main checkout, isolated experimental branch
+parent_agent=none
