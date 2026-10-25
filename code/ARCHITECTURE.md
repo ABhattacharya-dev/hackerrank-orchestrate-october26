@@ -193,3 +193,17 @@ applicable restore-request controls and eligible catalog ownership. Authorizatio
 is not directly observed. Without those controls, an older drill supplies no
 active-risk inference. The independent chronology test verifies both outcomes.
 All 115 tests pass; full output remains byte-identical to b513080.
+
+## Experimental ADR V4 — validate original scoped facts, not model assertions
+
+The source audit finds no parser-recoverable fact behind current public omissions.
+Keep production parsing and vision proposals unchanged. Research Tier B independently
+reads an exact JSON record and checks resource, authoritative owner, source system,
+container observation time, capture cutoff and identity conflicts; it can validate
+a real fact missing from normalized indexing. Page/neighbor co-occurrence, free
+text, confidence, invented states and later captures cannot provide ownership.
+The prototype scope bug illustrates why namespace defaults must not override
+explicit source context. Real accepted facts are already normalized, so there is
+no admission or measured prediction gain. Reject promotion instead of adding
+unhelpful integration complexity. Independent intent failures also show that a
+classifier swap under the same guards does not cure scope/consent errors.

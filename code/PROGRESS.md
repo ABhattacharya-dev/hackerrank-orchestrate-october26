@@ -224,3 +224,22 @@ structural violations; cold reproduction matches original output bytes. Public
 metrics unchanged. Local structured trace locations checked: no sessions present;
 agent-trace.zip cannot be honestly exported. Source package regenerated for
 chronology correctness, clear documentation and test coverage, not scoring changes.
+
+## V4 isolated original-source recovery research (reject promotion)
+
+Frozen base 3b942ac reproduced without touching artifacts. Audited all 34 missing
+operations and four extras against original scoped source, normalization, identity
+and cutoff. Found 16 absent target/ownership records, 12 ownerless normalized
+states and six later-captured targets; no demonstrated new recoverable source fact.
+Implemented a research-only independent Tier-B original JSON validator to fix
+V3's normalized-membership limitation. Real measurement: 276 duplicates, 224
+future captures and two future observations rejected; zero novel ledger facts.
+Prototype prefix-based scope error initially resembled two novel legal facts;
+original system/container/time checks corrected it. All 133 software tests pass,
+18 new source-boundary/mutation cases. Independent 32-probe intent comparison
+finds frozen/LinearSVC both 21 correct and 11 false authorizations; no alternative
+adopted. Hosted review NOT RUN without deployable model/credentials. No document
+parser or convention shortcut is justified; no meaningless promotion package.
+Public metrics and all 518 full rows unchanged, zero full structural errors.
+Detailed locators/results in research/v4_evidence_gap_report.md and
+research/v4_experiment_results.md; no V3 temporal search was repeated.
