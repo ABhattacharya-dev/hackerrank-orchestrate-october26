@@ -53,7 +53,7 @@ baseline are evaluated separately; guarded eager/selective decisions match.
 
 ## Actual software and full-run checks
 
-- `97` unit/regression tests ran: `0` failures,
+- `104` unit/regression tests ran: `0` failures,
   `0` errors, `0` skipped; all passed.
 - All 94 manifest files processed: 26 logs, 28 JSON, 1 text, 11 PNG, 24 SQL,
   4 PDF. 2906 observations and
@@ -65,9 +65,9 @@ baseline are evaluated separately; guarded eager/selective decisions match.
   explanations. This is provenance validation, not a claim of full coverage.
 - Input hashes verified unchanged; supplied evidence and root AGENTS.md were not
   edited. Candidate status counts: `{'INCOMPLETE': 400, 'COMPLETE': 108, 'NOT_APPLICABLE': 10}` (provisional).
-- Warm-cache full run: 6.196 seconds. A fresh source copy,
+- Warm-cache full run: 7.094 seconds. A fresh source copy,
   different working directory and empty extraction cache reproduced identical
-  candidate bytes in 22.829 seconds, executing
+  candidate bytes in 20.482 seconds, executing
   11 OCR calls and
   4 PDF extraction calls.
 - Strict refusal was exercised; it returned an evidence blocker and wrote no
@@ -75,6 +75,23 @@ baseline are evaluated separately; guarded eager/selective decisions match.
   distinct from unit-test failure (exit 1).
 
 Candidate SHA-256: `b83ff6a9b086a53ceda99b3f527eefda36ec49f69db392f84be51fdecb01e7c3`.
+
+## Milestone 7 strict full-dataset acceptance
+
+All 518 request IDs were processed in exact sorted order. Strict structural
+validation passes 420/518 candidate rows and finds
+171 violations across
+98 cases. A strict attempt at the real
+repository-root output.csv path was blocked; no final output was generated.
+490 cases retain semantic proof obligations. Seven
+new on-disk adversarial CLI scenarios passed as part of the 104
+test suite. They caught a same-table-name replica scope bug; the adapter now
+honors explicit snapshot_scope.database_id, including scoped absence.
+
+See code/evaluation/full_dataset_report.md for every structural blocker, scenario
+expectations, actual per-phase model usage and the distinction between candidate
+grammar, strict structural checks and semantic coverage. The milestone exit
+criterion remains unmet. Passing tests do not substitute for a valid output.csv.
 
 ## Independent adversarial cases executed
 

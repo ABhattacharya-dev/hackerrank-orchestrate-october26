@@ -38,6 +38,7 @@ python3 code/main.py --allow-unresolved
 PYTHONPATH=code python3 -m unittest discover -s code/tests -v
 python3 code/evaluation/main.py
 python3 code/evaluation/verify.py
+python3 code/evaluation/full_acceptance.py
 python3 code/evaluation/reproduce.py
 python3 code/evaluation/ai_ablation.py
 python3 code/evaluation/planning_acceptance.py

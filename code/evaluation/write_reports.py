@@ -19,6 +19,29 @@ def write():
     codes=Counter(i['code'] for d in verification['unresolved_cases'] for i in d['issues'])
     pct=lambda key:f"{metrics[key]:.2%}"
     planning=load('planning_acceptance')
+    full_path=ROOT/'.ghostgraph/full_acceptance.json'
+    full_section=''
+    if full_path.exists():
+        full=load('full_acceptance')
+        assert full['candidate_sha256']==repro['candidate_sha256']
+        full_section=f'''## Milestone 7 strict full-dataset acceptance
+
+All 518 request IDs were processed in exact sorted order. Strict structural
+validation passes {full['structurally_valid_rows']}/518 candidate rows and finds
+{len(full['structural_violations'])} violations across
+{len(full['structurally_invalid_case_ids'])} cases. A strict attempt at the real
+repository-root output.csv path was blocked; no final output was generated.
+{full['unresolved_case_count']} cases retain semantic proof obligations. Seven
+new on-disk adversarial CLI scenarios passed as part of the {tests['tests_run']}
+test suite. They caught a same-table-name replica scope bug; the adapter now
+honors explicit snapshot_scope.database_id, including scoped absence.
+
+See code/evaluation/full_dataset_report.md for every structural blocker, scenario
+expectations, actual per-phase model usage and the distinction between candidate
+grammar, strict structural checks and semantic coverage. The milestone exit
+criterion remains unmet. Passing tests do not substitute for a valid output.csv.
+
+'''
     report=f'''# GhostGraph evaluation report
 
 ## Submission acceptance: blocked
@@ -97,7 +120,7 @@ baseline are evaluated separately; guarded eager/selective decisions match.
 
 Candidate SHA-256: `{repro['candidate_sha256']}`.
 
-## Independent adversarial cases executed
+{full_section}## Independent adversarial cases executed
 
 Fixtures and assertions are in `code/tests/test_reasoning.py`; they are authored
 independently of public sample labels and do not mutate supplied evidence.
@@ -220,6 +243,9 @@ Deterministic decisions have no model probability, rather than a fabricated one.
 - Estimated API cost: USD 0.00 total; USD 0.00/request. Per-model API totals are
   also zero because all components execute locally with no metered API calls.
 - Local compute/storage cost is unpriced and excluded, rather than invented.
+- No paid model provider or external token-pricing tariff was used; the zero
+  API total follows from zero paid API calls, not an invented price schedule.
+  Per-phase validation-run counts are recorded in full_dataset_report.md.
 - Measured warm-cache runtime: {usage['runtime_seconds']:.3f} seconds,
   {usage['runtime_seconds']/518:.6f} seconds/request averaged across the run.
 - Cold extraction reproducibility run: {repro['runtime_seconds']:.3f} seconds,

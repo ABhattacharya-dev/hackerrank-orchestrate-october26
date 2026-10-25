@@ -143,3 +143,16 @@ Keep temporal/policy/serialization deterministic. Reject the tested document-rol
 change because it adds errors and lacks stronger evidence. Measured missing
 resource/proof coverage remains the next correctness priority; do not let a
 successful AI ablation conceal structural blockers. See OPTIMIZATION.md.
+
+## ADR 013 — physical SQL identity and strict full-run acceptance
+
+A new independent same-table replica scenario failed because table name alone
+collapsed explicit physical copies into one scope. Preserve an optional explicit
+snapshot_scope.database_id with the table, including exhaustive-table absence;
+reject ambiguous duplicate system declarations instead of choosing arbitrarily.
+Do not guess physical identity from filenames. Existing dataset output bytes are
+unchanged. Full acceptance now accumulates every strict structural violation for
+all 518 rows, checks internal citation provenance, and attempts real root strict
+export while preserving a prior destination on failure. There are 98 structurally
+blocked rows and 490 semantic gaps; a passing test suite or a 518-row candidate
+does not satisfy final publication. See ADVERSARIAL.md and full_dataset_report.md.

@@ -332,7 +332,17 @@ class EvidenceStore:
             conn.executescript(path.read_text())
             conn.row_factory = sqlite3.Row
             tables = [r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")]
-            declared = {r['origin_system']:r['captured_at'] for r in conn.execute('SELECT * FROM snapshot_scope')} if 'snapshot_scope' in tables else {}
+            declarations = [dict(r) for r in conn.execute('SELECT * FROM snapshot_scope')] if 'snapshot_scope' in tables else []
+            if len({r['origin_system'] for r in declarations}) != len(declarations):
+                raise ValueError('ambiguous duplicate snapshot system declarations')
+            declared = {r['origin_system']:r['captured_at'] for r in declarations}
+            metadata = {r['origin_system']:r for r in declarations}
+            def scope_id(system, table):
+                # An explicit database identifier distinguishes identical table
+                # names on different physical copies. Collector filenames alone
+                # do not establish that distinction.
+                database = metadata.get(system, {}).get('database_id')
+                return f'database:{database}/table:{table}' if is_value(database) else table
             match = re.search(r'-- Captured at:\s*(\S+)',path.read_text())
             captured = match[1] if match else meta['captured_at']
             table_types = {"customer_profiles": "USER_PROFILE", "customer_search_documents": "SEARCH_INDEX_ENTRY",
@@ -358,10 +368,11 @@ class EvidenceStore:
                     self.record(record, meta, system=row.get("origin_system") or system,
                                 collection=row.get("collection_name", table),
                                 when=declared.get(row.get('origin_system') or system,captured),
-                                locator=f"table:{table}/resource:{row['resource_id']}", scope=table)
+                                locator=f"table:{table}/resource:{row['resource_id']}", scope=scope_id(row.get('origin_system') or system, table))
                     keys.add(row["resource_id"])
                 # Full exported table permits absence only for independently linked resources.
                 self.scopes.append(dict(meta=meta, table=table, resources=keys,
+                                        scope_id=scope_id(system, table),
                                         system=system, category=category,
                                         observed=timestamp(declared.get(system,captured)),
                                         exhaustive=bool(system in declared or (match and not declared)),

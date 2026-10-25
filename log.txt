@@ -652,3 +652,45 @@ branch=work
 repo_root=/workspace/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+
+## [2026-10-25T00:15:30.958488+00:00] Milestone 7 adversarial CLI tests and strict full run
+
+User Prompt (verbatim, secrets redacted):
+## Milestone 7 — Adversarial testing and full-dataset run
+
+Create at least three genuinely new evaluation scenarios, including:
+
+1. A successful primary deletion but remaining PII in a replica, with an active sync path.
+2. A historical email change with conflicting evidence around the audit cutoff.
+3. A retained account tombstone, other policy-retained records, and an unsafe restore path.
+
+Add additional cases for multilingual negation, cross-user identity collisions, incomplete evidence, and repeated users at different audit timestamps when useful.
+
+Run the full pipeline across all 518 requests.
+
+Validate every output row, evidence reference, ordering constraint, and permissible operation.
+
+Capture actual model calls, input tokens, output tokens, cache usage where measurable, and estimated costs based on documented pricing.
+
+If no paid model calls are used, report that accurately. Never invent token counts.
+
+**Exit criterion:** A complete root-level `output.csv` containing exactly 518 correctly keyed and valid prediction rows.
+
+Agent Response Summary:
+Added seven genuinely new on-disk adversarial scenarios covering identical SQL table names across explicit databases, replica PII with active import, historical aliases and cutoff conflicts, retained tombstone/security/legal/archive records with unsafe restore, repeated cutoffs, cross-user collisions, multilingual negation and missing artifacts. The replica scenario initially failed and exposed collapsed SQL copy scopes; the adapter now honors explicit database_id, including derived absence scopes. All seven new scenarios and all 104 regression tests pass; cold-cache reproduction matches the candidate bytes. The full run processes all 518 keyed/sorted requests, but strict validation passes only 420 rows and finds 171 structural violations across 98 cases; 490 semantic cases remain unresolved, so the real root output.csv attempt refused to write and the exit criterion is not met.
+
+Actions:
+* Added test_adversarial_pipeline.py, explicit SQL database scopes and full_acceptance.py with per-row strict contract/source/cutoff validation and real root export attempt.
+* Ran focused scenarios, complete regressions, all public samples and the full 518-request pipeline; preserved supplied evidence and root AGENTS.md.
+* Verified all 729 cited steps against eligible internal provenance; documented all 98 structurally blocked case IDs.
+* Recorded actual candidate usage: 5 local learned calls, 370 deterministic scope decisions, 143 classification cache hits, zero paid API calls/input/output tokens/cost; local token units not applicable and compute unpriced.
+* Recorded separate sample/full/strict/root-attempt application run usage, reproduced candidate from a fresh empty-cache source copy, updated Markdown reports/architecture/progress and rebuilt the source-only archive.
+* No final output.csv created and no provisional candidate renamed or fabricated to satisfy the row count; authorized repository integration follows artifact checks.
+
+Context:
+tool=Codex
+Model metadata limitation: exact engineering runtime identifier remains inaccessible; no value was fabricated. Root exact-model logging compliance remains incomplete.
+branch=work
+repo_root=/workspace/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none

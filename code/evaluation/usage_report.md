@@ -37,9 +37,12 @@ Deterministic decisions have no model probability, rather than a fabricated one.
 - Estimated API cost: USD 0.00 total; USD 0.00/request. Per-model API totals are
   also zero because all components execute locally with no metered API calls.
 - Local compute/storage cost is unpriced and excluded, rather than invented.
-- Measured warm-cache runtime: 6.196 seconds,
-  0.011961 seconds/request averaged across the run.
-- Cold extraction reproducibility run: 22.829 seconds,
+- No paid model provider or external token-pricing tariff was used; the zero
+  API total follows from zero paid API calls, not an invented price schedule.
+  Per-phase validation-run counts are recorded in full_dataset_report.md.
+- Measured warm-cache runtime: 7.094 seconds,
+  0.013695 seconds/request averaged across the run.
+- Cold extraction reproducibility run: 20.482 seconds,
   11 OCR and
   4 PDF extraction calls;
   identical candidate bytes. This separate validation run is not added to the

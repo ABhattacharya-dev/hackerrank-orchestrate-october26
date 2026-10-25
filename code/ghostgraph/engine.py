@@ -96,7 +96,7 @@ class Auditor:
                         "table:" + scope["table"] + "/exhaustive-resource-lookup", timestamp(scope["meta"]["captured_at"]),
                         scope.get("observed", timestamp(scope["meta"]["captured_at"])), key[0], key[1],
                         DEFAULTS[prefix(key[1])][1], "ABSENT", tokens,
-                        {"exhaustive_lookup": True}, scope["table"], 4))
+                        {"exhaustive_lookup": True}, scope.get("scope_id",scope["table"]), 4))
             if not observations:
                 issues.append(dict(code="NO_STATE_PROOF", system=key[0], resource=key[1]))
                 continue

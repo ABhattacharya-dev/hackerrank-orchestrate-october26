@@ -161,3 +161,21 @@ blocked sample cases and 490 unresolved full cases; remote vision unconfigured.
 **Exit criterion NOT MET** because generated all-case structural acceptance still
 fails. See OPTIMIZATION.md and evaluation/mismatch_report.md; no later milestone
 or final readiness is claimed.
+
+## Requested Milestone 7 — adversarial scenarios and full acceptance
+
+Objective: new independent file-to-CLI tests plus exact full-dataset publication.
+Deliverables: seven new temporary-data scenarios, explicit SQL database scopes,
+full_acceptance.py, full_dataset_report.md and ADVERSARIAL.md. Dependencies: existing
+pipeline and unresolved prior proof/structural gates. Actual tests: 7/7 new
+scenarios and 104/104 complete regressions pass, no skips/errors/failures. The
+replica fixture initially failed because identical SQL table names merged across
+physical databases; explicit database_id and matching absence scopes corrected it.
+Full run: 518 exactly keyed/sorted provisional rows, 729 matching internal cited
+proofs; strict structure passes 420 rows and reports 171 errors across 98 cases.
+Strict root output.csv attempt refuses 490 unresolved semantic cases and writes
+no final file. Actual candidate usage is 5 local inference calls, 370 deterministic
+scope decisions, 143 cache hits, zero paid API calls/tokens/cost; local compute
+unpriced. Remaining risks: missing links, condition facts, copy/state proofs and
+restore capability. **Exit criterion NOT MET**; no fabricated rows or renamed
+candidate to conceal the failure. Detailed evidence in ADVERSARIAL.md and reports.
