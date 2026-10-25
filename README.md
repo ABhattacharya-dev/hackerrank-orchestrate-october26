@@ -1,33 +1,12 @@
-# HackerRank Orchestrate - October 2026
+# GhostGraph V5.1 — production submission
 
-## GhostGraph implementation
+Controlled production promotion of approved candidate `4015ede`. The original baseline remains at `submission-freeze-verified` (`3b942ac`); V5.1 is released as `submission-v5.1`. Root output.csv is byte-identical to the baseline; code.zip contains the promoted authorization improvements. See `release_manifest.md` and `code/evaluation/release_report.md` for acceptance and checksums. No competition CSV accuracy gain is claimed.
 
-GhostGraph is a Python command-line deletion auditor with a local supervised
-multilingual intent model, deterministic consent/scope guards, six evidence
-adapters, a temporal resource ledger, supplied-policy evaluation and canonical
-output validation. It generates plans; it never executes real deletion actions.
-Architecture and prompts are submitted in `code/ARCHITECTURE.md` and
-`code/ghostgraph/intent.py`.
+## Install and generate competition predictions
 
-**Final prediction submission:** root `output.csv` contains 518 sorted request rows
-with zero official structural violations and reproducible bytes. Predictions retain
-semantic uncertainty; conservative certification remains separate and does not pass.
-See `code/evaluation/evaluation_report.md` and `usage_report.md` for final metrics.
+Requires Python 3.12, Poppler's `pdftotext`, Tesseract with English data, and the pinned Python dependencies. On Debian/Ubuntu the OS packages are `poppler-utils` and `tesseract-ocr`. No paid API key, model download, model server or hosted service is required.
 
-Generate and validate the final competition predictions:
-
-```bash
-python3 code/evaluation/recovery.py
-python3 code/evaluation/final_submission.py
-python3 code/evaluation/final_reports.py
-```
-
-Requirements: Python 3.12, `pdftotext` (Poppler), Tesseract OCR with English data,
-and the pinned Python packages below. No API key, hosted model or service is
-required. On Debian/Ubuntu, system packages are `poppler-utils` and
-`tesseract-ocr`; use your system package manager if these are missing.
-
-From the repository root:
+Place the supplied participant-facing `dataset/` next to `code/`, then run from the extracted source root:
 
 ```bash
 python3 -m venv .venv
@@ -36,47 +15,33 @@ python3 -m pip install -r code/requirements.txt
 python3 code/main.py --mode predict
 ```
 
-For separate high-assurance evidence certification, run `python3 code/main.py --mode certify`.
-This strict command currently exits 2 because evidence is unresolved, and writes
-diagnostics under ignored `.ghostgraph/`. To inspect all proposed rows explicitly:
+This produces root `output.csv` after official-contract validation. On the supplied 518 requests it reproduces the protected CSV byte for byte. It uses the learned local word/character TF-IDF logistic regression on selective cases (five learned inference calls in the full run), with deterministic authorization gates, evidence parsing, temporal/policy logic and JSON construction. Training examples and exact model configuration are auditable in `code/ghostgraph/intent.py`; runtime consent logic is `code/ghostgraph/authorization.py`. Runtime modules do not import research code.
+
+## Certification, uncertainty and diagnostics
 
 ```bash
-python3 code/main.py --allow-unresolved
-PYTHONPATH=code python3 -m unittest discover -s code/tests -v
-python3 code/evaluation/main.py
-python3 code/evaluation/verify.py
-python3 code/evaluation/full_acceptance.py
-python3 code/evaluation/reproduce.py
-python3 code/evaluation/ai_ablation.py
-python3 code/evaluation/planning_acceptance.py
-python3 code/evaluation/optimization_report.py
-python3 code/evaluation/write_reports.py
-python3 code/package.py
+python3 code/main.py --mode certify --output output.certified.csv
 ```
 
-`--allow-unresolved` defaults to `output.candidate.csv`. `--requests` and `--output`
-override file paths. Defaults resolve relative to the checkout, so the entry point
-also works from another working directory. The public evaluator reads labels
-only after prediction; public answers never train the model or feed predictions.
-The verification command returns 0 for complete readiness, 1 for failing software
-tests, or 2 when tests execute but unresolved evidence blocks strict final export.
-It validates schema, citation cutoffs and matching internal ledger provenance;
-these checks do not establish hidden canonical correctness.
+Strict evidence certification is separate and currently exits 2 on unresolved supplied-data proof obligations; it is not the successful prediction quick-start. The prediction output is a reasoned competition prediction, not a certified conclusion.
 
-Extraction text and diagnostics in `.ghostgraph/` can contain fictional participant
-data and must stay outside submission archives and Git. The local model is
-trained from independently authored examples in source at every run, then performs
-actual inference. Its probabilities are similarity-based confidence signals, not
-calibrated guarantees. API token usage and API cost are zero; local compute is not
-priced. Full-run usage is documented in `code/evaluation/usage_report.md`.
+Unfulfilled conditions, undecided present consent and unverified third-party authority do not presently authorize deletion: prediction rows use `NOT_APPLICABLE,[]` and retain `CONSENT_UNRESOLVED` plus explanation internally. This does not mean permanent refusal or permission to act when a condition is later met; re-evaluate a new authorized request. Hypothetical/informational and quoted instructions likewise do not authorize erasure. Classifier uncertainty (`CLASSIFICATION_UNRESOLVED`) instead blocks the export, writes `.ghostgraph/full_blocked_cases.json`, and preserves an existing destination. Authorized requests with ambiguous ownership stay evidence problems: never relabel them non-applicable or invent findings. If no valid evidence-backed row is representable, normal export fails explicitly.
 
-`code.zip` contains source, instructions, prompts and Markdown reports, excluding
-the dataset, caches, environments and nested archives. Root `log.txt` is the
-conversation-summary artifact. A full hosted session trace is not available from
-this environment; use the interface export if provided, following
-`agent_trace_instructions.md`, and keep any trace ZIP separate from `code.zip`.
+`--requests PATH` and `--output PATH` override paths. Diagnostics, OCR caches and measured run usage are under ignored `.ghostgraph/`; do not submit them or log real personal information. `--allow-unresolved` is a provisional diagnostic option and does not bypass authorization-classification failure; it is not the competition quick-start.
 
-The original challenge reference follows.
+## Evaluate and package
+
+```bash
+PYTHONPATH=code python3 -m unittest discover -s code/tests -v
+PYTHONPATH=code python3 -m research.v5_final_evaluate
+python3 code/package.py --output code.zip
+```
+
+The research evaluator writes predictions and metrics under `.ghostgraph/v5/`, never production output. Public answers are read only by evaluation tooling. Historical three-source comparison additionally requires Git commits `3b942ac` and `08e975b`: `python3 code/evaluation/v51_compare.py`. Those commits are not required to run inference or tests from the ZIP. Historical snapshot implementations remain on the experimental Git branches and are omitted from production source and its package; useful research reports and regressions remain included.
+
+Read `code/evaluation/evaluation_report.md`, `usage_report.md`, and `v51_review.md` for actual metrics, independent fictional tests, corrections, promotion assessment and limitations. The small authored intent sets do not prove arbitrary multilingual consent interpretation. No hidden-set accuracy or Output CSV point gain is claimed. Root `log.txt` is the separate append-only chat submission; hosted structured session traces remain unavailable locally and have not been manufactured.
+
+---
 
 ## Ghost Data Still Exists
 
@@ -233,17 +198,3 @@ Before submitting, confirm that:
 - `code.zip` includes your runnable code, `README.md`, `code/evaluation/evaluation_report.md`, and `code/evaluation/usage_report.md`;
 - `log.txt` follows the `AGENTS.md` turn format and is uploaded to the `chat_transcript` slot; and
 - no API keys, credentials, real personal data, or sensitive configuration values are included.
-
-## Recovery prediction mode
-
-Strict certification remains the default. To generate explicitly uncertain
-competition predictions separately:
-
-```bash
-python3 code/evaluation/recovery.py
-python3 code/main.py --mode predict --allow-unresolved --output output.prediction.candidate.csv
-```
-
-Recovery restores 9/32 exact public rows and 159/193 exact steps. All 518 full
-prediction rows now pass structure. See
-code/evaluation/recovery_report.md for historical comparisons and assumptions.

@@ -1366,3 +1366,1352 @@ branch=work
 repo_root=/workspace/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+
+## [2026-10-25T01:23:00.640758+00:00] V3 experimental linkage research; reject promotion
+
+User Prompt (verbatim, secrets redacted):
+# GhostGraph V3 — Competitive Accuracy Research
+
+You are the principal AI research engineer for GhostGraph, a HackerRank Orchestrate deletion-audit system.
+
+Repository:
+https://github.com/ABhattacharya-dev/hackerrank-orchestrate-october26
+
+We have a valid, reproducible competition submission. We now have additional development time and want to maximize evidence-backed accuracy against unseen cases.
+
+**This is an experimental accuracy-improvement project, not a submission rescue.**
+
+## Protected baseline
+
+The current verified commit is `3b942ac`, tagged `submission-freeze-verified`.
+
+Baseline:
+
+- 518 valid output rows
+- Zero official structural violations
+- 115 passing tests
+- 9/32 exact public sample cases
+- 29/32 correct statuses
+- 159/193 exact matching steps
+- 97.55% step precision
+- 82.38% step recall
+- 78.67% citation accuracy
+
+Do not modify, delete, or overwrite the protected submission artifacts.
+
+Create a dedicated experimental branch from the frozen commit, for example `experiment/evidence-linkage-v3`.
+
+You are explicitly authorized to use isolated experimental branches and temporary worktrees for this research.
+
+Do not merge experimental work into main until it passes the promotion criteria.
+
+## Research objective
+
+Find generalizable improvements to identity resolution, temporal evidence linkage, resource discovery, verification coverage, and exact step accuracy.
+
+Do not add features merely to increase architectural complexity.
+
+Use real evidence, controlled experiments, and measured changes in evaluation results.
+
+---
+
+## Experiment 0 — Rebuild accurate diagnostics
+
+The committed `code/evaluation/mismatch_report.md` describes an older certification-mode evaluation.
+
+Generate a fresh mismatch report from the CURRENT prediction engine.
+
+For all 32 samples, measure:
+
+- Correct and incorrect statuses
+- Exact row matches
+- Missing canonical operations
+- Extra predicted operations
+- Wrong citations
+- Missing resource relationships
+- Missing verification obligations
+- Incorrect policy decisions
+- Ordering issues
+
+Classify each mismatch by probable root cause.
+
+Preserve public sample labels strictly inside evaluation tooling.
+
+Also produce a coverage matrix across all 518 unlabeled requests. Do not invent hidden labels.
+
+## Experiment 1 — Temporal Request-to-Activity Correlation
+
+A new dataset investigation found a potentially significant missing linkage mechanism.
+
+Several public deletion requests have account-deletion worker activities extremely close to their reported workflow timestamps.
+
+Examples:
+
+- case_01: activity_3342, account_001, 17 seconds before reported_at.
+- case_02: activity_3376, account_002, 303 seconds after reported_at.
+- case_06: activity_3545, account_006, 220 seconds before reported_at.
+- case_07: activity_3590, account_007, 81 seconds before reported_at.
+- case_08: activity_3554, account_008, 298 seconds after reported_at.
+- case_10: activity_3595, account_010, 37 seconds after reported_at.
+
+These are candidate temporal relationships, NOT established identity proofs.
+
+Across the full dataset, an initial ±5-minute search for account DELETE_RECORD activities found 118 cases with exactly one matching activity and two with multiple matching activities.
+
+Investigate whether a request can be linked to a worker activity through corroborated temporal workflow relationships.
+
+Consider:
+
+- requested_at
+- reported_at
+- audit_at
+- event_time
+- event_type
+- reported_status
+- reported_result
+- target_system
+- resource_id
+- Explicit subject identifiers
+- Other catalog relationships
+- Readback evidence
+- SQL snapshot scopes
+
+Build a constrained candidate-matching algorithm with explicit ambiguity rejection.
+
+Consider global assignment consistency to avoid assigning one worker action incorrectly to multiple requests. Allow legitimate multi-event workflows and repeated customer requests.
+
+Do not link accounts solely from matching numeric suffixes, nearest timestamps, reported status, or sample answer labels.
+
+Use timestamps to propose candidate relationships; require independent corroboration before treating a candidate as a strong identity edge.
+
+Record inferred links separately from directly established links, including their supporting sources and uncertainty.
+
+Test narrow and wider time windows, collision handling, and unique-match criteria.
+
+A worker's successful operation claim may identify a target resource but does NOT prove the record is absent.
+
+After establishing a defensible resource relationship, retrieve independent snapshot/readback evidence to determine resource state.
+
+Test whether this recovers missing VERIFY_RECORD_ABSENT operations.
+
+Evaluate performance on the public samples and independent adversarial cases.
+
+## Experiment 2 — Improve Evidence Graph Completeness
+
+Investigate resources that cannot currently be linked to a stable subject.
+
+Review:
+
+- Historical identity changes
+- Explicit catalog records
+- Worker operations and target resources
+- Structured cross-resource references
+- SQL snapshot scope
+- Service readback records
+- Analytics and anonymization histories
+- Retained records and tombstones
+
+Introduce a staged identity graph:
+
+1. Direct verified links
+2. Corroborated derived links
+3. Weak candidate links
+4. Ambiguous or rejected links
+
+Only sufficiently supported links may affect final predictions.
+
+Preserve time validity and source provenance.
+
+Never merge different users merely because they share a name, phone fragment, or historical email.
+
+Do not assume an absent account record means the account never existed.
+
+## Experiment 3 — Recover Missing Verification Obligations
+
+Use the fresh prediction-mode mismatch report.
+
+For each omitted canonical verification, determine whether the failure comes from:
+
+- Missing resource discovery
+- Missing subject attribution
+- Incorrect temporal reconstruction
+- Conditional policy applicability
+- Failure to propagate a verified state
+- Planner suppression
+- Missing appropriate evidence citation
+
+Correct generalizable causes, not individual case IDs.
+
+Ensure incomplete cases include all justified future verification obligations.
+
+Ensure complete cases cite eligible evidence for actual current-state verification.
+
+Retain exact phase and operation order.
+
+## Experiment 4 — Targeted AI Evidence Review
+
+Evaluate whether a bounded LLM or vision-model review pass improves evidence coverage.
+
+Do not call an LLM for every request by default.
+
+Select only cases with unresolved relationships or suspiciously incomplete evidence coverage.
+
+The model must return structured candidate evidence relationships with:
+
+- Subject or candidate identifier
+- System and resource
+- Proposed relationship
+- Supporting evidence ID
+- Exact evidence locator
+- Explanation
+- Uncertainty
+
+Verify model proposals against the supplied source material using deterministic checks.
+
+Reject invented identifiers, unsupported relationships, missing evidence, or post-cutoff information.
+
+Never let the model directly modify output.csv.
+
+Compare the AI-assisted system against the deterministic baseline using the same evaluations.
+
+Measure extra inference calls, tokens, runtime, costs, recovered correct steps, and introduced false positives.
+
+Keep the AI component only if it demonstrates measurable value.
+
+## Experiment 5 — Independent Generalization Tests
+
+Create adversarial scenarios not copied from public sample outputs.
+
+Include:
+
+- Two deletion requests with similar reported timestamps.
+- Several worker operations near one request.
+- A successful worker claim followed by a replica containing PII.
+- An account absent in one scope but present in another.
+- A false temporal association involving another customer.
+- Historical email reassignment.
+- Worker activity after the audit cutoff.
+- Compliant retained records and tombstones.
+- Archive inventory without proven restore capability.
+- Multilingual non-deletion requests.
+
+Run all previous tests alongside these new scenarios.
+
+A change that improves public samples but fails independent tests is not automatically an improvement.
+
+## Experiment 6 — Controlled Ablation
+
+Evaluate each major improvement independently:
+
+A. Baseline frozen model.
+
+B. Temporal correlation only.
+
+C. Improved identity graph only.
+
+D. Improved verification generation only.
+
+E. AI evidence review only.
+
+F. Best justified combination.
+
+Report for every experiment:
+
+- Exact sample rows
+- Status accuracy
+- Step precision/recall/F1
+- Citation accuracy
+- Field accuracy
+- Structural violations
+- Full-dataset prediction changes
+- New false-positive risks
+- Adversarial test results
+- Runtime and model cost
+
+Do not hide regressions.
+
+## Promotion rules
+
+A candidate may replace the frozen submission only when:
+
+1. All official structural checks still pass.
+2. Existing valid test coverage remains passing.
+3. New adversarial tests pass.
+4. Evidence and temporal rules remain defensible.
+5. Evaluation demonstrates a meaningful accuracy improvement.
+6. Source changes generalize rather than memorize public cases.
+7. Reproduction succeeds from a clean environment.
+8. Final output and reports are regenerated honestly.
+
+Prefer meaningful gains in exact-row accuracy and recall while maintaining precision close to or above 95%.
+
+The aspirational research target is at least 16/32 exact public rows and 90% step recall, but do not force these values through invalid assumptions.
+
+Do not merge a weaker implementation merely to meet a numerical target.
+
+## Research autonomy
+
+You may select libraries, algorithms, inference models, or internal representations based on experiments.
+
+You may modify implementation code on the experimental branch.
+
+Do not modify official datasets, sample answers, root competition instructions, or frozen submission tags.
+
+Do not introduce unnecessary infrastructure or a frontend.
+
+Keep architectural and experimental decisions documented.
+
+Continue milestone by milestone, executing actual code and testing every change.
+
+## Final deliverable
+
+Produce:
+
+1. An experimental V3 implementation.
+2. An accurate current-mode mismatch report.
+3. Before/after evaluation tables.
+4. Independent adversarial test results.
+5. Explanation of every important improvement.
+6. Measured model usage and cost.
+7. A recommendation to promote or reject V3.
+8. If promoted, a reproducible 518-row candidate and updated source package.
+
+Do not overwrite the protected baseline automatically.
+
+**Begin with Experiment 0, followed by the temporal request-to-activity linkage investigation. Prioritize accuracy over complexity.**
+
+Agent Response Summary:
+Created isolated experiment/evidence-linkage-v3 worktree from submission-freeze-verified without changing protected CSV/ZIP or production code. Rebuilt current prediction mismatches and 518-request unlabeled coverage, implemented corroborated temporal matching, staged structured-source graph and a deterministic bounded-review proposal gate, and evaluated controlled A/B/C/D/F arms. The 300-second full-input search reproduces 118 unique and two multiple-candidate cases, but no independently corroborated ownership in that window; the single public 360-second corroborated source relationship was already known to the baseline. All evaluated arms remain 9/32 exact rows, 29/32 statuses and 159/193 exact steps, with zero full structural violations and no changed full prediction rows. All 130 tests pass, including 15 new independent cases; cold combination reproduction matches protected output. Recommend rejecting promotion because no meaningful accuracy improvement is measured; hosted AI review is NOT RUN due to absent configured credentials/model.
+
+Actions:
+* Added research/linkage.py, auditor.py, review.py, controlled runner, cold reproduction and adversarial tests; production main.py unchanged.
+* Generated fresh evaluation/mismatch_report.md plus research results, coverage, temporal findings, decisions and usage/timing tables.
+* Tested five windows, explicit subject corroboration, global collision rejection, foreign contacts, future worker/workflow times, replicas, retention, negation and invented review proposals.
+* A temporary syntax error while adding uncertainty metadata was caught by regression/import checks, corrected, and all 130 tests and experiments were rerun; failed runs are not counted as passing.
+* D remains a documented no-op planner audit because no new verified obligation rule was justified. E has no measured scores; zero extra hosted calls and no invented token counts or gains.
+* Preserved original root shared transcript and mirrored its append-only snapshot into the research branch; no experimental code merged into main.
+
+Context:
+tool=Codex
+Model metadata limitation: exact runtime identifier inaccessible; no identifier fabricated. Exact-model log compliance remains incomplete.
+branch=experiment/evidence-linkage-v3
+repo_root=/workspace/ghostgraph-v3
+worktree=/workspace/ghostgraph-v3
+shared_log=/workspace/hackerrank-orchestrate-october26/log.txt
+parent_agent=none
+
+## [2026-10-25T02:49:10.510640+00:00] V4 source recovery research; reject promotion
+
+User Prompt (verbatim, secrets redacted):
+# GhostGraph V4 — Competition Score Optimization
+
+You are the principal research engineer responsible for improving GhostGraph's competitive performance.
+
+Repository:
+https://github.com/ABhattacharya-dev/hackerrank-orchestrate-october26
+
+## Competition scoring
+
+The published leaderboard categories are:
+
+- Output CSV: 30 points
+- Code ZIP: 30 points
+- Chat transcript: 10 points
+- AI judge interview: 30 points
+
+The participant will handle the AI judge interview separately.
+
+Our objective is to maximize the remaining 70 points through better prediction accuracy, stronger implementation, genuine AI usefulness, and complete documentation.
+
+Do not optimize for appearances or test counts.
+
+## Protected baseline
+
+Production tag: `submission-freeze-verified`
+
+Production commit: `3b942ac`
+
+Baseline results:
+
+- 518 generated rows
+- Zero official structural violations
+- 115 passing tests
+- 9/32 exact public cases
+- 29/32 correct statuses
+- 159/193 exact matching steps
+- 97.55% precision
+- 82.38% recall
+- 89.33% step F1
+- 78.67% citation accuracy
+
+V3 experiment:
+`experiment/evidence-linkage-v3`, commit `9e6c3e2`
+
+V3 tested temporal association, expanded identity-graph linkage, and combined approaches. None improved accuracy. V3 has 130 passing tests and a fresh prediction-mode mismatch report.
+
+**Do not repeat failed V3 experiments.**
+
+Create `experiment/evidence-recovery-v4` from the frozen baseline. Reuse useful V3 diagnostic tooling without importing its ineffective prediction changes.
+
+Never modify production output.csv, code.zip, frozen tags, or official datasets during experimentation.
+
+Read all relevant repository AGENTS.md instructions first. Preserve append-only transcript requirements.
+
+---
+
+# Milestone 0 — Establish scoring-oriented evaluation
+
+Reproduce the frozen baseline.
+
+Import or recreate the latest V3 prediction-mode mismatch report.
+
+Identify all remaining unmatched canonical steps and exact-case failures.
+
+Build a research matrix containing:
+
+- Case ID
+- Missing/extra operation
+- Expected resource
+- Original evidence source
+- Normalized evidence available
+- Predicted resource linkage
+- Policy treatment
+- Candidate root cause
+- Confidence in the diagnosis
+
+Separate:
+
+1. Status errors
+2. Evidence extraction failures
+3. Identity and attribution failures
+4. Temporal-state failures
+5. Policy or planning failures
+6. Canonical-convention disagreements
+
+Keep sample labels exclusively in evaluation and analysis, never in production inference.
+
+Do not assume a canonical output proves the underlying source contains sufficient evidence.
+
+**Exit criterion:** An accurate description of what must improve before implementing anything new.
+
+# Milestone 1 — Original-source evidence gap analysis
+
+This is the highest-priority research phase.
+
+For every missing public-sample operation:
+
+1. Locate the original source artifact.
+2. Inspect the original data directly.
+3. Compare it with the deterministic parser's output.
+4. Identify omitted fields, references, timestamps, relationships, states and source scopes.
+5. Determine whether the information is actually recoverable.
+6. Record exact evidence locators.
+7. Classify the failure.
+
+Use these classifications:
+
+- PARSER_LOSS
+- NORMALIZATION_LOSS
+- SOURCE_STRUCTURE_LOSS
+- IDENTITY_RELATIONSHIP_LOSS
+- STATE_RECONSTRUCTION_ERROR
+- POLICY_ERROR
+- OUTPUT_CONVENTION_ERROR
+- SOURCE_DOES_NOT_SUPPORT_PROOF
+
+Pay special attention to:
+
+- Service readback logs
+- SQL snapshot boundaries and empty tables
+- Analytics records with removed personal identifiers
+- Screenshots containing multiple resource records
+- Support PDFs and attachments
+- Historical identifiers
+- Explicit resource correlation IDs
+- Retained-record relationships
+
+Do not use numeric suffixes or nearby activity timestamps as ownership proof.
+
+Produce `code/research/v4_evidence_gap_report.md`.
+
+**Exit criterion:** Identify specific recoverable facts or demonstrate that the missing evidence is genuinely unsupported.
+
+# Milestone 2 — Improve document extraction when warranted
+
+Inspect:
+
+- `code/ghostgraph/evidence.py`
+- `code/ghostgraph/vision.py`
+
+There is a known architectural limitation:
+
+The optional vision extractor records extracted text under `vision_review_required`, but does not normally convert new findings into validated observations consumed by the temporal ledger.
+
+Investigate a safe integration.
+
+Proposed stages:
+
+1. Extract source facts from the original PDF/image.
+2. Parse into a strict structured evidence schema.
+3. Associate each fact with a precise source region or locator.
+4. Verify identifiers, relationships, timestamps, and current states against the source.
+5. Reject fabricated or ambiguous facts.
+6. Create a typed normalized observation.
+7. Preserve the evidence ID and temporal cutoff.
+8. Rebuild the evidence index.
+9. Re-run the deterministic policy engine.
+10. Measure whether the final output actually improves.
+
+Do not treat the model's confidence as proof.
+
+Do not assume two identifiers appearing on the same screenshot belong to the same subject.
+
+Preserve evidence source scope so different rows and panels cannot be mistakenly merged.
+
+Do not use future captures to prove historical states.
+
+If independent validation is impossible, retain the model's extraction as a diagnostic proposal.
+
+**Important:** Do not integrate vision merely to claim that the project uses a multimodal model. Require measurable information recovery.
+
+# Milestone 3 — Fix the V3 AI proposal acceptance limitation
+
+Inspect V3:
+
+`code/research/review.py`
+
+The existing validator accepts relationships only when the proposed subject already appears in the normalized observation.
+
+This prevents recovery of novel relationships omitted by an earlier parser.
+
+Design a two-tier validation process.
+
+Tier A — Existing-observation validation:
+
+Confirm against already parsed, timestamp-eligible evidence.
+
+Tier B — Original-source validation:
+
+For a proposed new relationship:
+
+- Locate the exact original artifact.
+- Confirm that the specified resource actually occurs.
+- Confirm that the proposed subject or explicit authoritative relationship is grounded in the same scoped record.
+- Reject page-level co-occurrence as sufficient proof.
+- Check ownership conflicts and historical identity reassignment.
+- Confirm capture and observation timestamps.
+- Record the precise locator and validation rationale.
+- Reject unsupported claims, invented IDs, and ambiguity.
+
+Only accepted Tier B facts may enter the ledger as new observations.
+
+Do not use an LLM's textual assertion as independent confirmation of the same assertion.
+
+Add adversarial tests designed to catch falsely associated subjects from multi-record screenshots and documents.
+
+# Milestone 4 — Evaluate AI extraction pragmatically
+
+An optional OpenAI vision adapter already exists. Hosted inference has not been measured.
+
+Do not assume access to API keys, paid services, or particular models.
+
+First test deterministic improvements and available local extraction methods.
+
+If a vision-capable model is genuinely available, perform a bounded experimental run using only artifacts where Phase 1 established a plausible source-extraction failure.
+
+Record:
+
+- Model/provider
+- Model calls
+- Input/output tokens, where supported
+- Cost, if metered
+- Runtime
+- Accepted facts
+- Rejected facts
+- Newly recovered correct operations
+- Introduced false positives
+
+If no model is available, mark hosted AI evaluation NOT RUN and continue the deterministic research.
+
+Do not stop or fabricate performance.
+
+Do not request credentials merely to complete an optional experiment.
+
+# Milestone 5 — Canonical convention audit
+
+Use `deletion_rules.csv` and the 32 public sample answers to investigate general planning conventions.
+
+Evaluate whether the current implementation misunderstands:
+
+- Retained-record verification
+- Already-deleted accounts
+- Anonymized analytics
+- Tombstones
+- Backup restoration checks
+- Incomplete-case future verifications
+- Evidence selection and source precedence
+
+Use public answers to identify potential rules and test them against the original challenge contract.
+
+Do not memorize case-specific output.
+
+Do not invent resource relationships to reproduce sample labels.
+
+Where canonical examples conflict with a defensible reading of the supplied evidence, record the disagreement and avoid unsupported shortcuts.
+
+# Milestone 6 — Independent intent-model comparison
+
+The local intent classifier performs only five learned inference calls on the full dataset. Most other classifications are handled by explicit scope guards.
+
+Do not replace the classifier without evidence.
+
+Evaluate the existing model against independently authored cases covering:
+
+- Multilingual requests
+- Explicit and implicit deletion
+- Negation
+- Hypothetical questions
+- Account deactivation
+- Marketing-only requests
+- Data export
+- Correction requests
+- Quoted or forwarded requests
+- Conditional consent
+- Third-party requests
+- Duplicate customer requests
+
+Compare deterministic guards, the existing learned model, and an available alternative model if one exists.
+
+Use the same held-out tests for all implementations.
+
+Measure false authorization separately from missed deletion requests.
+
+Only retain the alternative if it materially improves reliability.
+
+Remember that the 32 public samples contain no NOT_APPLICABLE cases; they are not sufficient for measuring negative intent accuracy.
+
+# Milestone 7 — Controlled evaluation and ablation
+
+Compare these experimental variants:
+
+A. Frozen baseline
+
+B. Improved deterministic document parsing
+
+C. New original-source relationship validation
+
+D. Targeted multimodal extraction, only if actually executed
+
+E. Generalizable policy-convention corrections
+
+F. Best validated combination
+
+For each, report:
+
+- Correct statuses
+- Exact public rows
+- Correct canonical steps
+- Precision, recall and F1
+- Evidence citation accuracy
+- Field accuracy
+- Full structural violations
+- Full-dataset row differences
+- Independent adversarial tests
+- Runtime and model usage
+
+Use independent adversarial tests and mutation tests to detect overfitting.
+
+Do not call any sample-score gain proof of hidden-set improvement.
+
+Do not permit new operations unsupported by evidence.
+
+Preserve a 97.55%-precision baseline as a reference, not a number to artificially maintain by suppressing justified findings.
+
+# Milestone 8 — Competition submission improvements
+
+If V4 improves actual correctness and passes all requirements:
+
+- Generate a new candidate output, not the protected output.csv.
+- Run the complete official structural validator.
+- Run the existing and new regression suites.
+- Test reproduction from a clean environment.
+- Update evaluation and usage reports with genuine numbers.
+- Check source-package portability and dependencies.
+- Prepare a proposed ZIP outside the protected baseline.
+- Document the AI component's actual contribution.
+
+Investigate transcript completeness separately.
+
+Preserve real conversation logs, original structured traces if accessible, and actual runtime metadata.
+
+Do not reconstruct or fabricate missing agent sessions.
+
+Do not alter production until promotion is explicitly justified.
+
+## Promotion criteria
+
+Recommend V4 promotion only if:
+
+1. Zero official structural violations remain.
+2. Independent adversarial tests pass.
+3. New source relationships are independently validated.
+4. Improvements are generalizable.
+5. Public accuracy increases meaningfully without unacceptable precision regression.
+6. Full-dataset output changes are explainable.
+7. Clean reproduction passes.
+8. Model usage and costs are documented truthfully.
+
+If V4 discovers no recoverable information or produces no meaningful improvement, reject promotion.
+
+## Required final deliverables
+
+- `code/research/v4_evidence_gap_report.md`
+- `code/research/v4_experiment_results.md`
+- Accurate before/after metrics
+- New independent tests
+- Details of accepted and rejected extracted facts
+- Evaluation of AI usefulness, if actually tested
+- Full-dataset prediction impact
+- Promotion or rejection recommendation
+
+## Execution instructions
+
+Work autonomously, milestone by milestone.
+
+Prioritize source-grounded accuracy over architectural complexity.
+
+Do not stop merely after creating documentation; implement and evaluate justified corrections.
+
+Do not repeat V3's failed temporal candidate matching.
+
+Do not weaken deterministic safety or output validation.
+
+If Phase 1 establishes that the remaining source information cannot be recovered, stop speculative development rather than inventing additional relationships.
+
+**Start immediately with Milestone 0 and Milestone 1. Continue to implementation only when the evidence supports a plausible improvement.**
+
+Agent Response Summary:
+Created experiment/evidence-recovery-v4 from frozen 3b942ac and reproduced prediction metrics without touching protected artifacts. Audited every one of 34 missing canonical operations and four extras against original scoped artifacts, normalized observations, activity/anonymization histories, identity and cutoff: 16 lack original target/ownership records, 12 have normalized states without ownership, six are available only in later captures. No recoverable novel source fact was established, so production parsing, vision admission and policy remain unchanged. Implemented a research-only Tier A/B original JSON validator that can validate facts absent from normalization; actual measurement accepted 276 already-normalized facts and rejected 224 future captures plus two future observations, with zero novel ledger facts. A separate 32-probe intent comparison scored frozen and LinearSVC alternatives both 21/32 with 11 false authorizations; no replacement adopted. All 133 software tests pass, including 18 new source-boundary/mutation tests. Recommend rejecting promotion; hosted review is NOT RUN, public/full predictions unchanged and no new ZIP or candidate replaces the baseline.
+
+Actions:
+* Reused V3 mismatch Markdown only; did not repeat V3 temporal matching or import its prediction changes.
+* Added original-source gap matrix/report with exact JSON/line/activity locators, accepted/rejected fact details and measured results.
+* Tested novel scoped facts with normalization omitted, neighbor/free-text confusion, future times, conflicting original systems/owners, tombstones, claims versus observations and malformed locators.
+* An initial research validator mistook explicit legal_service records for novel finance_service records; original scope inspection exposed and corrected this before admission, with independent tests.
+* Evaluated actual local intent alternative and disclosed challenge failures separately from software-test passes; no held-out labels used for training or guard tuning.
+* Verified all 518 frozen prediction rows against the official structural checker, zero errors and byte equality with protected output. CSV/ZIP/tag/dataset/main code unchanged.
+* Recorded actual model calls/runtime/cache and zero paid API tokens/cost. Hosted model/key configuration absent; no credentials requested. Local structured session directories unavailable; no traces or runtime model metadata fabricated.
+* Appended the primary shared transcript and mirrored only its append-only snapshot to the experimental branch. No experimental merge into main.
+
+Context:
+tool=Codex
+Model metadata limitation: exact runtime identifier is inaccessible; no value fabricated. Exact-model logging compliance remains incomplete.
+branch=experiment/evidence-recovery-v4
+repo_root=/workspace/ghostgraph-v4
+worktree=/workspace/ghostgraph-v4
+shared_log=/workspace/hackerrank-orchestrate-october26/log.txt
+parent_agent=none
+
+
+## [2026-10-25T05:03:01.394444+00:00] SESSION START — V5 research (late persistence)
+
+tool=Codex
+Model metadata limitation: exact runtime identifier is inaccessible; no value fabricated. Exact-model logging compliance remains incomplete.
+branch=experiment/intent-safety-v5
+repo_root=/workspace/ghostgraph-v5
+worktree=/workspace/ghostgraph-v5
+shared_log=/workspace/hackerrank-orchestrate-october26/log.txt
+parent_agent=none
+Language: py
+Time Remaining: not configured
+Session metadata persisted late; no earlier timestamp manufactured.
+
+## [2026-10-25T05:03:01.394444+00:00] V5 authorization-safety implementation and evaluation
+
+User Prompt (verbatim, secrets redacted):
+# GhostGraph V5 — Intent Safety and Code Quality
+
+Continue from the protected production baseline `3b942ac`.
+
+V4 experimental branch: `experiment/evidence-recovery-v4`, commit `eb06bdc`.
+
+Create a new isolated research branch named `experiment/intent-safety-v5`.
+
+## Objective
+
+Improve GhostGraph's authorization decisions, particularly false positive deletion authorization, while preserving current submission performance and avoiding overfitting.
+
+V4 discovered that the frozen model and a LinearSVC alternative both scored 21/32 on newly authored intent probes, with 11 false authorizations each.
+
+This is a demonstrated robustness weakness.
+
+However, the existing competition output already classifies 10 clear non-deletion requests as NOT_APPLICABLE. Do not assume improving the adversarial benchmark will automatically improve the current CSV score.
+
+## Phase 1 — Failure analysis
+
+Run and inspect the exact V4 intent comparison.
+
+For every failed probe, identify:
+
+- Whether the scope guard or ML classifier caused the result
+- Whether the instruction was quoted, conditional, hypothetical, third-party, or explicitly negated
+- Whether the error was a false authorization, missed deletion, or inappropriate abstention
+- Whether the expected label is supported by an unambiguous authorization interpretation
+
+Audit the existing 518 request texts without consulting hidden answers.
+
+Verify that the ten currently predicted NOT_APPLICABLE cases remain correctly classified according to their expressed intent.
+
+Do not change implementation yet.
+
+## Phase 2 — Build an authorization-aware intent engine
+
+Experiment with a structured semantic decision process that distinguishes:
+
+- Actual requester instructions
+- Quoted or forwarded text
+- Hypothetical discussion
+- Confirmed versus unfulfilled conditional consent
+- Explicit refusal or cancellation
+- Third-party deletion requests
+- Marketing-only or partial data preferences
+- Account deletion with an additional export request
+- Multilingual deletion and negation
+- Legitimate repeated deletion requests
+
+Preserve actual authorization as a requirement. Keyword occurrence alone must never establish consent.
+
+You may improve deterministic guards and test alternative learned models, but do not introduce new complexity without measurable improvement.
+
+Do not allow a blanket negation rule to suppress a separate, genuinely authorized deletion request within the same message.
+
+Keep uncertainty and evidence for the decision available in diagnostics.
+
+## Phase 3 — Independent testing
+
+Create additional evaluation examples before modifying the model.
+
+Separate development tests from genuinely held-out adversarial tests.
+
+Use the 32 V4 probes as a known regression suite, not as a set of strings to memorize.
+
+Measure:
+
+- False authorization rate
+- Missed authorized deletion rate
+- Correct rejection of out-of-scope requests
+- Multilingual performance
+- Conditional-consent handling
+- Runtime and inference cost
+
+Test variations and paraphrases that were not copied from training examples.
+
+## Phase 4 — Competition impact
+
+Run the unchanged production baseline and the experimental classifier against:
+
+- All 32 public samples
+- All 518 full requests
+- Existing regression tests
+- Independent intent challenge cases
+
+Compare every changed prediction.
+
+Preserve zero structural violations.
+
+Do not automatically merge a model that improves synthetic probes but damages competition predictions.
+
+## Phase 5 — Promotion decision
+
+There are two valid promotion outcomes.
+
+**Prediction improvement:** A generalizable correction improves competition predictions without unacceptable regressions.
+
+**Code-quality improvement:** Authorization robustness improves substantially on independent tests while all 518 output rows remain byte-identical and reproducible.
+
+Either may justify a carefully reviewed Code ZIP update, but do not claim that unchanged CSV predictions improve Output CSV points.
+
+If improvements are inconsistent, overfitted, or unsupported, reject promotion.
+
+Preserve the frozen production artifacts throughout research.
+
+## Final deliverables
+
+Provide a failure analysis, before/after confusion matrices, actual model usage, independent test results, full-dataset prediction differences, and an explicit promotion recommendation.
+
+Do not rebuild the evidence graph, OCR pipeline, temporal ledger, or policy engine.
+
+Do not merge automatically.
+
+Start with the V4 false-authorization failures.
+
+Agent Response Summary:
+Replayed V4 false authorizations, authored separate development/prospective probes and implemented a consent/speech-act wrapper over the unchanged local learned classifier on an isolated branch. First held-out40 improved 25 to39 correct with zero false authorizations and one missed instruction; subsequent prospective24 improved11 to24 with zero false authorizations or misses. Final competition audit discovered sample-only regressions; corrected generic continuation audits and retained-reference conditions, then restored baseline public metrics and byte-identical518 predictions with zero full structural errors. Final challenge scores are now observed regression, not fresh held-out evidence; reviewed Code ZIP-only promotion is proposed, never merged automatically.
+
+Actions:
+* Read repository instructions and onboarding setup skill; reused pinned local tools and dependencies.
+* Replayed code/research/v4_intent.py and audited ten existing non-deletion requests.
+* Added versioned scope layer, pre-authored probes, confusion matrices, source snapshots, full-dataset comparisons and144 passing tests.
+* Added normal CLI integration only on experiment/intent-safety-v5; no evidence graph, OCR, temporal or policy rebuild.
+* Source-package reproduction in progress; final results will be appended. Protected output.csv/code.zip/dataset/tags unchanged.
+* No hosted inference, paid API cost or fabricated token counts. Exact aggregate development local inference calls were not instrumented.
+
+Context:
+tool=Codex
+Model metadata limitation: exact runtime identifier is inaccessible; no value fabricated. Exact-model logging compliance remains incomplete.
+branch=experiment/intent-safety-v5
+repo_root=/workspace/ghostgraph-v5
+worktree=/workspace/ghostgraph-v5
+shared_log=/workspace/hackerrank-orchestrate-october26/log.txt
+parent_agent=none
+
+## [2026-10-25T05:03:01.394444+00:00] Continue V5 final validation
+
+User Prompt (verbatim, secrets redacted):
+Pickup from where you left
+
+Agent Response Summary:
+Continued final sample regression, source archive reproduction, documentation and protected-artifact verification. All final public sample outputs match the baseline, and all518 submission rows are unchanged; no automatic merge is authorized or performed.
+
+Actions:
+* Re-ran complete144-test suite and baseline-versus-V5 prediction evaluator.
+* Prepared proposed source ZIP in a separate proposals path and tested clean-cache reproduction.
+
+Context:
+tool=Codex
+Model metadata limitation: exact runtime identifier is inaccessible; no value fabricated. Exact-model logging compliance remains incomplete.
+branch=experiment/intent-safety-v5
+repo_root=/workspace/ghostgraph-v5
+worktree=/workspace/ghostgraph-v5
+shared_log=/workspace/hackerrank-orchestrate-october26/log.txt
+parent_agent=none
+
+
+## [2026-10-25T05:04:19.264233+00:00] V5 final verification supplement
+
+Agent Response Summary:
+The final classifier preserves every public sample prediction (29/32 statuses,9/32 exact rows,159/193 steps) and every frozen518 output row. All144 tests pass from the worktree, temporary source root and extracted proposed ZIP; full official-contract violations remain zero. Sample-only generation retains the same six pre-existing structural violations, and strict evidence certification still has490 unresolved cases. Recommendation: review-only code-quality promotion; no Output CSV accuracy gain claimed and no automatic merge.
+
+Actions:
+* Reproduced the normal prediction CLI from an empty source root with no extraction cache and from an extracted source ZIP; both reproduce output SHA256 61c7563f3ffa04edb7ab18532f9d31b49fe316c52a5d013f80412e0b458a9891.
+* Proposed ZIP proposals/code-v5.zip has84 source/documentation files, valid CRC and SHA256 556dcb65abcdd7d76692e3b73967bf6efab56e91e957e3198fae929eb0e581f1; no dataset, secrets, environments or nested archives. Final documentation-only repack retained identical tested Python bytes and all archive members match current source.
+* Clean CLI used five genuine local learned inference calls and143 cache hits; no hosted AI calls or paid API cost. Token units do not apply to sklearn; exact aggregate development calls were not instrumented.
+* Original baseline output.csv,code.zip,official instructions,datasets and frozen tag remain unchanged. Only experiment/intent-safety-v5 is to be committed/pushed, never merged automatically.
+* Structured hosted session export and exact engineering-runtime model identifier remain unavailable; neither was fabricated.
+
+Context:
+tool=Codex
+Model metadata limitation: exact runtime identifier is inaccessible; no value fabricated. Exact-model logging compliance remains incomplete.
+branch=experiment/intent-safety-v5
+repo_root=/workspace/ghostgraph-v5
+worktree=/workspace/ghostgraph-v5
+shared_log=/workspace/hackerrank-orchestrate-october26/log.txt
+parent_agent=none
+
+
+## [2026-10-25T05:17:10.976635+00:00] SESSION START — V5.1 production readiness
+
+tool=Codex
+Model metadata limitation: exact runtime identifier is inaccessible; no value fabricated. Exact-model logging compliance remains incomplete.
+Repo Root: /workspace/ghostgraph-v5
+Branch: experiment/intent-safety-v5.1
+Worktree: /workspace/ghostgraph-v5
+Parent Agent: none
+Language: py
+Time Remaining: not configured
+
+
+## [2026-10-25T05:24:25.660861+00:00] V5.1 consent-contract repair and production cleanup
+
+User Prompt (verbatim, secrets redacted):
+# GhostGraph V5.1 — Production Readiness and Code ZIP Promotion
+
+Continue from commit `08e975b` on `experiment/intent-safety-v5`.
+
+Protected baseline: `submission-freeze-verified`, commit `3b942ac`.
+
+V5 demonstrated a substantial authorization-safety improvement, with no change to the competition CSV.
+
+**Objective: correct remaining integration risks, independently test the enhanced authorization logic, and determine whether V5 should replace the frozen Code ZIP.**
+
+Do not modify the frozen production artifacts or merge automatically.
+
+## Phase 1 — Audit ambiguous-intent handling
+
+There is a possible end-to-end contract bug.
+
+`Auditor.audit()` currently handles ambiguous intent by returning:
+
+`INCOMPLETE` with `steps_json=[]`.
+
+But the official structural validator may reject an INCOMPLETE case without supported findings.
+
+Reproduce this issue using an independent, fictional conditional deletion request.
+
+Test through the actual CLI, not only `AuthorizationIntent.classify()`.
+
+Investigate the correct competition interpretation of:
+
+- Explicitly unfulfilled conditional consent
+- Hypothetical deletion inquiry
+- Unverified third-party authorization
+- Genuine uncertainty about present deletion consent
+- Authorized deletion with uncertain resource ownership
+
+Distinguish an unauthorized/non-applicable deletion request from an authorized deletion with insufficient evidence.
+
+Do not automatically equate every unknown with INCOMPLETE.
+
+Implement a defensible, contract-compliant behavior according to the official problem statement.
+
+Preserve uncertainty in internal diagnostics.
+
+Never create invented findings to make an invalid row pass validation.
+
+## Phase 2 — Production architecture cleanup
+
+Move the runtime authorization implementation from:
+
+`code/research/v5_intent.py`
+
+into the production `code/ghostgraph/` package.
+
+Keep a compatibility import if required by existing evaluation scripts.
+
+Update `code/main.py` to import from the production package.
+
+Ensure the code being evaluated is precisely the implementation packaged for submission.
+
+Keep research experiments and historical evaluation records clearly identified as research, not production dependencies.
+
+Avoid unnecessary changes to the evidence, identity, temporal, policy, and planning modules.
+
+## Phase 3 — Independent authorization tests
+
+Retain all 144 existing tests.
+
+Add end-to-end tests covering:
+
+1. Unfulfilled deletion conditions.
+2. Hypothetical and quoted deletion instructions.
+3. Unauthorized third-party requests.
+4. Legitimate authorized deletion.
+5. Ambiguous requester consent.
+6. Separate authorized and refused actions within one request.
+7. Multilingual non-deletion and deletion requests.
+8. Continuation of a previously authorized erasure.
+9. Unexpected novel sentence structure.
+10. Full official structural validation of generated rows.
+
+Use independent fictional test data.
+
+Do not modify test expectations merely to make the implementation pass.
+
+Check that improvements aren't specific to the previously inspected V5 probes.
+
+## Phase 4 — Regression verification
+
+Compare V5.1 against the frozen baseline and final V5.
+
+Run:
+
+- All software tests
+- Full 32-case public evaluation
+- Full 518-case prediction
+- Official structural validation
+- Clean-cache reproduction
+- Exact output byte comparison
+- Packaging verification
+
+Required competition baseline:
+
+- 518 correctly keyed rows
+- Zero structural violations
+- 9/32 exact public rows or better
+- 29/32 correct public statuses or better
+- Byte-identical full CSV unless a separately justified correction improves it
+
+Do not claim higher Output CSV accuracy if the output remains unchanged.
+
+## Phase 5 — Code ZIP scoring readiness
+
+Review source structure, dependencies, README, documentation, and evaluation reports from a judge's perspective.
+
+Verify:
+
+- Production logic is not dependent on experiment-only code.
+- The source ZIP includes everything needed for execution.
+- Installation and inference run without a paid API key.
+- AI participation is correctly documented.
+- Actual model usage is reported.
+- Strict certification and prediction modes are clearly distinguished.
+- Known limitations and uncertainty remain honestly disclosed.
+- No secrets, training leakage, or excluded datasets are packaged.
+- The exported code reproduces the submitted CSV.
+
+Do not pad the ZIP with redundant experimental scripts just to increase apparent complexity.
+
+Preserve the most useful research reports demonstrating real failures, corrections, and evaluation.
+
+## Phase 6 — Promotion decision
+
+Produce a final review comparing:
+
+- Frozen production
+- V5
+- V5.1
+
+Rate each implementation's safety, maintainability, reproducibility, accuracy, and Code ZIP submission readiness.
+
+Recommend promotion only if V5.1:
+
+1. Fixes the ambiguous-intent output problem.
+2. Preserves the complete 518-row competition contract.
+3. Passes end-to-end authorization tests.
+4. Retains the demonstrated authorization improvements.
+5. Preserves source reproducibility.
+6. Does not introduce new unsupported evidence or decisions.
+
+If successful, produce a **proposed** replacement ZIP, without overwriting the protected baseline.
+
+Do not merge into main until the promotion assessment is complete.
+
+Document tests executed, observed limitations, exact file checksums, and remaining risks.
+
+**Begin by reproducing and resolving the ambiguous-intent structural issue.**
+
+Agent Response Summary:
+Reproduced the ambiguous-intent CLI failure using entirely fictional data: exit2, unsupported empty INCOMPLETE row and no export. Moved runtime consent logic into ghostgraph.authorization with a research compatibility import, separated pending consent from classifier uncertainty, and preserved authorized ownership ambiguity as an evidence blocker. Added12 independent CLI/integration tests while retaining all144 original tests; first run exposed a prefatory-sentence miss, corrected generically without changing expectations. Three-source regression, pinned fresh-venv installation and final proposed ZIP reproduction are being verified; no merge or production-artifact replacement is performed.
+
+Actions:
+* Read root/code instructions, README, problem statement and trace protocol; continued on experiment/intent-safety-v5.1 from08e975b.
+* Added fictional dataset/CLI tests covering conditional, hypothetical, quoted, third-party, multilingual, own-scope and prior-erasure cases plus classifier fault injection.
+* Preserve consent uncertainty in diagnostics; export NOT_APPLICABLE only when present consent is not established by the request, not on classifier uncertainty. Classifier uncertainty writes blocked-case diagnostics and preserves existing output.
+* No changes to evidence, identity, temporal, policy or planning logic. Authorized ownership ambiguity is never converted to NOT_APPLICABLE.
+* Normal CLI imports only production authorization; four redundant historical snapshot/runner files are excluded from proposed packages while remaining in Git.
+* Frozen output.csv/code.zip, original V5 proposed ZIP, official instructions, datasets and frozen tag remain unchanged.
+
+Context:
+tool=Codex
+Model metadata limitation: exact runtime identifier is inaccessible; no value fabricated. Exact-model logging compliance remains incomplete.
+branch=experiment/intent-safety-v5.1
+repo_root=/workspace/ghostgraph-v5
+worktree=/workspace/ghostgraph-v5
+shared_log=/workspace/hackerrank-orchestrate-october26/log.txt
+parent_agent=none
+
+
+## [2026-10-25T05:32:37.826838+00:00] V5.1 final acceptance and promotion assessment
+
+Agent Response Summary:
+V5.1 is recommended for reviewed Code ZIP-only promotion, with no automatic merge or replacement. The ambiguous-consent CLI reproduction now exits0 with NOT_APPLICABLE,[] and retained consent diagnostics; actual classifier uncertainty blocks export and preserves an existing destination. Frozen,V5,V5.1 all reproduce the identical518 CSV and unchanged32 public predictions; full structural errors are zero. Original source suites115/144 and V5.1's156 tests pass; final ZIP fresh-venv/cold-cache reproduction and runtime-without-research checks pass, while strict certification still exits2 with490 unresolved evidence cases.
+
+Actions:
+* Installed pinned requirements into a fresh virtualenv, ran pip check, and verified the actual sys.prefix. Acceptance initially resolved the venv executable symlink into the base interpreter; fixed the verification helper and reran using the actual venv before claiming fresh-environment execution.
+* Ran all original/new suites, independent fictional real-CLI cases, baseline/V5/V5.1 full/sample comparison and known V5 intent regressions.
+* Produced proposals/code-v51.zip with87 source/documentation files; CRC, explicit exclusions, member/source byte equality, known secret-pattern scan and deterministic repack passed.
+* Final proposed ZIP SHA256:ab0c7e15ffb5e3529e3366a16a999406b665c46501146ab10729b6cb681a204a; unchanged frozen output SHA256:61c7563f3ffa04edb7ab18532f9d31b49fe316c52a5d013f80412e0b458a9891.
+* Final archive prediction:five local learned inferences,143 cache hits; no paid API calls/tokens/cost. Local token units are inapplicable and local compute is unpriced. No higher Output CSV accuracy claimed.
+* Preserved root production CSV/ZIP, original V5 proposed ZIP, official instructions,datasets and frozen tag. Only research branch experiment/intent-safety-v5.1 is to be committed/pushed; no main merge.
+* Authored comparative review, actual metrics/usage, installation/reproduction instructions and final checksums. Structured hosted traces and exact engineering-runtime model identifier remain inaccessible; neither was invented.
+
+Context:
+tool=Codex
+Model metadata limitation: exact runtime identifier is inaccessible; no value fabricated. Exact-model logging compliance remains incomplete.
+branch=experiment/intent-safety-v5.1
+repo_root=/workspace/ghostgraph-v5
+worktree=/workspace/ghostgraph-v5
+shared_log=/workspace/hackerrank-orchestrate-october26/log.txt
+parent_agent=none
+
+
+## [2026-10-25T05:43:04.101914+00:00] SESSION START — controlled V5.1 production promotion
+
+tool=Codex
+Model metadata limitation: exact runtime identifier is inaccessible; no value fabricated. Exact-model logging compliance remains incomplete.
+Repo Root: /workspace/hackerrank-orchestrate-october26
+Branch: release/v5.1
+Worktree: main checkout
+Parent Agent: none
+Language: py
+Time Remaining: not configured
+
+
+## [2026-10-25T05:44:27.916646+00:00] Authorized controlled V5.1 production promotion
+
+User Prompt (verbatim, secrets redacted):
+# GhostGraph — Final V5.1 Production Promotion
+
+You are the release engineer responsible for promoting the verified V5.1 authorization improvements into the final HackerRank submission.
+
+Repository:\
+[https://github.com/ABhattacharya-dev/hackerrank-orchestrate-october26](https://github.com/ABhattacharya-dev/hackerrank-orchestrate-october26)
+
+Approved candidate:\
+`experiment/intent-safety-v5.1` at `4015ede`
+
+Protected baseline:\
+`submission-freeze-verified` at `3b942ac`
+
+## Objective
+
+Promote the validated V5.1 Code ZIP improvements without changing the existing 518-row competition predictions.
+
+This is a controlled production release, not another research milestone.
+
+## Phase 1 — Preserve the baseline
+
+Before merging:
+
+- Verify the original frozen commit and tag.
+- Preserve the original `code.zip` and `output.csv`.
+- Record their SHA-256 checksums.
+- Create a reversible release checkpoint.
+- Inspect working-tree changes.
+
+Do not modify the frozen tag.
+
+## Phase 2 — Selective promotion
+
+Integrate the validated V5.1 production implementation into main.
+
+Include:
+
+- `ghostgraph/authorization.py`
+- Required updates to `main.py`
+- Required authorization handling in `engine.py`
+- New end-to-end authorization tests
+- Required compatibility and supporting modules
+- Updated architecture and README
+- Final evaluation and usage reports
+- Relevant V5/V5.1 analysis explaining the improvements
+
+Do not blindly merge duplicate experimental implementations, superseded scripts, or proposed ZIP archives.
+
+Retain genuine development history and mandatory prompts/report files.
+
+Ensure production modules do not import runtime logic from research-only modules.
+
+Follow the root AGENTS.md instructions.
+
+## Phase 3 — Final validation
+
+Run all 156 software tests.
+
+Run the full 32-case public evaluation.
+
+Regenerate the complete 518-case predictions in a temporary location.
+
+Require:
+
+- Exactly 518 sorted rows.
+- Zero official structural violations.
+- No changes to authorized evidence citations or operations.
+- Byte-identical comparison with the protected `output.csv`.
+- No regression from 9/32 exact public cases.
+- No regression from 29/32 status accuracy.
+
+Perform a clean-cache execution.
+
+Repeat the tests and normal prediction run using the final packaged source ZIP.
+
+Verify that the package contains all necessary runtime dependencies, source files, configuration, prompts, documentation and evaluation reports.
+
+## Phase 4 — Submission archive
+
+Generate the production `code.zip`.
+
+Verify:
+
+- ZIP integrity and CRC.
+- No dataset, credentials, caches or unnecessary dependencies included.
+- Fresh installation and documented quick-start.
+- The documented prediction command exits successfully.
+- Strict certification remains clearly distinguished.
+- The original `output.csv` checksum is unchanged.
+
+The protected CSV SHA-256 must remain:
+
+`61c7563f3ffa04edb7ab18532f9d31b49fe316c52a5d013f80412e0b458a9891`
+
+If it changes unexpectedly, stop release and investigate.
+
+## Phase 5 — Transcript preservation
+
+Preserve the genuine append-only root `log.txt`.
+
+Do not rewrite historical prompts, responses or model metadata.
+
+Ensure all real promotion steps are appended following the official logging format.
+
+Do not fabricate missing structured session traces.
+
+## Phase 6 — Final release
+
+Only after all acceptance checks pass:
+
+1. Update main with the reviewed source changes.
+2. Regenerate the final production Code ZIP.
+3. Keep the original `output.csv` unchanged.
+4. Create a distinct V5.1 release tag.
+5. Push the verified release.
+6. Report final commit, artifact hashes, test counts, ZIP contents, and reproduction results.
+
+If the promotion fails any requirement, restore the frozen baseline instead of shipping a broken release.
+
+## Final report
+
+State explicitly:
+
+- Whether promotion succeeded
+- Production commit and tag
+- Final Code ZIP SHA-256
+- Output CSV SHA-256
+- Software tests passed
+- Public sample accuracy
+- Structural violations
+- Remaining semantic uncertainty
+- Any changes from the proposed V5.1 package
+
+Do not claim an Output CSV score improvement, hidden-test gain or strict certification success.
+
+**Execute the controlled promotion and stop after producing a verified production release.**
+
+Agent Response Summary:
+Verified frozen tag/remote main at3b942ac and original artifact checksums, preserved the original CSV/ZIP/transcript in an ignored local backup and created reversible tag release-v5.1-pre-promotion. Selected the approved4015ede source into release/v5.1 while excluding duplicate historical implementations, superseded round-two runner, proposed ZIPs and their proposal metadata. Full test/public/full-data/clean-source/packaged-source checks are being rerun before main or production Code ZIP is updated. Existing uncommitted work was solely the genuine append-only transcript and is preserved without rewriting.
+
+Actions:
+* Read root and code instructions, README, official problem statement and trace protocol.
+* Confirmed remote main and frozen tag both3b942ac; original code.zip SHA256:a0547f21fad274cf6b85b8bf3d6a4a88535cef9950108dcc605bb71226e6ddad.
+* Confirmed protected output.csv SHA256:61c7563f3ffa04edb7ab18532f9d31b49fe316c52a5d013f80412e0b458a9891.
+* Created release checkpoint and selected27 source/documentation/test paths; no blind merge or proposed archive promotion.
+* Installing pinned requirements in a fresh release virtual environment; no paid credentials requested.
+
+Context:
+tool=Codex
+Model metadata limitation: exact runtime identifier is inaccessible; no value fabricated. Exact-model logging compliance remains incomplete.
+branch=release/v5.1
+repo_root=/workspace/hackerrank-orchestrate-october26
+worktree=main checkout
+parent_agent=none
+
+
+## [2026-10-25T05:50:07.743212+00:00] Production V5.1 acceptance passed
+
+Agent Response Summary:
+All release gates pass before main is updated:156 software tests in the checkout, clean-source root and final extracted ZIP; public9/32 exact and29/32 statuses; all518 sorted rows valid and byte-identical to the protected CSV. Final ZIP has88 files with passing CRC/exclusions/source comparison; all Python and requirements bytes equal approved4015ede, with only release documentation changes. Source and ZIP run in a freshly installed virtual environment without paid keys or research code. Strict certification still exits2 on490 unresolved cases and is not claimed successful.
+
+Actions:
+* Preserved original CSV/ZIP/transcript and immutable frozen tag; checkpoint release-v5.1-pre-promotion points to3b942ac.
+* Selected source promotion excluded proposed archives and four superseded snapshot/runner files; no policy, evidence, temporal, identity or prediction changes.
+* Production ZIP accepted SHA256:1681ba4bd15187cc87512c4ba1cb10b03e1ac4fc2229d2632daf7723c63fd312; protected CSV SHA256:61c7563f3ffa04edb7ab18532f9d31b49fe316c52a5d013f80412e0b458a9891.
+* Verified all real transcript bytes remain an unchanged prefix; exact runtime model metadata/hosted structured traces remain unavailable and were not fabricated.
+* Source changes will now be committed and fast-forwarded into main only after these gates, then the production ZIP regenerated and required to equal the tested ZIP before final artifact commit/tag/push.
+
+Context:
+tool=Codex
+Model metadata limitation: exact runtime identifier is inaccessible; no value fabricated. Exact-model logging compliance remains incomplete.
+branch=release/v5.1
+repo_root=/workspace/hackerrank-orchestrate-october26
+worktree=main checkout
+parent_agent=none

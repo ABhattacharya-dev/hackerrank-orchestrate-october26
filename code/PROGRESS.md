@@ -224,3 +224,18 @@ structural violations; cold reproduction matches original output bytes. Public
 metrics unchanged. Local structured trace locations checked: no sessions present;
 agent-trace.zip cannot be honestly exported. Source package regenerated for
 chronology correctness, clear documentation and test coverage, not scoring changes.
+
+
+## V5 experimental authorization safety
+
+Objective: reduce false authorization without changing competition output. Deliverables: consent-layer wrapper, pre-authored probes, failure analysis and reproducible evaluation. Dependencies: existing local sklearn model and participant-facing data. Acceptance: complete regression, baseline public metrics and byte-identical 518 predictions with zero full structural errors. Failures: neutral follow-up conditions, own-account modifier attribution and sample-only completion-audit deferrals; corrected through explicit clause/request scope. Actual results and remaining uncertainty are in research/v5_report.md and v5_results.md. Production artifacts and frozen tags are preserved; no automatic merge.
+
+
+## V5.1 production readiness
+
+Objective: eliminate the pending-consent CLI contract failure without changing the competition CSV. Deliverables: production authorization module, compatibility import, typed classifier uncertainty, independently authored CLI fixtures, slimmed proposed source package and three-source review. Dependencies: unchanged learned model/evidence pipeline and pinned local runtime; no paid key. Acceptance: retain144 existing tests, pass12 new tests, preserve all32 sample outputs and518 full rows, official full validation, fresh environment/cold-cache/source/ZIP reproduction. Actual source results:156 tests pass, three versions reproduce the same518 rows, no full structural errors. Initial novel-preface miss corrected without changing expectations; acceptance script's symlink resolution initially bypassed the intended virtualenv and was corrected to preserve the executable path and verify sys.prefix. Pending consent is not current authorization; true classifier uncertainty blocks export and authorized ownership ambiguity remains an evidence blocker. Remaining risks: bounded grammar/languages, incomplete evidence, no universal consent inference or certification success. Detailed measurements and final package acceptance are in evaluation/v51_review.md and proposals/v51_checksums.md. No automatic merge or frozen-artifact replacement.
+
+
+## Controlled V5.1 production promotion
+
+Objective: promote only the authorized4015ede implementation while preserving the frozen518 CSV. Original artifacts and tag verified/preserved; release-v5.1-pre-promotion supplies rollback. Deliverables: production authorization/CLI/engine integration,156 unchanged tests, supporting compatibility/evaluators and current release reports. Duplicate historical implementations, superseded runner and proposal archives are excluded. Source tests, public9/32 exact and29/32 status baseline, full518 zero structural errors and byte equality, fresh dependency installation and clean-cache runtime without research all pass. Final production publication is gated on the exact packaged-source tests/prediction, CRC/member/exclusion/determinism checks and unchanged CSV hash; results are recorded in release_report.md and the repository release_manifest.md. No new model or evidence logic, speculative features, score claims or certification success. Known semantic uncertainty and490 strict proof gaps remain.

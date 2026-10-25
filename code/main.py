@@ -9,10 +9,11 @@ import sys
 import time
 
 from ghostgraph.contract import read_csv, validate_rows, write_csv, resource_registry
-from ghostgraph.engine import Auditor
+from ghostgraph.engine import Auditor, AuthorizationUnresolved
 from ghostgraph.evidence import EvidenceStore
 from ghostgraph.identity import IdentityIndex
-from ghostgraph.intent import IntentClassifier, MODEL_NAME
+from ghostgraph.intent import MODEL_NAME
+from ghostgraph.authorization import AuthorizationIntent as IntentClassifier, VERSION
 from ghostgraph.intent import POSITIVE, NEGATIVE
 from ghostgraph.vision import from_environment
 
@@ -36,7 +37,16 @@ def run(root, requests_path, output, *, allow_unresolved=False, tag="full", mode
     if mode not in {"certify","predict"}:raise ValueError("invalid mode")
     from ghostgraph.prediction import PredictionAuditor
     auditor = (PredictionAuditor if mode=="predict" else Auditor)(store, IdentityIndex(dataset, store=store), intent)
-    pairs = [auditor.audit(r) for r in sorted(requests, key=lambda r: r["case_id"])]
+    pairs, blocked = [], []
+    for request in sorted(requests, key=lambda r: r["case_id"]):
+        try:
+            pairs.append(auditor.audit(request))
+        except AuthorizationUnresolved as exc:
+            blocked.append(exc.diagnostics)
+    blocked_path = root / ".ghostgraph" / (tag + "_blocked_cases.json")
+    blocked_path.write_text(json.dumps(blocked, indent=2))
+    if blocked:
+        raise ValueError(f"{len(blocked)} authorization classifications unresolved; no output written. Inspect {blocked_path}")
     rows, diagnostics = map(list, zip(*pairs))
     unresolved = [d for d in diagnostics if d["issues"]]
     cache = root / ".ghostgraph"
@@ -45,7 +55,7 @@ def run(root, requests_path, output, *, allow_unresolved=False, tag="full", mode
     input_hashes = dict(store.hashes)
     for name in ["user_identities.csv", "user_audit_log.csv", "system_activity.csv", "deletion_rules.csv", "evidence_files.csv"]:
         input_hashes[name] = hashlib.sha256((dataset / name).read_bytes()).hexdigest()
-    usage = {"mode": mode, "provider": "local scikit-learn", "model": MODEL_NAME,
+    usage = {"authorization_layer": VERSION, "mode": mode, "provider": "local scikit-learn", "model": MODEL_NAME,
              "request_count": len(requests), "inference_calls": intent.calls,
              "cache_hits": intent.cache_hits, "input_tokens": 0, "output_tokens": 0,
              "unique_classifications": len(intent.cache), "scope_decisions": intent.scope_decisions,

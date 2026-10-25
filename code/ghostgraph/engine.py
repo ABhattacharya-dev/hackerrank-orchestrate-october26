@@ -21,6 +21,13 @@ TREATMENTS = {
 }
 
 
+class AuthorizationUnresolved(ValueError):
+    """No contract row can be inferred from an uncertain classifier result."""
+    def __init__(self, diagnostics):
+        self.diagnostics = diagnostics
+        super().__init__('authorization classification unresolved for '+diagnostics['case_id'])
+
+
 class Auditor:
     def __init__(self, store, identity, intent):
         self.store, self.identity, self.intent = store, identity, intent
@@ -122,8 +129,14 @@ class Auditor:
         diagnostics = {"case_id": request["case_id"], "intent": intent, "issues": [], "proofs": []}
         if intent["low_confidence"]:
             diagnostics["issues"].append({"code": "INTENT_LOW_CONFIDENCE"})
+        if intent.get('authorization_state') == 'CLASSIFICATION_UNRESOLVED':
+            diagnostics['issues'].append({'code': 'AUTHORIZATION_CLASSIFICATION_UNRESOLVED'})
+            raise AuthorizationUnresolved(diagnostics)
         if intent.get('ambiguous'):
-            return self.row(request,"INCOMPLETE",[]),diagnostics
+            # Unfulfilled/undecided consent does not presently authorize deletion.
+            # Keep that distinction internally; do not invent a policy finding.
+            diagnostics['issues'].append({'code': 'CONSENT_NOT_ESTABLISHED'})
+            return self.row(request,"NOT_APPLICABLE",[]),diagnostics
         if not intent["authorized"]:
             return self.row(request, "NOT_APPLICABLE", []), diagnostics
         tokens, uid, identity_issue = self.identity.resolve(request["email"], cutoff)
