@@ -211,3 +211,16 @@ required Activity-section scoping and an OCR storage-scheme variant correction.
 Final reports lead with prediction results and disclose inferred restore capability
 versus directly observed authorization. No further ungrounded identity shortcut
 adopted for anonymous/null-linked sample artifacts.
+
+## Submission audit and freeze
+
+Protected b513080 with submission-baseline-b513080 tag and original artifact
+backup. Corrected an overstated target drill: it predates archive creation, so
+is only history. Added chronology regression, retained explicitly uncertain
+operational-domain prediction; no prediction rows changed. Clarified successful
+README quick-start (--mode predict) versus separately failing conservative
+certification (--mode certify). 115 tests pass; 518 rows validate, zero official
+structural violations; cold reproduction matches original output bytes. Public
+metrics unchanged. Local structured trace locations checked: no sessions present;
+agent-trace.zip cannot be honestly exported. Source package regenerated for
+chronology correctness, clear documentation and test coverage, not scoring changes.

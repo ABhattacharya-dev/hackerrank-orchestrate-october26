@@ -21,13 +21,13 @@ Results are unchanged from 1146bc7: 9/32 exact rows, 29/32 statuses, 159/193 mat
 
 ## Blocker correction and evidence
 
-The selected archive detail in the April recovery console has its own prior drill, verified checksum, archive path and retention details in the same healthy production recovery domain. Eligible catalog activity supplies subject/archive linkage. Together these support a prediction of a live recreation path; a successful restore authorization is not directly observed. Other archives’ completed restores alone are insufficient. Future August restores are excluded. The inference is separately typed prediction_inference with document locator, target drill timestamp and catalog provenance; strict certification does not consume it as direct evidence.
+The selected archive was created April 26, after the displayed March 29 drill. The drill is historical service context, not proof this archive was drilled. The selected archive has verified checksum, path and retention details within a healthy production recovery domain with applicable restore-request controls. Eligible catalog activity supplies subject/archive linkage. Together these support a prediction of a live recreation path; a successful restore authorization is not directly observed. Other archives’ completed restores alone are insufficient. Future August restores are excluded. The inference is separately typed prediction_inference with document locator, creation timestamp, drill chronology classification and catalog provenance; strict certification does not consume it as direct evidence.
 
 The ordinary policy/planner emits REPORT_RESTORE_RISK, BLOCK_RESTORE and VERIFY_RESTORE_BLOCKED, with the finding citing the console and future steps using empty citations. Required archive records are preserved; future retained-presence verification may also appear. No deletion action is issued against the archive.
 
 ## Executed independent tests
 
-All **114 software tests pass** (zero failures, errors or skips). Seven new counterfactual tests in tests/test_restore_prediction.py cover:
+All **115 software tests pass** (zero failures, errors or skips). Seven new counterfactual tests in tests/test_restore_prediction.py cover:
 
 1. Target-scoped drill/checksum/live-domain capability: exact risk/block/verification ordering and citations.
 2. Explicit target block: suppress the inferred active risk.
@@ -43,4 +43,4 @@ The initial OCR rule failed because an archive was repeated in the activity sect
 
 The entire CSV passes exact header/count/keys/sorting, JSON parsing, allowed phases/operations/states, consecutive numbers, canonical ordering, valid system/resource namespace, duplicate/contradiction checks, complete finding/remedy/check pairs, citation existence/cutoff and empty future citation checks. All 1,032 cited steps also match internal ledger provenance and eligible linkage/time records; this is not an independent entailment judge. Cold reproduction executes 11 OCR and 4 PDF extractions and reproduces output.csv exactly.
 
-Prediction diagnostics retain 490 uncertainty-bearing cases. The conservative certification default remains separate; no claim that its global proof obligations pass is made. Service health and a prior drill establish a defensible risk prediction, not an observed target-specific authorization. Reported service history is not treated as deletion proof. No hidden accuracy is known.
+Prediction diagnostics retain 490 uncertainty-bearing cases. The conservative certification default remains separate; no claim that its global proof obligations pass is made. Selected archive integrity/path and applicable operational recovery controls support a risk prediction, not an observed target-specific authorization. Reported service history is not treated as deletion proof. No hidden accuracy is known.

@@ -33,10 +33,11 @@ From the repository root:
 python3 -m venv .venv
 . .venv/bin/activate
 python3 -m pip install -r code/requirements.txt
-python3 code/main.py
+python3 code/main.py --mode predict
 ```
 
-The strict command currently exits 2 because evidence is unresolved, and writes
+For separate high-assurance evidence certification, run `python3 code/main.py --mode certify`.
+This strict command currently exits 2 because evidence is unresolved, and writes
 diagnostics under ignored `.ghostgraph/`. To inspect all proposed rows explicitly:
 
 ```bash
@@ -111,7 +112,7 @@ Your solution must:
 Run the starter Python entry point with:
 
 ```bash
-python3 code/main.py
+python3 code/main.py --mode predict
 ```
 
 The blank template at `dataset/output.csv` is provided as a reference. Your final generated file for submission must be the root-level `output.csv`.

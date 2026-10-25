@@ -180,3 +180,16 @@ backdate future evidence or override an explicit block/disabled service. Strict
 certification remains unchanged. Cold prediction export is byte-identical with
 zero structural violations; this does not prove hidden correctness or exact
 archive-specific authorization. See evaluation/evaluation_report.md.
+
+## ADR 016 — freeze audit corrects drill chronology
+
+The March 29 drill precedes the selected archive’s April 26 creation. It cannot
+prove a drill of that archive; ADR 015 and the original console inference
+overstated this. Require creation chronology before labeling a target drill.
+An earlier drill is historical context only. The prediction is retained on the
+separate, explicitly uncertain basis of a selected checksum-verified archive
+with path/retention details in the same live production recovery domain with
+applicable restore-request controls and eligible catalog ownership. Authorization
+is not directly observed. Without those controls, an older drill supplies no
+active-risk inference. The independent chronology test verifies both outcomes.
+All 115 tests pass; full output remains byte-identical to b513080.

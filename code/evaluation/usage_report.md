@@ -14,7 +14,7 @@ older certification candidate. Provider: local scikit-learn. Model: ghostgraph-i
 | API input / output tokens | 0 / 0 |
 | Paid model calls | 0 |
 | API cost total / per request | USD 0.00 / USD 0.00 |
-| Runtime seconds | 9.867531 |
+| Runtime seconds | 6.407435 |
 
 Token units do not apply to local TF-IDF/logistic regression, Tesseract or PDF
 extraction. No token estimate was invented. No paid provider tariff applies

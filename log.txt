@@ -1259,3 +1259,110 @@ branch=work
 repo_root=/workspace/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+
+## [2026-10-25T00:54:55.921539+00:00] Final submission audit and freeze
+
+User Prompt (verbatim, secrets redacted):
+# GhostGraph — Final Submission Audit and Freeze
+
+Continue from commit `b513080`.
+
+The project now has a generated 518-row `output.csv` and zero reported structural violations. Treat this as the protected submission baseline.
+
+Do not start another major refactoring cycle.
+
+## Task 1 — Protect the submission
+
+Create a Git tag or checkpoint for the current verified commit and preserve the existing `output.csv` and `code.zip`.
+
+Do not replace these artifacts unless a proposed change demonstrates a defensible improvement and passes complete regression testing.
+
+## Task 2 — Check case_55 evidence chronology
+
+Inspect the original backup console `evidence_32`.
+
+It shows:
+
+- Archive creation: April 26, 2026
+- Last drill: March 29, 2026
+
+Investigate whether the earlier drill actually applies to `backup_9287` or represents broader service history.
+
+A drill preceding the target archive's creation cannot, without additional evidence, establish a successful drill of that archive.
+
+Review the restore-risk inference for this contradiction.
+
+If the prediction remains defensible based on operational restore capability and eligible subject linkage, document the correct reasoning without overstating what the drill proves.
+
+If the inference is materially unsupported, investigate an evidence-grounded alternative. Do not hardcode case_55 or fabricate an active restore state merely to preserve structural compliance.
+
+Do not alter the baseline output without demonstrating why the change improves correctness.
+
+Add an independent chronology regression test if a generalizable issue is found.
+
+## Task 3 — Verify judge reproducibility
+
+Ensure the README clearly distinguishes:
+
+1. The command for generating competition predictions.
+2. The command for strict evidence certification.
+
+The primary quick-start should successfully reproduce the submitted output when all documented dependencies and supplied data are available.
+
+Do not make a default command that exits with a known certification failure appear to be the normal successful quick-start.
+
+Check that the source archive contains the necessary implementation, dependencies, prompts, README, and evaluation reports.
+
+## Task 4 — Verify submission and traces
+
+Verify:
+
+- Exactly 518 correctly ordered output rows.
+- Zero structural violations under the existing official-contract validator.
+- Byte-identical clean reproduction.
+- Passing regression tests.
+- Correct regenerated code.zip.
+- Evaluation and usage reports correspond to the actual output.
+- No secrets or excluded data included in archives.
+
+Preserve the root `log.txt`.
+
+Review `agent_trace_instructions.md` and determine whether relevant structured session traces can be exported locally. If unavailable, document the limitation without manufacturing traces.
+
+## Task 5 — Final decision
+
+Report:
+
+- Final commit
+- Output file hash
+- ZIP verification results
+- Whether case_55 reasoning is defensible
+- Any changes made to the prediction
+- Exact tests and accuracy measurements
+- Missing submission artifacts, if any
+- Whether it is safe to submit
+
+Do not pursue additional model changes, UI development, or speculative features.
+
+**Goal: preserve a valid, reproducible competition submission while correcting any final factual or packaging errors.**
+
+Agent Response Summary:
+Protected b513080 with submission-baseline-b513080 tag and original CSV/ZIP backup. Corrected the false implication that the March 29 drill proves a drill of the archive created April 26: it is now history only; a separate same-domain live-control/integrity/path inference supports the uncertain risk prediction. Added a general chronology regression test; all 115 tests pass. The 518-row output is byte-identical to the protected baseline and passes the existing official validator with zero violations. An extracted source ZIP with empty extraction cache reproduces the same output via the README prediction command; public accuracy is unchanged. Structured local trace directories/export tools are unavailable, so no trace ZIP was manufactured; high-assurance certification remains unpassed.
+
+Actions:
+* Updated restore chronology classification, independent regression, architecture/progress and final evaluation reports.
+* Corrected README primary quick-start to --mode predict and explicitly separated --mode certify with known evidence-gap refusal.
+* Ran all 115 tests, full recovery evaluation, official validator, source-copy and extracted-ZIP cold reproduction; all required checks passed.
+* Verified 68 ZIP members, CRC integrity, required source/dependencies/prompts/reports, excluded paths/nested archives and secret patterns; no detections.
+* Preserved output.csv bytes and appended root log; refreshed code.zip only for justified factual/documentation/test corrections.
+* Verified unchanged public results: 29/32 statuses, 9/32 exact rows/sequences, 159/163 step precision, 159/193 recall, 1068/1351 fields, 59/75 citations. No hidden accuracy claimed.
+* Final output SHA256: 61c7563f3ffa04edb7ab18532f9d31b49fe316c52a5d013f80412e0b458a9891.
+* ZIP SHA256: a0547f21fad274cf6b85b8bf3d6a4a88535cef9950108dcc605bb71226e6ddad.
+
+Context:
+tool=Codex
+Model metadata limitation: exact runtime identifier inaccessible; no value fabricated. Exact-model log compliance remains incomplete.
+branch=work
+repo_root=/workspace/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none

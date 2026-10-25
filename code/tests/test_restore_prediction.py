@@ -10,6 +10,7 @@ Archive backup_740 account@example.test
 Selected backup_740
 Path s3://tenant-storage/weekly/customer.tar
 Checksum Verified
+Created 05 Mar 2026 02:00 UTC
 Last drill 10 Mar 2026
 Retention end 15 Jun 2026
 Other backup_741 restored Completed
@@ -48,3 +49,16 @@ class RestorePredictionTests(unittest.TestCase):
         o=self.infer();decision=PredictionPolicy(Path(__file__).resolve().parents[2]/'dataset/deletion_rules.csv').evaluate(o.category,o.state,o.fields,T)
         self.assertEqual(decision.treatment,'RESTORE');self.assertEqual(decision.policy_action,'RETAIN')
         self.assertNotEqual(decision.treatment,'DELETE')
+
+
+class RestoreChronologyTests(unittest.TestCase):
+    def test_drill_before_creation_is_not_a_target_drill(self):
+        text=TEXT.replace('05 Mar','12 Mar')
+        self.assertIsNone(console_facts(text,META))
+        operational=text+'\nCustomer-platform archives Restore request Service health'
+        facts=console_facts(operational,META)
+        self.assertFalse(facts['target_drill_proven'])
+        self.assertIsNone(facts['target_drill_at'])
+        self.assertTrue(facts['applicable_live_controls'])
+        self.assertLess(facts['drill_history_at'],facts['archive_created_at'])
+        self.assertIsNotNone(infer_restore(facts,META,T,{'user_707'},[]))
