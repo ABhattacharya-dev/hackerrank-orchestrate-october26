@@ -208,6 +208,7 @@ class Auditor:
             diagnostics['proofs'].append(dict(system=obs.system,resource=obs.resource,category=obs.category,
                 state=obs.state,policy=policy,source=obs.source,locator=obs.locator,evidence_id=obs.evidence_id,
                 observed=obs.observed,available=obs.available,scope=obs.scope,subject_linkage=self.linkage.get(key,[])))
+        diagnostics['prediction_inferences']=[dict(resource=o.resource,evidence_id=o.evidence_id,source=o.source,locator=o.locator,available=o.available,basis=o.fields['prediction_inference']) for o in ledger.values() if 'prediction_inference' in o.fields]
         plan=plan_dependencies(remediation,list(ledger.values()),cutoff,risks)
         diagnostics['remediation_plan']=plan
         diagnostics['issues'].extend(dict(code=code) for code in plan['issues'])

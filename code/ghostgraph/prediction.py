@@ -43,11 +43,39 @@ class PredictionAuditor(Auditor):
         super().__init__(*args)
         self.policy_engine=PredictionPolicy(self.store.dataset/'deletion_rules.csv')
 
+    def ledger(self,tokens,cutoff,subject_id=None):
+        from .restore_prediction import console_facts,infer_restore
+        from collections import defaultdict
+        from copy import copy
+        original=self.store
+        scoped=copy(original)
+        scoped.by_token=defaultdict(list,{k:list(v) for k,v in original.by_token.items()})
+        scoped.by_resource=defaultdict(list,{k:list(v) for k,v in original.by_resource.items()})
+        scoped.observations=list(original.observations)
+        for meta,text in getattr(original,'documents',[]):
+            facts=console_facts(text,meta)
+            if not facts:continue
+            linked=set();references=[]
+            for when,system,resource,aliases,eid in original.links:
+                if when<=cutoff and system==facts['service'] and resource==facts['resource'] and aliases & tokens:
+                    linked.update(aliases & tokens)
+                    references.append(dict(evidence_id=eid,available=when))
+            key=facts['service'],facts['resource']
+            inferred=infer_restore(facts,meta,cutoff,linked,original.by_resource.get(key,[]))
+            if inferred:
+                inferred.available=max([inferred.available]+[r['available'] for r in references])
+                inferred.fields['prediction_inference']=dict(inferred.fields['prediction_inference'],catalog_links=references)
+                scoped.observations.append(inferred);scoped.by_resource[key].append(inferred)
+                for token in inferred.subject_tokens:scoped.by_token[token].append(inferred)
+        self.store=scoped
+        try:return super().ledger(tokens,cutoff,subject_id)
+        finally:self.store=original
+
     def reduce_state(self,observations,cutoff,claims):
         # A later operation claim remains a warning, not proof of its result.
         # For prediction, carry forward direct observations of known copies.
         strict=reconstruct(observations,cutoff,claims)
-        eligible=[o for o in observations if max(o.available,o.observed)<=cutoff]
+        eligible=[replace(o,kind="observation") if o.kind=="prediction_inference" else o for o in observations if max(o.available,o.observed)<=cutoff]
         result=reconstruct(eligible,cutoff)
         if any(i['code']=='SCOPE_ALIGNMENT_UNKNOWN' for i in result.issues):
             aligned=[replace(o,fields=dict(o.fields,_source_origin='logical-service')) if o.scope=='logical' else o for o in eligible]

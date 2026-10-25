@@ -1006,3 +1006,256 @@ branch=work
 repo_root=/workspace/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+
+## [2026-10-25T00:45:03.259574+00:00] Final restore blocker and valid prediction submission
+
+User Prompt (verbatim, secrets redacted):
+# GhostGraph — Final Submission Blocker & Accuracy Improvements
+
+You are continuing GhostGraph from commit `1146bc7`.
+
+Do not restart the project, repeat the historical rollback work, or rebuild modules that are already functional.
+
+Read the repository instructions, current code, `code/evaluation/recovery_report.md`, and the official problem statement before changing anything.
+
+## Current verified baseline
+
+- 518 total evaluation requests
+- 517 structurally valid prediction rows
+- 2 structural violations, both in `case_55`
+- 9/32 exact public sample answers
+- 90.63% public-sample status accuracy
+- 82.38% exact step recall
+- 78.67% canonical citation accuracy
+- 107 tests passing
+- Strict certification remains separate and unchanged
+
+Your first priority is to resolve the last structural blocker through a generalizable, evidence-grounded correction.
+
+Your second priority is improving canonical accuracy without compromising the valid submission.
+
+## Phase 1 — Investigate case_55 deeply
+
+The request is a genuine account-deletion request.
+
+Audit cutoff:
+`2026-04-30T11:00:00Z`
+
+Identified subject:
+`user_16`
+
+Affected archive:
+`backup_9287`
+
+Relevant evidence:
+
+- `evidence_32`: backup restore console, captured April 29, 2026
+- `activity_4006`: explicit user/archive catalog link on April 29, 2026
+- `activity_3387`: successful restore recorded in August 2026 — NOT eligible to prove the state at the April cutoff
+
+Inspect the actual image in:
+
+`dataset/evidence/images/backup_restore_console_20260429.png`
+
+The console shows an existing target backup, a functioning restore-management service, recovery statistics, and completed restorations involving other archives.
+
+Investigate whether the target archive is part of an operational restore path capable of recreating deleted data at the audit cutoff.
+
+Explicitly distinguish:
+
+1. Archive existence
+2. Subject/archive identity linkage
+3. Operational restore-service availability
+4. Archive-specific restore eligibility
+5. Historical completed restores
+6. Restore access already blocked
+7. Future restore events
+
+Do not treat later restore events as earlier-state proof.
+
+Do not assume that an archive is actively restorable merely because it exists.
+
+However, examine whether operational restore controls plus an eligible target archive constitute sufficient evidence of a current re-creation risk under the challenge's definition.
+
+Determine the strongest defensible prediction.
+
+## Phase 2 — Implement a general restoration-risk rule if supported
+
+Inspect:
+
+- `ghostgraph/evidence.py`
+- `ghostgraph/risks.py`
+- `ghostgraph/temporal.py`
+- `ghostgraph/policy.py`
+- `ghostgraph/prediction.py`
+- `ghostgraph/engine.py`
+- `ghostgraph/planner.py`
+
+If the available evidence supports a live, affected restore path, implement a reusable rule in prediction mode.
+
+The rule should distinguish archive inventory from executable restoration capability.
+
+Evaluate service-wide restoration capability only where the evidence establishes that it applies to the target archive and same relevant service, scope, or policy domain.
+
+Preserve temporal restrictions.
+
+If an archive-specific restore block already exists, do not report an active restore risk.
+
+If a genuine active restore risk is supported, the ordinary planner should produce the appropriate:
+
+- `REPORT_RESTORE_RISK`
+- `BLOCK_RESTORE`
+- `VERIFY_RESTORE_BLOCKED`
+
+Preserve policy-required archive records.
+
+Do not hardcode `case_55`, `backup_9287`, its email, or its expected output.
+
+Keep strict certification conservative.
+
+Treat any supported prediction inference separately from direct observations and record its provenance and uncertainty.
+
+Do not falsely label a proposed remediation as already completed.
+
+## Phase 3 — Counterfactual testing
+
+Create independent tests for:
+
+1. Existing archive plus proven applicable live restore capability.
+2. Existing archive with explicit restore block.
+3. Existing archive but disabled restore service.
+4. Other archives restored, without proof the target archive is eligible.
+5. Restore evidence arriving after the audit cutoff.
+6. A restore capability belonging to another service or tenant.
+7. A policy-required retained archive that must not be deleted.
+
+Tests must assert precise findings, remediation, verification, citations, and output order.
+
+Do not define tests merely to accept a guessed `case_55` answer.
+
+If the evidence cannot legitimately support any official finding, report that as a representational limitation rather than fabricating a resource state.
+
+## Phase 4 — Validate the full submission
+
+Run:
+
+```bash
+PYTHONPATH=code python3 -m unittest discover -s code/tests -v
+python3 code/evaluation/recovery.py
+```
+
+Evaluate:
+
+- All 518 rows
+- Exact IDs and sorting
+- JSON parsing
+- Step numbering
+- Allowed operations and states
+- Correct citations and cutoff eligibility
+- Complete remediation/verification pairs
+- No contradictory steps
+- Remaining structural violations
+
+Compare the results against commit `1146bc7`.
+
+Do not regress public-sample accuracy unnecessarily.
+
+If the correction is generalizable and valid, generate the actual repository-root `output.csv` through the normal exporter.
+
+Do not simply rename a structurally invalid candidate.
+
+## Phase 5 — Improve accuracy only after submission validity
+
+Once a contract-compliant output exists, investigate remaining public-sample mismatches.
+
+Prioritize missing canonical operations supported by participant-facing evidence.
+
+Examine recurring causes rather than individual sample IDs.
+
+Focus especially on:
+
+- Missing account-absence verification
+- Anonymous analytics identity linkage
+- Retained-record verification
+- Missing source-resource relationships
+- Evidence-citation selection
+
+Use isolated ablation tests.
+
+Do not regress a valid submission while experimenting.
+
+Preserve the best passing version as a checkpoint.
+
+Do not use canonical sample answers as direct prediction inputs.
+
+## Phase 6 — Final packaging and reporting
+
+Update the reports so the main summary reflects the actual final prediction run, not only the old certification baseline.
+
+In particular, the current evaluation and usage reports contain older headline results with recovery notes appended. Make the distinction clearer for judges.
+
+Regenerate:
+
+- Root `output.csv`
+- `code.zip`
+- `code/evaluation/evaluation_report.md`
+- `code/evaluation/usage_report.md`
+- Recovery/validation documentation
+
+Preserve the original append-only chat transcript and any other officially required trace artifact.
+
+Verify the ZIP contents.
+
+Run a reproducibility check and verify that generated outputs match the evaluated run.
+
+Report true model calls, token usage, and cost.
+
+Do not claim high-assurance certification has passed if unresolved proof gaps remain.
+
+Do not invent hidden-test accuracy.
+
+## Final acceptance requirements
+
+The intended successful outcome is:
+
+- Exactly 518 submission rows
+- Zero official structural violations
+- Deterministic output
+- Valid evidence citations
+- No unauthorized deletion of retained records
+- Public-sample results no worse than the recovery baseline unless a correction is demonstrably necessary
+- Complete required submission artifacts
+- Clear disclosure of remaining semantic uncertainty
+
+Do not stop at another diagnostic report if a valid evidence-grounded implementation is achievable.
+
+If the supplied evidence genuinely cannot support a valid `case_55` prediction, explain precisely why, preserve the best-effort candidate, and do not claim completion.
+
+## Autonomous execution
+
+You have authority to make justified engineering changes, add tests, run ablations, update reports, and regenerate submission artifacts.
+
+Continue automatically through these phases without asking routine implementation questions.
+
+Keep all changes scoped to this competition.
+
+Start by reconstructing the April 30 restore eligibility of `backup_9287` from `evidence_32` and the eligible activity records.
+
+Agent Response Summary:
+Visually inspected the actual restore console and identified the selected target's own prior drill, verified checksum, archive path and retention context in a healthy production recovery domain. Added a reusable prediction-only inference with eligible catalog-link provenance, explicit uncertainty and safeguards for target blocks, disabled services, foreign domains, other-target-only history and future evidence. The normal exporter now produces root output.csv with exactly 518 sorted rows and zero official structural violations; only case_55 changed relative to 1146bc7. All 114 tests pass, including seven counterfactuals; an empty-cache fresh-directory run reproduces identical final bytes. Public metrics remain unchanged at 9/32 exact, 29/32 status, 159/193 exact steps and 59/75 citations. Strict certification has not passed and semantic uncertainty remains disclosed.
+
+Actions:
+* Added restore_prediction.py, typed inference provenance and test_restore_prediction.py.
+* Ran requested complete unit suite and recovery evaluation; validated all rows, source registry, citations/cutoffs and internal provenance for 1,032 cited steps.
+* Added final_submission.py cold reproduction, final_reports.py and post-validity linkage audit; no ungrounded ownership shortcut adopted.
+* Regenerated output.csv, code.zip and judge-facing evaluation/usage reports with final prediction headlines.
+* Actual final-run usage: 5 local sklearn inference calls, 143 cache hits, 370 deterministic unique scope decisions, no paid API calls/input/output API tokens or cost; local token units not applicable, compute unpriced.
+* Verified root instructions and dataset unchanged, archive integrity/membership, and append-only transcript. Hosted full trace remains unavailable; no trace export was fabricated.
+
+Context:
+tool=Codex
+Model metadata limitation: exact engineering runtime identifier is inaccessible; no value fabricated. Exact-model log compliance remains incomplete.
+branch=work
+repo_root=/workspace/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none

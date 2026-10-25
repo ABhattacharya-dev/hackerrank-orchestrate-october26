@@ -169,3 +169,14 @@ validates the official step contract independently of certification obligations.
 A malformed candidate is never silently renamed output.csv. Recovery restores
 9 exact rows, but cannot legitimately ground the last full-case restore state;
 that single-case failure remains explicit. See evaluation/recovery_report.md.
+
+## ADR 015 — selected-target restore capability is a prediction inference
+
+A target's own prior drill, checksum/path/retention details and live same-domain
+recovery console support a recreation-risk prediction when eligible catalog links
+the target subject. Inventory or other targets' successful restores alone do not.
+Infer only in prediction mode, annotate derivation and catalog availability; never
+backdate future evidence or override an explicit block/disabled service. Strict
+certification remains unchanged. Cold prediction export is byte-identical with
+zero structural violations; this does not prove hidden correctness or exact
+archive-specific authorization. See evaluation/evaluation_report.md.

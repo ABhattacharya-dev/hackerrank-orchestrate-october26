@@ -1,183 +1,46 @@
-# GhostGraph evaluation report
+# Final GhostGraph competition prediction evaluation
 
-## Submission acceptance: blocked
+Root output.csv contains 518 sorted request rows and has **zero official structural violations**. It is a prediction submission, not a high-assurance certification. A fresh directory, different working directory and empty extraction cache reproduce identical bytes. SHA-256: `61c7563f3ffa04edb7ab18532f9d31b49fe316c52a5d013f80412e0b458a9891`.
 
-The implemented pipeline executes and produces a **provisional 518-row candidate**.
-It is not a fully verified submission. Strict export refuses final `output.csv`
-because **490 cases have explicit proof/coverage gaps**.
-The candidate's fallback statuses and partial plans must not be presented as
-certified deletion decisions. Additional authoritative subject/resource links or
-state evidence are needed; case-number inference and sample-label lookup are
-prohibited. No hidden-set accuracy is known.
-
-## Actual public-sample results
-
-Milestone 5 strict planning acceptance: 24/32 generated
-rows pass the complete structural contract; 13
-violations remain in 8 cases. All 32 public reference
-rows pass structural validation. The passing subset is diagnostic only and cannot
-replace the required full sample output. See `code/PLANNING.md`. Candidate checks
-below use an explicitly relaxed completeness mode; they do not establish that
-every incomplete case has a full plan. The milestone exit criterion is unmet.
-
-Command: `python3 code/evaluation/main.py`. Labels are loaded by the evaluator
-after predictions; they never enter intent training or prediction. These 32
-public samples were used during development, so results are regression scores,
-not an independent held-out estimate. Samples contain no NOT_APPLICABLE cases.
+## Actual 32-case public evaluation
 
 | Metric | Result |
 | --- | ---: |
-| Deletion-status accuracy | 28/32 (87.50%) |
-| Exact row accuracy (status and full step array) | 2/32 (6.25%) |
-| Exact sequence accuracy | 2/32 (6.25%) |
-| Step precision, including exact canonical citation | 111/115 (96.52%) |
-| Step recall, including exact canonical citation | 111/193 (57.51%) |
-| Step F1, including exact canonical citation | 72.08% |
-| Structural step precision, ignoring citation | 96.52% |
-| Structural step recall, ignoring citation | 57.51% |
-| Field accuracy | 719/1351 (53.22%) |
-| Canonical evidence-reference accuracy | 44/75 (58.67%) |
+| Status accuracy | 90.6250% |
+| Exact row accuracy | 28.1250% |
+| Step precision | 97.5460% |
+| Step recall | 82.3834% |
+| Step F1 | 89.3258% |
+| Field accuracy | 79.0526% |
+| Canonical citation accuracy | 78.6667% |
+| Exact sequence accuracy | 28.1250% |
 
-Step precision/recall use multiset intersection over phase, system, resource,
-operation, state and (for exact matching) evidence ID; step number is evaluated
-in sequence/field accuracy. Fields align on phase/system/resource/operation;
-missing expected fields count wrong. Canonical reference accuracy compares
-expected cited steps, including omitted ones as incorrect. The provenance check
-independently verifies internal source/linkage/cutoff consistency, but is not an
-independent semantic-entailment judge and does not prove hidden correctness.
+Exact steps include phase/system/resource/operation/state/citation and use multiset matching. Field accuracy aligns on phase/system/resource/operation and counts seven expected fields, including numbering. Missing cited steps count wrong for citation accuracy. Sequence accuracy compares the complete ordered array. Public labels are evaluation-only and are not predictor inputs. These development regression scores do not establish hidden-set accuracy.
 
-`code/evaluation/mismatch_report.md` documents every mismatched sample, missing
-and extra operations, wrong states/citations, relative ordering and classification
-errors, plus a measured selective-AI ablation. The AI-only model and rules-only
-baseline are evaluated separately; guarded eager/selective decisions match.
+Results are unchanged from 1146bc7: 9/32 exact rows, 29/32 statuses, 159/193 matching steps and 59/75 canonical citations. Public samples still contain six structural violations in three cases whose absent account IDs lack grounded links; this is distinct from the actual 518-request submission, which has none. Anonymous records with null lookups cannot be attributed by numeric suffix. No unsupported extra linkage rule was adopted solely to improve scores. Recovery history and per-operation losses are retained in recovery_report.md.
 
-## Actual software and full-run checks
+## Blocker correction and evidence
 
-- `104` unit/regression tests ran: `0` failures,
-  `0` errors, `0` skipped; all passed.
-- All 94 manifest files processed: 26 logs, 28 JSON, 1 text, 11 PNG, 24 SQL,
-  4 PDF. 2906 observations and
-  116 SQL table scopes retained.
-- Candidate IDs/count/header/order, allowed enums, field sets, step numbers,
-  duplicate detection and citation availability were validated for 518 rows.
-- 729 cited candidate steps
-  matched internal ledger proofs with eligible timestamps and explicit linkage
-  explanations. This is provenance validation, not a claim of full coverage.
-- Input hashes verified unchanged; supplied evidence and root AGENTS.md were not
-  edited. Candidate status counts: `{'INCOMPLETE': 400, 'COMPLETE': 108, 'NOT_APPLICABLE': 10}` (provisional).
-- Warm-cache full run: 7.094 seconds. A fresh source copy,
-  different working directory and empty extraction cache reproduced identical
-  candidate bytes in 20.482 seconds, executing
-  11 OCR calls and
-  4 PDF extraction calls.
-- Strict refusal was exercised; it returned an evidence blocker and wrote no
-  final output. Readiness verification exits 2 for that diagnosed blocker,
-  distinct from unit-test failure (exit 1).
+The selected archive detail in the April recovery console has its own prior drill, verified checksum, archive path and retention details in the same healthy production recovery domain. Eligible catalog activity supplies subject/archive linkage. Together these support a prediction of a live recreation path; a successful restore authorization is not directly observed. Other archives’ completed restores alone are insufficient. Future August restores are excluded. The inference is separately typed prediction_inference with document locator, target drill timestamp and catalog provenance; strict certification does not consume it as direct evidence.
 
-Candidate SHA-256: `b83ff6a9b086a53ceda99b3f527eefda36ec49f69db392f84be51fdecb01e7c3`.
+The ordinary policy/planner emits REPORT_RESTORE_RISK, BLOCK_RESTORE and VERIFY_RESTORE_BLOCKED, with the finding citing the console and future steps using empty citations. Required archive records are preserved; future retained-presence verification may also appear. No deletion action is issued against the archive.
 
-## Milestone 7 strict full-dataset acceptance
+## Executed independent tests
 
-All 518 request IDs were processed in exact sorted order. Strict structural
-validation passes 420/518 candidate rows and finds
-171 violations across
-98 cases. A strict attempt at the real
-repository-root output.csv path was blocked; no final output was generated.
-490 cases retain semantic proof obligations. Seven
-new on-disk adversarial CLI scenarios passed as part of the 104
-test suite. They caught a same-table-name replica scope bug; the adapter now
-honors explicit snapshot_scope.database_id, including scoped absence.
+All **114 software tests pass** (zero failures, errors or skips). Seven new counterfactual tests in tests/test_restore_prediction.py cover:
 
-See code/evaluation/full_dataset_report.md for every structural blocker, scenario
-expectations, actual per-phase model usage and the distinction between candidate
-grammar, strict structural checks and semantic coverage. The milestone exit
-criterion remains unmet. Passing tests do not substitute for a valid output.csv.
+1. Target-scoped drill/checksum/live-domain capability: exact risk/block/verification ordering and citations.
+2. Explicit target block: suppress the inferred active risk.
+3. Disabled restore service: no active capability inference.
+4. Other archives restored without a target drill: no target eligibility inference.
+5. Future capture or future target drill: excluded at cutoff.
+6. Foreign service or absent target/subject linkage: excluded.
+7. Required archive retention: RESTORE controls, never DELETE.
 
-## Independent adversarial cases executed
+The initial OCR rule failed because an archive was repeated in the activity section and because OCR read the storage scheme as £3. Inventory/detail scope is now separated from the Activity section, and the limited storage-scheme OCR variant is accepted only alongside all other target facts. The full regression and export passed after correction. Previous seven on-disk CLI adversarial scenarios remain passing.
 
-Fixtures and assertions are in `code/tests/test_reasoning.py`; they are authored
-independently of public sample labels and do not mutate supplied evidence.
+## Validation and remaining uncertainty
 
-1. **Multilingual access-only and negation.** Requests ask only for an export,
-   correction or a copy in English, French, Spanish, Japanese and Korean. Expected:
-   authorization false; no destructive plan. All language subcases passed.
-2. **Future capture describing an earlier state.** `account_7` is observed PRESENT
-   at 2026-01-01T00:00:00Z. A later-captured ABSENT observation describes an earlier
-   event but is unavailable at the 2026-01-02 cutoff. Expected: INCOMPLETE from
-   eligible presence; the future capture cannot prove deletion. Passed.
-3. **Replica drift plus retained records and recreation.** `account_7` is absent
-   from primary and present in a replica; `tombstone_8` is redacted;
-   `audit_record_9` is retained; `data_flow_4` and `backup_5` are active. Expected:
-   INCOMPLETE; disable flow, block restore, delete the remaining copy in official
-   order; preserve the compliant tombstone and audit record. Passed.
-4. **Reused alias.** Two stable subjects share a supplied email. Expected: no
-   automatic merge or guessed owner. Passed.
-5. **Retained audit without primary proof.** Only a retained audit record is
-   observed. Expected: explicit NO_PRIMARY_PROFILE_PROOF; partial observations
-   cannot certify account deletion. Passed.
+The entire CSV passes exact header/count/keys/sorting, JSON parsing, allowed phases/operations/states, consecutive numbers, canonical ordering, valid system/resource namespace, duplicate/contradiction checks, complete finding/remedy/check pairs, citation existence/cutoff and empty future citation checks. All 1,032 cited steps also match internal ledger provenance and eligible linkage/time records; this is not an independent entailment judge. Cold reproduction executes 11 OCR and 4 PDF extractions and reproduces output.csv exactly.
 
-Other executed tests cover cutoff inclusivity, repeated cases, equal-time
-conflicts, future identity snapshots, explicit source-resource edges, redaction,
-anonymization, missing retained records, claims versus observations, path escape,
-all six log envelopes and invalid output/citations.
-
-## Failures, corrections and remaining risks
-
-Initial sample status accuracy was 19/32, with 6/32 exact rows. The current
-scores above include stricter temporal and conditional-policy proof requirements;
-they are not claimed to improve every metric over earlier provisional runs.
-Independent training examples, Unicode normalization, scope guards and grounded
-source edges were evaluated during development. Pure-ML training expansion introduced portability/negation
-regressions; generic consent/scope guards corrected those rather than memorizing
-sample answers. All final fixtures passed after the corrections.
-
-Cloud log envelopes originally hid nested event fields; unwrapping was fixed.
-SQL loading initially rejected the supplied foreign_keys pragma; only that safe
-pragma is now permitted. A legitimate empty SQL snapshot is counted as table-scope
-evidence. Document matching originally allowed reference substrings and unrelated
-page rows to create false links; token boundaries, source compatibility and
-scoped excerpts corrected those paths. Cutoff-specific identity caching reduced
-observed warm runtime from roughly 18 seconds to roughly four seconds.
-
-The final proof audit exposed a serious readiness weakness: compliant downstream
-or retained records do not establish primary deletion. Strict export now checks
-that coverage explicitly instead of relying on status scores or a nonempty ledger.
-
-Current blocker counts (overlap is possible): `{'POLICY_CONDITION_UNKNOWN': 421, 'NO_PRIMARY_PROFILE_PROOF': 465, 'NO_SUPPORTED_STEPS': 73, 'INCOMPLETE_WITHOUT_FINDING': 73, 'RETAINED_ARCHIVE_PRESENCE_UNKNOWN': 22, 'MISSING_REQUIRED_VERIFICATION': 83, 'COPY_COVERAGE_UNPROVEN': 112, 'FINDING_WITHOUT_FULL_REMEDIATION_AND_VERIFICATION': 25, 'UNVERIFIED_MUTATION_AFTER_OBSERVATION': 48, 'SCOPE_ALIGNMENT_UNKNOWN': 1, 'NO_LINKED_RESOURCE_PROOFS': 3, 'UNSUPPORTED_SCOPED_STATE': 1, 'UNRESOLVED_PROCESS_PRECONDITION': 1, 'NO_STATE_PROOF': 1}`.
-
-Conditional policy facts are now evaluated explicitly. Unknown retention periods,
-attachment exclusivity, required reference context or restore-block capability
-are not assumed from category names. Unknown conditions block destructive actions
-and can reduce provisional sample recall; this limitation needs grounded evidence
-or extraction improvements, rather than weakening proof requirements. A complete
-obligation ledger and process/dependency analysis are retained in diagnostics.
-
-Investigated examples:
-
-- `case_01` and `case_02` public expected absent account IDs have no supplied
-  subject link in the eligible evidence; a worker claim without a subject cannot
-  supply that link. Do not infer IDs from user/case numbering.
-- Anonymous analytics records, including `analytics_901` and `analytics_9406`,
-  expose no subject identifier. State can be read, but attribution needs a grounded
-  historical/catalog link. Some expected verification steps remain unreproduced.
-- Public `case_09` expects account/security verification cited to `evidence_93`,
-  whose readback contains only one backup target. Corresponding ordinary-log
-  observations occur in a file captured after that case's cutoff; they cannot
-  repair earlier provenance under the root contract.
-- Full `case_46`: the retained-reference screenshot does not expose enough fields
-  to certify redaction of `tombstone_17`.
-- Full `case_55`: archive existence and unrelated restore history do not establish
-  restore permission for `backup_9287` at cutoff. No ACTIVE state is invented.
-
-These are diagnosed limitations of the present evidence-backed implementation,
-not proof that every remaining mismatch is a dataset defect. More extraction or
-authoritative linkage may resolve some gaps. OCR fidelity, conditional policy
-coverage, anonymous attribution and exact reference selection remain risks.
-Public sample recall and exact-row accuracy are materially below complete
-correctness. The candidate is **not submission-ready**.
-
-
-## Recovery V2 prediction mode
-
-See recovery_report.md for separately measured prediction results and assumptions. The existing figures above describe certification-mode candidates. Recovery prediction is not certification.
-Status 90.62%; exact rows 28.12%; step precision/recall/F1 97.55%/82.38%/89.33%; field 79.05%; citation 78.67%; exact sequence 28.12%. 517/518 prediction rows pass structure; one fails with two violations.
+Prediction diagnostics retain 490 uncertainty-bearing cases. The conservative certification default remains separate; no claim that its global proof obligations pass is made. Service health and a prior drill establish a defensible risk prediction, not an observed target-specific authorization. Reported service history is not treated as deletion proof. No hidden accuracy is known.

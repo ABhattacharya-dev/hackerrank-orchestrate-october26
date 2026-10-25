@@ -193,3 +193,21 @@ case_55: archive presence and unrelated historic restores do not establish its
 restore permission. Stronger final predictions would require legitimate evidence
 links rather than null lookups or suffix-based identity guesses. Best-effort
 output.prediction.candidate.csv and detailed recovery report delivered.
+
+## Final restore blocker and prediction submission
+
+Objective: ground the remaining restore-risk prediction and publish valid output.
+Read actual image: target detail contains verified checksum, prior target drill,
+archive path and retention in healthy same production domain; eligible catalog
+links subject and target. Added prediction-only typed inference with source/locator
+and catalog-time provenance. Other archive restores, future evidence, disabled
+service, foreign domain and explicit target blocks cannot supply active risk.
+Seven counterfactual tests added; 114/114 total tests pass. Full output now 518
+rows with zero structural violations (formerly two in one case). Public metrics
+unchanged: 9/32 exact, 29/32 status, 159/193 steps. Cold source-copy output matches
+bytes; 1,032 cited steps pass internal eligible provenance checks. Certification
+remains conservative; 490 prediction cases carry uncertainty. Source extraction
+required Activity-section scoping and an OCR storage-scheme variant correction.
+Final reports lead with prediction results and disclose inferred restore capability
+versus directly observed authorization. No further ungrounded identity shortcut
+adopted for anonymous/null-linked sample artifacts.

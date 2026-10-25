@@ -9,12 +9,18 @@ output validation. It generates plans; it never executes real deletion actions.
 Architecture and prompts are submitted in `code/ARCHITECTURE.md` and
 `code/ghostgraph/intent.py`.
 
-**Current submission status: provisional.** The implementation processes all 518
-evaluation requests, but 490 cases have explicit proof or coverage gaps. Strict mode refuses
-to write a final `output.csv`. `output.candidate.csv` is explicitly provisional;
-it must not be represented as a fully verified final submission. See
-`code/evaluation/evaluation_report.md` for actual scores, missing evidence and
-known recall limitations. No hidden-set accuracy is claimed.
+**Final prediction submission:** root `output.csv` contains 518 sorted request rows
+with zero official structural violations and reproducible bytes. Predictions retain
+semantic uncertainty; conservative certification remains separate and does not pass.
+See `code/evaluation/evaluation_report.md` and `usage_report.md` for final metrics.
+
+Generate and validate the final competition predictions:
+
+```bash
+python3 code/evaluation/recovery.py
+python3 code/evaluation/final_submission.py
+python3 code/evaluation/final_reports.py
+```
 
 Requirements: Python 3.12, `pdftotext` (Poppler), Tesseract OCR with English data,
 and the pinned Python packages below. No API key, hosted model or service is
@@ -237,7 +243,6 @@ python3 code/evaluation/recovery.py
 python3 code/main.py --mode predict --allow-unresolved --output output.prediction.candidate.csv
 ```
 
-Recovery restores 9/32 exact public rows and 159/193 exact steps. 517/518 full
-prediction rows pass structure; case_55 has insufficient eligible restore-state
-evidence, so root output.csv is not published. See
+Recovery restores 9/32 exact public rows and 159/193 exact steps. All 518 full
+prediction rows now pass structure. See
 code/evaluation/recovery_report.md for historical comparisons and assumptions.

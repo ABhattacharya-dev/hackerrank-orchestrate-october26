@@ -1,66 +1,42 @@
-# GhostGraph final candidate-run usage report
+# Actual final prediction-run usage
 
-This report describes the actual 518-request run that produced
-`output.candidate.csv`; strict final `output.csv` remains blocked by
-490 proof/coverage gaps. It is not a claim that a final
-submission run succeeded. Development/evaluation runs and the engineering
-assistant's own conversation usage are excluded; their provider billing is not
-available to the application.
+This is the 518-request prediction run that produced root output.csv, not the
+older certification candidate. Provider: local scikit-learn. Model: ghostgraph-intent-hybrid-word-char-logreg-v5-selective.
 
-| Component | Provider / model | Actual final-run usage |
-| --- | --- | ---: |
-| Intent inference | local scikit-learn / ghostgraph-intent-hybrid-word-char-logreg-v5-selective | 5 inference calls |
-| Intent cache | same content/model/training-hash cache | 143 cache hits |
-| Deterministic intent scope | same consent/ambiguity guards | 370 unique scope decisions without ML calls |
-| Intent training | independently authored source examples | 296 examples; 1 fit |
-| OCR | local Tesseract English recognizer | 0 fresh calls |
-| PDF text extraction | local Poppler pdftotext | 0 fresh calls |
-| Extraction cache | content-hash cache | 15 hits |
+| Measurement | Actual final-run value |
+| --- | ---: |
+| Requests | 518 |
+| Learned local inference calls | 5 |
+| Deterministic unique scope decisions | 370 |
+| Intent classification cache hits | 143 |
+| Unique normalized classifications | 375 |
+| Training fits / authored examples | 1 / 296 |
+| API input / output tokens | 0 / 0 |
+| Paid model calls | 0 |
+| API cost total / per request | USD 0.00 / USD 0.00 |
+| Runtime seconds | 9.867531 |
 
-The ML component genuinely executes. It is a supervised discriminative model,
-not a hosted LLM. Generic deterministic English consent/scope guards complement
-the learned model; model decisions are used for multilingual/implicit intent.
-Request decision sources: `{'explicit erasure or completion/audit of prior erasure': 446, 'semantic ML inference': 62, 'limited scope preserving the account': 3, 'explicit non-deletion scope': 5, 'access/correction/portability without erasure': 2}`. Cached repeated
-texts reuse the same validated classification. No public output label trains it.
+Token units do not apply to local TF-IDF/logistic regression, Tesseract or PDF
+extraction. No token estimate was invented. No paid provider tariff applies
+because no paid API calls were made. CPU/storage cost is unpriced, not asserted
+free. The actual classifier participates in multilingual/implicit intent; English
+scope guards and cached repetitions avoid redundant inference. Training uses
+296 authored source examples, never public output labels.
 
-There were 375 unique normalized classifications;
-only 5 required learned inference. In the preceding
-M5 run, eager inference executed 375 calls for the same request set; selective
-routing preserves candidate bytes while avoiding those unnecessary model calls.
-Deterministic decisions have no model probability, rather than a fabricated one.
+Warm-run document extraction: {'cache_hits': 15}.
+Separate cold reproducibility validation: {'tesseract_calls': 11, 'pdftotext_calls': 4}.
+Public evaluations, unit fixtures, earlier failed extraction attempts, cold
+reproduction and engineering-assistant usage are separate validation/development
+work and are excluded from final-run counts. Engineering-assistant billing and
+exact runtime model metadata are not exposed and are not fabricated.
 
-- Requests processed: 518.
-- Input API tokens: 0; output API tokens: 0; total API tokens: 0.
-- Average API tokens/request: 0. Token units are **not applicable** to TF-IDF,
-  logistic regression, Tesseract or PDF text extraction; zero does not mean the
-  local components performed no computation.
-- Estimated API cost: USD 0.00 total; USD 0.00/request. Per-model API totals are
-  also zero because all components execute locally with no metered API calls.
-- Local compute/storage cost is unpriced and excluded, rather than invented.
-- No paid model provider or external token-pricing tariff was used; the zero
-  API total follows from zero paid API calls, not an invented price schedule.
-  Per-phase validation-run counts are recorded in full_dataset_report.md.
-- Measured warm-cache runtime: 7.094 seconds,
-  0.013695 seconds/request averaged across the run.
-- Cold extraction reproducibility run: 20.482 seconds,
-  11 OCR and
-  4 PDF extraction calls;
-  identical candidate bytes. This separate validation run is not added to the
-  final candidate-run counts above.
+Restore-console inference is deterministic source extraction and rule evaluation,
+not an unrecorded paid vision call. The supplied image was visually reviewed
+during engineering; deployed extraction uses the reproducible local OCR path.
 
-Training corpus SHA-256: `c61f2d25b193fa6713c9367e592751a0e5e792a937db1a51cde4c127ec94d4d6`.
-Request-file SHA-256: `78464850941b84baecf9fee586208752521c4521d0c15c76f741516eb7f700d2`.
-Combined manifest/evidence/identity/policy/activity hash:
-`3b7030520f221ca63031f36ab5b72c3a139bb100e599476d003489014cccad7e`.
-Candidate SHA-256: `b83ff6a9b086a53ceda99b3f527eefda36ec49f69db392f84be51fdecb01e7c3`.
+Final output SHA-256: 61c7563f3ffa04edb7ab18532f9d31b49fe316c52a5d013f80412e0b458a9891.
+Request SHA-256: 78464850941b84baecf9fee586208752521c4521d0c15c76f741516eb7f700d2.
+Training SHA-256: c61f2d25b193fa6713c9367e592751a0e5e792a937db1a51cde4c127ec94d4d6.
 
-Prompts, training examples and response validation live in
-`code/ghostgraph/intent.py`. All retries are zero for this local deterministic
-inference path; exceptions fail the run rather than returning a fabricated result.
-No credentials or secret values are stored in source, reports or logs.
-
-
-## Recovery V2 prediction mode
-
-See recovery_report.md for separately measured prediction results and assumptions. The existing figures above describe certification-mode candidates. Recovery prediction is not certification.
-Actual 518-case prediction run: 5 local sklearn v5-selective calls, 143 cache hits, 370 deterministic scope decisions, one model fit, 0 API input/output tokens, USD 0 paid API cost. Token units are not applicable; local compute unpriced. No paid provider tariff applies.
+This export passes the official structural contract but is not high-assurance
+certification. All uncertainty remains available in local prediction diagnostics.

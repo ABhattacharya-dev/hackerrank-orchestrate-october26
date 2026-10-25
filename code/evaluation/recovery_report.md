@@ -1,3 +1,9 @@
+> Final update: root output.csv now has 518 rows and zero official structural
+> violations. Target-scoped console drill/checksum/domain inference resolves the
+> last blocker in prediction mode. Public metrics remain 9/32 exact. See
+> evaluation_report.md for current results. The recovery investigation below is
+> preserved as historical evidence of the 1146bc7 baseline and its limitations.
+
 # Accuracy recovery regression report
 
 Checkpoint: recovery-checkpoint-a0437e3. Comparison copies under /tmp/ghostgraph-history use git archive of code and read-only participant dataset symlinks; no organizer data was accessed.
