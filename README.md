@@ -1,200 +1,253 @@
-# GhostGraph V5.1 — production submission
+<div align="center">
 
-Controlled production promotion of approved candidate `4015ede`. The original baseline remains at `submission-freeze-verified` (`3b942ac`); V5.1 is released as `submission-v5.1`. Root output.csv is byte-identical to the baseline; code.zip contains the promoted authorization improvements. See `release_manifest.md` and `code/evaluation/release_report.md` for acceptance and checksums. No competition CSV accuracy gain is claimed.
+# GhostGraph
 
-## Install and generate competition predictions
+### An evidence-first AI-assisted deletion audit engine
 
-Requires Python 3.12, Poppler's `pdftotext`, Tesseract with English data, and the pinned Python dependencies. On Debian/Ubuntu the OS packages are `poppler-utils` and `tesseract-ocr`. No paid API key, model download, model server or hosted service is required.
+**A deletion workflow can say “Complete” while personal data still exists.** GhostGraph checks the evidence, reconstructs the state of affected records, and produces an auditable deletion assessment and action plan.
 
-Place the supplied participant-facing `dataset/` next to `code/`, then run from the extracted source root:
+[![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![scikit-learn](https://img.shields.io/badge/Local%20ML-scikit--learn-F7931E?style=flat-square)](https://scikit-learn.org/)
+[![Release](https://img.shields.io/badge/Release-v5.1-6750A4?style=flat-square)](https://github.com/ABhattacharya-dev/hackerrank-orchestrate-october26/tree/submission-v5.1)
+[![Tests](https://img.shields.io/badge/Tests-156%20passed-16803C?style=flat-square)](#evaluation)
+[![Hosted API](https://img.shields.io/badge/Hosted%20AI%20calls-0-334155?style=flat-square)](#approach-overview)
 
-```bash
-python3 -m venv .venv
-. .venv/bin/activate
-python3 -m pip install -r code/requirements.txt
-python3 code/main.py --mode predict
-```
+[**Quick start**](#quick-start) · [**Approach**](#approach-overview) · [**Evaluation**](#evaluation) · [**Project structure**](#project-structure) · [**Challenge**](https://www.hackerrank.com/contests/hackerrank-orchestrate-october26/challenges/ghost-data-still-exists)
 
-This produces root `output.csv` after official-contract validation. On the supplied 518 requests it reproduces the protected CSV byte for byte. It uses the learned local word/character TF-IDF logistic regression on selective cases (five learned inference calls in the full run), with deterministic authorization gates, evidence parsing, temporal/policy logic and JSON construction. Training examples and exact model configuration are auditable in `code/ghostgraph/intent.py`; runtime consent logic is `code/ghostgraph/authorization.py`. Runtime modules do not import research code.
+*Built for HackerRank Orchestrate October 2026 — Ghost Data Still Exists.*
 
-## Certification, uncertainty and diagnostics
-
-```bash
-python3 code/main.py --mode certify --output output.certified.csv
-```
-
-Strict evidence certification is separate and currently exits 2 on unresolved supplied-data proof obligations; it is not the successful prediction quick-start. The prediction output is a reasoned competition prediction, not a certified conclusion.
-
-Unfulfilled conditions, undecided present consent and unverified third-party authority do not presently authorize deletion: prediction rows use `NOT_APPLICABLE,[]` and retain `CONSENT_UNRESOLVED` plus explanation internally. This does not mean permanent refusal or permission to act when a condition is later met; re-evaluate a new authorized request. Hypothetical/informational and quoted instructions likewise do not authorize erasure. Classifier uncertainty (`CLASSIFICATION_UNRESOLVED`) instead blocks the export, writes `.ghostgraph/full_blocked_cases.json`, and preserves an existing destination. Authorized requests with ambiguous ownership stay evidence problems: never relabel them non-applicable or invent findings. If no valid evidence-backed row is representable, normal export fails explicitly.
-
-`--requests PATH` and `--output PATH` override paths. Diagnostics, OCR caches and measured run usage are under ignored `.ghostgraph/`; do not submit them or log real personal information. `--allow-unresolved` is a provisional diagnostic option and does not bypass authorization-classification failure; it is not the competition quick-start.
-
-## Evaluate and package
-
-```bash
-PYTHONPATH=code python3 -m unittest discover -s code/tests -v
-PYTHONPATH=code python3 -m research.v5_final_evaluate
-python3 code/package.py --output code.zip
-```
-
-The research evaluator writes predictions and metrics under `.ghostgraph/v5/`, never production output. Public answers are read only by evaluation tooling. Historical three-source comparison additionally requires Git commits `3b942ac` and `08e975b`: `python3 code/evaluation/v51_compare.py`. Those commits are not required to run inference or tests from the ZIP. Historical snapshot implementations remain on the experimental Git branches and are omitted from production source and its package; useful research reports and regressions remain included.
-
-Read `code/evaluation/evaluation_report.md`, `usage_report.md`, and `v51_review.md` for actual metrics, independent fictional tests, corrections, promotion assessment and limitations. The small authored intent sets do not prove arbitrary multilingual consent interpretation. No hidden-set accuracy or Output CSV point gain is claimed. Root `log.txt` is the separate append-only chat submission; hosted structured session traces remain unavailable locally and have not been manufactured.
+</div>
 
 ---
 
-## Ghost Data Still Exists
+## What does GhostGraph do?
 
-Build an AI agent that audits whether a user's personal data was actually deleted.
+Deleting a user account does not necessarily remove its copies from databases, analytics systems, support files, logs, backups, or replicas. Imports and restore processes can also bring deleted information back. Some security or legal records, meanwhile, must be retained under policy.
 
-A deletion workflow may report **Complete** while data still exists in databases, logs, support attachments, exports, search indexes, archives, or backups. Sync and restore processes may also bring deleted data back.
+GhostGraph audits each request **as of its own `audit_at` timestamp** and answers:
 
-For each request, the agent must first determine whether deletion was actually requested. It then returns `COMPLETE`, `INCOMPLETE`, or `NOT_APPLICABLE`, reports any remaining data or recreation risk, and produces the ordered remediation and verification steps required to finish an authorized deletion safely.
+1. **Is deletion authorized?** Distinguish real instructions from quoted, hypothetical, conditional, or third-party requests.
+2. **What does the evidence prove?** Resolve historical identities and record copies; avoid using evidence that was unavailable at the audit cutoff.
+3. **What must happen next?** Generate `COMPLETE`, `INCOMPLETE`, or `NOT_APPLICABLE` with ordered, evidence-backed findings, remediation steps, and verification checks.
 
-Read [`problem_statement.md`](./problem_statement.md) for the complete challenge contract.
+> [!IMPORTANT]
+> **Audit and planning only.** GhostGraph does not delete real data or modify external systems. Its competition predictions are not guarantees of real-world deletion or high-assurance certification.
 
----
+## Quick start
 
-## Quick Start
+### Requirements
 
-Clone the repository and move into the project directory:
+- **Python 3.12** with virtual environment support.
+- **Tesseract OCR**, including English language data, and **Poppler `pdftotext`** on your `PATH`.
+- The competition's **participant-facing `dataset/`** directory, placed beside `code/` (the dataset is not included in `code.zip`).
+- No paid API key, hosted language model, external model service, or separately downloaded model weights.
+
+### 1. Get the project
 
 ```bash
-git clone https://github.com/interviewstreet/hackerrank-orchestrate-october26.git
+git clone https://github.com/ABhattacharya-dev/hackerrank-orchestrate-october26.git
 cd hackerrank-orchestrate-october26
+git checkout submission-v5.1
 ```
 
-Start your AI coding tool from the **repository root** so it automatically reads [`AGENTS.md`](./AGENTS.md) and logs your session turns to `log.txt` in the root directory.
+Alternatively, extract the released `code.zip` and place the supplied `dataset/` next to the extracted `code/` directory. Skip the Git commands when using the ZIP.
 
-Build your solution in `code/main.py`, or use another language and document its setup and run command clearly in your README.
+### 2. Install system tools and Python dependencies
 
-Your solution must:
-
-- Read the input files from `dataset/`
-- Generate one prediction row for every request in `dataset/deletion_requests.csv`
-- Write the final predictions to `output.csv` in the repository root
-
-Run the starter Python entry point with:
+<details open>
+<summary><strong>Ubuntu / Debian</strong></summary>
 
 ```bash
-python3 code/main.py --mode predict
+sudo apt-get update
+sudo apt-get install -y poppler-utils tesseract-ocr
+python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r code/requirements.txt
 ```
 
-The blank template at `dataset/output.csv` is provided as a reference. Your final generated file for submission must be the root-level `output.csv`.
+Python 3.12 must already be installed; the commands above install OCR utilities and the pinned Python dependencies.
 
+</details>
 
-## Dataset
+<details>
+<summary><strong>macOS</strong></summary>
 
-All participant-facing files are in `dataset/`:
+```bash
+brew install poppler tesseract
+python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r code/requirements.txt
+```
 
-| File | Contents |
+Requires Homebrew and Python 3.12.
+
+</details>
+
+<details>
+<summary><strong>Windows PowerShell</strong></summary>
+
+Install Python 3.12, [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) and [Poppler](https://poppler.freedesktop.org/) first. Make sure `tesseract` and `pdftotext` can be run from PowerShell.
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r code/requirements.txt
+```
+
+There is no need to change PowerShell's script execution policy or activate the environment when using its Python executable directly.
+
+</details>
+
+### 3. Generate predictions
+
+**Linux / macOS** (after activating the environment):
+
+```bash
+python code/main.py --mode predict
+```
+
+**Windows PowerShell:**
+
+```powershell
+.\.venv\Scripts\python.exe code/main.py --mode predict
+```
+
+The command reads `dataset/deletion_requests.csv` and writes a validated **`output.csv` in the project root**. The released run produces one row for each of the **518 supplied requests**.
+
+You can override the input and destination using `--requests PATH` and `--output PATH`. Run the command from the project root for the simplest setup; the CLI resolves its default dataset path relative to the project files.
+
+## Approach overview
+
+GhostGraph uses a **hybrid design**: selective local machine learning for request intent, with deterministic code for evidence handling, policy reasoning, planning, and output validation.
+
+```mermaid
+flowchart TD
+    A[Deletion request] --> B[Consent and intent assessment]
+    H[Identity and audit history] --> D[Historical identity resolution]
+    E[CSV, SQL, JSON, logs, PDFs, images] --> F[Evidence ingestion and provenance]
+    B --> G[Temporal resource ledger at audit_at]
+    D --> G
+    F --> G
+    G --> P[Deletion policies and recreation risks]
+    P --> Q[Findings, remediation and verification plan]
+    Q --> V[Deterministic contract and citation validation]
+    V --> O[output.csv]
+```
+
+| Stage | Implementation approach |
 | --- | --- |
-| `deletion_requests.csv` | 518 requests |
-| `sample_deletion_requests.csv` | 32 sample requests |
-| `sample_output.csv` | Correct sample answers |
-| `user_identities.csv` | Current user identities |
-| `user_audit_log.csv` | Historical identity changes |
-| `system_activity.csv` | Activity across services and data processes |
-| `deletion_rules.csv` | Required treatment for each data category |
-| `evidence_files.csv` | Manifest of supplied evidence files |
-| `output.csv` | Blank output template |
+| **Authorization** | A consent/speech-act layer handles clear scope, quotation, negation and conditions; a local word/character TF-IDF logistic-regression classifier handles selected ambiguous or multilingual intent cases. |
+| **Evidence ingestion** | Read-only adapters process CSV, SQL, JSON, text/logs, PDFs and images; observations retain source IDs, timestamps, scopes and provenance. SQL snapshots are parsed using isolated SQLite. |
+| **Identity resolution** | Current and historical identifiers are linked through supported evidence, not shared names, coincidental IDs or unsupported time proximity. |
+| **Temporal reconstruction** | Each request is evaluated independently at `audit_at`, accounting for capture availability, replicas, contradictions and historical changes. A worker's “success” report is not automatically proof of absence. |
+| **Policy and risk analysis** | Rules from `deletion_rules.csv` determine DELETE, REDACT, ANONYMIZE and RETAIN obligations. Active sync/import/restore paths are considered for potential re-creation. |
+| **Planning and validation** | Deterministic code generates the mandated phases, operation order, step numbers, allowed states and evidence citations. No unconstrained LLM writes the final JSON. |
 
-Evidence is stored under `dataset/evidence/` and may include PDFs, images, logs, JSON, plain text, or SQL snapshot exports. SQL captures may contain a primary database, regional replicas, a reporting replica, or a failover replica so replication drift can be investigated directly. The `.sql` files are readable as text and executable with SQLite.
+**Why this design?** It keeps the learned component focused on a task where language interpretation helps, while making deletion-related decisions inspectable, reproducible, and tied to the supplied evidence. It needs no graph database or hosted inference service.
 
-Only `deletion_requests.csv` requires answers. The other files provide evidence and context.
+Key source modules: [`authorization.py`](code/ghostgraph/authorization.py), [`intent.py`](code/ghostgraph/intent.py), [`evidence.py`](code/ghostgraph/evidence.py), [`identity.py`](code/ghostgraph/identity.py), [`temporal.py`](code/ghostgraph/temporal.py), [`policy.py`](code/ghostgraph/policy.py), [`prediction.py`](code/ghostgraph/prediction.py) and [`contract.py`](code/ghostgraph/contract.py). More detail is in [`code/ARCHITECTURE.md`](code/ARCHITECTURE.md).
 
----
+## Output contract
 
-## Output
-
-Create `output.csv` with these columns in this exact order:
-
-```text
+```csv
 case_id,deletion_status,steps_json
 ```
 
-Produce exactly one row per request. `deletion_status` is `COMPLETE`, `INCOMPLETE`, or `NOT_APPLICABLE`. `steps_json` is an ordered JSON array containing findings, remediation actions, and verification checks. Use an empty array (`[]`) for `NOT_APPLICABLE`. Evidence references may be a `file_id`, `activity_id`, or `audit_id`. Determine the resource state at `audit_at` from the available evidence; reported workflow statuses and operation results are claims. Use `dataset/sample_output.csv` as the format reference.
+| Status | Interpretation |
+| --- | --- |
+| `COMPLETE` | Evidence supports the required end state; verification steps document the checks. |
+| `INCOMPLETE` | Supported findings indicate outstanding work or a re-creation risk, with proposed remediation and verification. |
+| `NOT_APPLICABLE` | The request does not currently authorize deletion; the step array is `[]`. |
 
-The final file must contain 518 data rows sorted by `case_id` (plus the header row). The grader parses `steps_json` as JSON, so object-key order and whitespace do not matter; array order does. Order findings, remediation, and verification in that phase order. Within a phase, follow the operation order in the problem statement, then sort by `system_id` and `resource_id`.
-
----
+`steps_json` is an ordered JSON array. Actual findings and completed checks cite eligible evidence; planned future remediation and verification use empty evidence IDs. See [`problem_statement.md`](problem_statement.md) for the complete enum, policy, and ordering requirements.
 
 ## Evaluation
 
-`output.csv` will be compared with hidden canonical answers. Scoring considers:
+**Frozen production release:** [`submission-v5.1`](https://github.com/ABhattacharya-dev/hackerrank-orchestrate-october26/tree/submission-v5.1) (`7a18c2e`).
 
-- deletion assessment accuracy;
-- current and historical identity resolution;
-- discovery of remaining data and recreation risks;
-- correct policy application and evidence references; and
-- completeness and ordering of remediation and verification steps.
+| Verified measurement | Result |
+| --- | ---: |
+| Full prediction rows | **518 / 518** |
+| Structural violations in submitted full output | **0** |
+| Software tests | **156 passed** |
+| Public reference exact rows | **9 / 32** |
+| Correct public deletion statuses | **29 / 32** |
+| Matching public canonical steps | **159 / 193** |
+| Public step precision / recall / F1 | **97.55% / 82.38% / 89.33%** |
+| Local learned inference calls (full run) | **5** |
+| Hosted model calls / API charges | **0 / $0** |
 
-Your `code.zip` must include:
+These are public-reference metrics and full-file validation results, **not hidden-test results**. Local CPU/OCR costs were not priced. The authorization improvements in V5.1 did **not** change the frozen CSV predictions.
 
-```text
-code/evaluation/evaluation_report.md
-code/evaluation/usage_report.md
-```
+### Tests and evaluation reports
 
-- `evaluation_report.md` must cover case, row, field, and sequence accuracy, at least three additional evaluation cases created by you, failures found, and improvements made.
-- `usage_report.md` must cover the final full-dataset run, including model providers and names, model calls, input and output tokens, total and average tokens per request, and estimated total and per-request cost. Include per-model and overall totals when using multiple models.
-
-**Important:** Place `evaluation_report.md` and `usage_report.md` inside `code/evaluation/` (matching `code/evaluation/main.py` in this starter layout), write your complete evaluation metrics, custom evaluation test cases, and token/cost breakdowns directly inside those Markdown files, and keep prompts in source code or Markdown files. Automated code evaluation ignores raw data files (`.csv`, `.tsv`, `.json`, `.jsonl`, `.sql`, `.log`), so content stored only in those formats will not be visible to the code judge or AI interviewer.
-
----
-
-## Chat Transcript
-
-This repository includes [`AGENTS.md`](./AGENTS.md), which instructs compatible AI coding tools to append conversation summaries to `log.txt` in the repository root:
-
-| Platform | Path |
-| --- | --- |
-| macOS / Linux | `<repo root>/log.txt` |
-| Windows | `<repo root>\log.txt` |
-
-- Always launch your AI coding agent from the repository root (or explicitly ask it to read `./AGENTS.md` first) so every turn is logged to `log.txt` with the required `User Prompt`, `Agent Response Summary`, `Actions`, and `Context` sections.
-- Upload `log.txt` directly as your `chat_transcript` submission on HackerRank.
-- Do not include API keys, tokens, credentials, or secrets in prompts, code, configuration, or `log.txt`.
-
----
-
-## Packaging `code.zip` and Submission
-
-| Item | Description |
-| --- | --- |
-| `code.zip` | Runnable solution, prompts, configuration, `README.md`, and `evaluation/` reports |
-| `output.csv` | One answer row for each of the 518 requests in `dataset/deletion_requests.csv` |
-| `chat_transcript` | The root `log.txt` file generated by your coding agent |
-| AI interview | Live explanation of your architecture, approach, and evaluation |
-
-You may use any programming language, model, framework, or retrieval approach. Include clear setup and execution instructions in `README.md` inside `code.zip`.
-
-To package `code.zip` from the repository root without bundling the dataset:
-
-**macOS / Linux:**
+On Linux / macOS, after activating the environment:
 
 ```bash
-zip -r code.zip README.md code -x "*/__pycache__/*" "*/.venv/*" "*/venv/*" "*/node_modules/*" "*/.git/*" "*/.DS_Store"
+PYTHONPATH=code python -m unittest discover -s code/tests -v
+PYTHONPATH=code python -m research.v5_final_evaluate
 ```
 
-**Windows (PowerShell):**
+The second command uses public references for evaluation and writes research output under `.ghostgraph/v5/`; it does not overwrite the released `output.csv`. Public answer labels are not used as prediction inputs. Windows users can set `$env:PYTHONPATH = 'code'` and run these modules through `.\.venv\Scripts\python.exe`.
 
-```powershell
-Compress-Archive -Path README.md, code -DestinationPath code.zip -Force
+Read the actual [evaluation report](code/evaluation/evaluation_report.md), [model usage report](code/evaluation/usage_report.md), and [release checks](code/evaluation/release_report.md) for test scenarios, validation, costs, and remaining mismatches.
+
+<details>
+<summary><strong>Strict certification and uncertainty</strong></summary>
+
+```bash
+python code/main.py --mode certify --output output.certified.csv
 ```
 
-When packaging `code.zip`:
+This separate, more conservative mode does **not** produce a certified file on the supplied full dataset: it exits with code `2` because **490 cases have unresolved proof obligations**. This does not mean 490 predictions are missing from `output.csv`.
 
-- Keep your evaluation reports in `code/evaluation/` so they are bundled automatically with `code` (or add `evaluation` to the archive command above if you placed them in a top-level `evaluation/` directory).
-- Do **not** include `dataset/`, virtual environments (`.venv`, `venv`, `node_modules`), or build caches (`__pycache__`). On Windows, keep `.venv` at the repository root (outside `code/`) and remove any `code/__pycache__` folders before running `Compress-Archive`.
-- Do **not** include nested archives (`.zip`, `.tar`, `.gz`, `.tgz`, `.7z`, `.rar`) inside `code.zip` — submissions containing nested archive files will be rejected.
+Requests with unmet consent conditions, uncertain present consent or unsupported third-party authority are not treated as presently authorized. An otherwise authorized request with unproven resource ownership remains an evidence question; the system does not invent links. Irreducibly uncertain intent can block export rather than silently guessing. The tool never executes real deletions.
 
-Before submitting, confirm that:
+</details>
 
-- `output.csv` has the exact header `case_id,deletion_status,steps_json` and contains all 518 data rows sorted by `case_id`;
-- every `steps_json` value is a valid JSON array with consecutive step numbers starting at `1`;
-- findings cite valid evidence IDs, and `COMPLETE` verification steps cite evidence proving the current state;
-- proposed remediation and future verification steps use an empty `evidence_id` (`""`);
-- `code.zip` includes your runnable code, `README.md`, `code/evaluation/evaluation_report.md`, and `code/evaluation/usage_report.md`;
-- `log.txt` follows the `AGENTS.md` turn format and is uploaded to the `chat_transcript` slot; and
-- no API keys, credentials, real personal data, or sensitive configuration values are included.
+## Project structure
+
+```text
+.
+├── README.md                      # Setup and approach overview
+├── problem_statement.md          # Official challenge specification
+├── AGENTS.md                     # Agent engineering/logging instructions
+├── code/
+│   ├── main.py                   # CLI entry point
+│   ├── requirements.txt          # Pinned Python dependencies
+│   ├── ghostgraph/               # Authorization, evidence and audit engine
+│   ├── evaluation/               # Validators and measured reports
+│   ├── tests/                    # Unit and adversarial regressions
+│   └── research/                 # Retained experiments and reports
+├── dataset/                      # Supplied separately; excluded from code.zip
+├── output.csv                     # Submission predictions
+└── log.txt                        # Separate authentic chat transcript
+```
+
+### Submission artifacts
+
+HackerRank requires `code.zip` (source with README and evaluation reports), `output.csv` (predictions), and the authentic root `log.txt` as the chat transcript. The participant dataset, credentials, virtual environments, generated caches and nested ZIPs must not be packaged.
+
+To create the source archive, run from the repository root:
+
+```bash
+python code/package.py --output code.zip
+```
+
+**Note:** Changing this README and rebuilding `code.zip` creates a *new* archive with a new hash. The previously verified V5.1 submission archive remains unchanged unless separately rebuilt and revalidated.
+
+## Known limitations
+
+- The system does not claim full high-assurance deletion certification, perfect public-reference accuracy, or hidden-evaluation performance.
+- Some historical ownership relationships and source observations remain unsupported or ambiguous; guesses are not substituted for evidence.
+- The local classifier is bounded by its training examples and test coverage; not every language or consent construction is guaranteed to work.
+- Original coding-agent model metadata was not available in the historical development transcript and was not invented. This is separate from the application model documented above.
+
+---
+
+<div align="center">
+
+**GhostGraph** · Evidence before assumptions · Planning before irreversible action
+
+[Back to top](#ghostgraph) · [HackerRank challenge](https://www.hackerrank.com/contests/hackerrank-orchestrate-october26/challenges/ghost-data-still-exists)
+
+</div>
