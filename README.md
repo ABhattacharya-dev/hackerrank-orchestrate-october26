@@ -226,3 +226,18 @@ Before submitting, confirm that:
 - `code.zip` includes your runnable code, `README.md`, `code/evaluation/evaluation_report.md`, and `code/evaluation/usage_report.md`;
 - `log.txt` follows the `AGENTS.md` turn format and is uploaded to the `chat_transcript` slot; and
 - no API keys, credentials, real personal data, or sensitive configuration values are included.
+
+## Recovery prediction mode
+
+Strict certification remains the default. To generate explicitly uncertain
+competition predictions separately:
+
+```bash
+python3 code/evaluation/recovery.py
+python3 code/main.py --mode predict --allow-unresolved --output output.prediction.candidate.csv
+```
+
+Recovery restores 9/32 exact public rows and 159/193 exact steps. 517/518 full
+prediction rows pass structure; case_55 has insufficient eligible restore-state
+evidence, so root output.csv is not published. See
+code/evaluation/recovery_report.md for historical comparisons and assumptions.

@@ -32,6 +32,9 @@ class Auditor:
         if any(r["required_action"] not in {"DELETE", "REDACT", "ANONYMIZE", "RETAIN"} for r in self.rules):
             raise ValueError("unsupported policy action")
 
+    def reduce_state(self, observations, cutoff, claims):
+        return reconstruct(observations,cutoff,claims)
+
     def ledger(self, tokens, cutoff, subject_id=None):
         selected = {}
         linkage = defaultdict(list)
@@ -101,7 +104,7 @@ class Auditor:
                 issues.append(dict(code="NO_STATE_PROOF", system=key[0], resource=key[1]))
                 continue
             claims=getattr(self.store,'claims_by_resource',{}).get(key[1],getattr(self.store,'claims',[]))
-            result = reconstruct(observations,cutoff,claims)
+            result = self.reduce_state(observations,cutoff,claims)
             self.temporal[key] = result.explain()
             issues.extend(dict(item,system=key[0],resource=key[1]) for item in result.issues)
             if result.witness is not None:

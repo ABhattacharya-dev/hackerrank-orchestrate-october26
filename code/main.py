@@ -17,7 +17,7 @@ from ghostgraph.intent import POSITIVE, NEGATIVE
 from ghostgraph.vision import from_environment
 
 
-def run(root, requests_path, output, *, allow_unresolved=False, tag="full"):
+def run(root, requests_path, output, *, allow_unresolved=False, tag="full", mode="certify"):
     started = time.perf_counter()
     dataset = root / "dataset"
     requests = read_csv(requests_path)
@@ -33,7 +33,9 @@ def run(root, requests_path, output, *, allow_unresolved=False, tag="full"):
     if store.failures and not allow_unresolved:
         raise ValueError("evidence ingestion failures; inspect .ghostgraph/ingestion_report.json")
     intent = IntentClassifier()
-    auditor = Auditor(store, IdentityIndex(dataset, store=store), intent)
+    if mode not in {"certify","predict"}:raise ValueError("invalid mode")
+    from ghostgraph.prediction import PredictionAuditor
+    auditor = (PredictionAuditor if mode=="predict" else Auditor)(store, IdentityIndex(dataset, store=store), intent)
     pairs = [auditor.audit(r) for r in sorted(requests, key=lambda r: r["case_id"])]
     rows, diagnostics = map(list, zip(*pairs))
     unresolved = [d for d in diagnostics if d["issues"]]
@@ -43,7 +45,7 @@ def run(root, requests_path, output, *, allow_unresolved=False, tag="full"):
     input_hashes = dict(store.hashes)
     for name in ["user_identities.csv", "user_audit_log.csv", "system_activity.csv", "deletion_rules.csv", "evidence_files.csv"]:
         input_hashes[name] = hashlib.sha256((dataset / name).read_bytes()).hexdigest()
-    usage = {"provider": "local scikit-learn", "model": MODEL_NAME,
+    usage = {"mode": mode, "provider": "local scikit-learn", "model": MODEL_NAME,
              "request_count": len(requests), "inference_calls": intent.calls,
              "cache_hits": intent.cache_hits, "input_tokens": 0, "output_tokens": 0,
              "unique_classifications": len(intent.cache), "scope_decisions": intent.scope_decisions,
@@ -56,7 +58,7 @@ def run(root, requests_path, output, *, allow_unresolved=False, tag="full"):
              "document_extraction": dict(store.extraction_stats),
              "ingestion": store.summary()}
     (cache / (tag + "_run.json")).write_text(json.dumps(usage, indent=2))
-    if unresolved and not allow_unresolved:
+    if unresolved and not allow_unresolved and mode=="certify":
         raise ValueError(f"{len(unresolved)} unresolved cases; no final output written. Inspect .ghostgraph/{tag}_diagnostics.json. --allow-unresolved writes a PROVISIONAL candidate only.")
     validate_rows(rows, requests, store.citation_times, require_proofs=not allow_unresolved,known_resource_pairs=resource_registry(store))
     write_csv(output, rows)
@@ -68,13 +70,14 @@ def run(root, requests_path, output, *, allow_unresolved=False, tag="full"):
 def main():
     root = Path(__file__).resolve().parents[1]
     parser = argparse.ArgumentParser(description="Evidence-backed temporal deletion audit; strict by default")
+    parser.add_argument("--mode",choices=["certify","predict"],default="certify")
     parser.add_argument("--requests", type=Path, default=root / "dataset/deletion_requests.csv")
     parser.add_argument("--output", type=Path, help="defaults to output.csv in strict mode; output.candidate.csv with --allow-unresolved")
     parser.add_argument("--allow-unresolved", action="store_true", help="write explicitly provisional candidate despite diagnosed missing proofs")
     args = parser.parse_args()
     try:
         output = args.output or root / ("output.candidate.csv" if args.allow_unresolved else "output.csv")
-        run(root, args.requests.resolve(), output.resolve(), allow_unresolved=args.allow_unresolved)
+        run(root, args.requests.resolve(), output.resolve(), allow_unresolved=args.allow_unresolved,mode=args.mode)
     except (ValueError, AssertionError) as exc:
         print("GhostGraph: " + str(exc), file=sys.stderr)
         return 2

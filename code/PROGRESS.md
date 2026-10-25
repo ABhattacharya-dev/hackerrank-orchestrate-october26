@@ -179,3 +179,17 @@ scope decisions, 143 cache hits, zero paid API calls/tokens/cost; local compute
 unpriced. Remaining risks: missing links, condition facts, copy/state proofs and
 restore capability. **Exit criterion NOT MET**; no fabricated rows or renamed
 candidate to conceal the failure. Detailed evidence in ADVERSARIAL.md and reports.
+
+## Recovery V2
+
+Checkpoint a0437e3 retained as recovery-checkpoint-a0437e3. Historical isolated
+code snapshots and current baseline reproduced. Added separately selected
+prediction mode without changing default certification behavior. Actual results:
+107 tests pass; exact rows 2 -> 9, status 28 -> 29/32, exact steps 111 -> 159/193,
+field 719 -> 1068/1351, citations 44 -> 59/75. Full structural errors 171 -> 2,
+affected cases 98 -> 1; uncertainty-bearing cases remain 490 by design. The target
+to exceed initial 9 exact rows was not achieved. Root output.csv is blocked by
+case_55: archive presence and unrelated historic restores do not establish its
+restore permission. Stronger final predictions would require legitimate evidence
+links rather than null lookups or suffix-based identity guesses. Best-effort
+output.prediction.candidate.csv and detailed recovery report delivered.

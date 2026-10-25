@@ -58,3 +58,9 @@ Prompts, training examples and response validation live in
 `code/ghostgraph/intent.py`. All retries are zero for this local deterministic
 inference path; exceptions fail the run rather than returning a fabricated result.
 No credentials or secret values are stored in source, reports or logs.
+
+
+## Recovery V2 prediction mode
+
+See recovery_report.md for separately measured prediction results and assumptions. The existing figures above describe certification-mode candidates. Recovery prediction is not certification.
+Actual 518-case prediction run: 5 local sklearn v5-selective calls, 143 cache hits, 370 deterministic scope decisions, one model fit, 0 API input/output tokens, USD 0 paid API cost. Token units are not applicable; local compute unpriced. No paid provider tariff applies.

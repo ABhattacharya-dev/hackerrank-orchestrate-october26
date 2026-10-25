@@ -156,3 +156,16 @@ all 518 rows, checks internal citation provenance, and attempts real root strict
 export while preserving a prior destination on failure. There are 98 structurally
 blocked rows and 490 semantic gaps; a passing test suite or a 518-row candidate
 does not satisfy final publication. See ADVERSARIAL.md and full_dataset_report.md.
+
+## ADR 014 — recovery: prediction is separate from certification
+
+Historical executions reproduced 9, 7 and 1 exact rows for 34465f9, cded062 and
+ee0914f respectively. Conditional-policy suppression caused most lost recall.
+PredictionAuditor/PredictionPolicy retain uncertainty but use known scoped
+observations and conservative policy applicability inferences. Defaults and
+certification tests remain unchanged. False conditions, future captures, explicit
+replicas, conflicts and foreign identities remain protected. Prediction export
+validates the official step contract independently of certification obligations.
+A malformed candidate is never silently renamed output.csv. Recovery restores
+9 exact rows, but cannot legitimately ground the last full-case restore state;
+that single-case failure remains explicit. See evaluation/recovery_report.md.

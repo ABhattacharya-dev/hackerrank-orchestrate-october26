@@ -694,3 +694,315 @@ branch=work
 repo_root=/workspace/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
+
+## [2026-10-25T00:32:08.341047+00:00] Accuracy recovery V2
+
+User Prompt (verbatim, secrets redacted):
+# GHOSTGRAPH — ACCURACY RECOVERY & SUBMISSION RESCUE (V2)
+
+You are the principal AI systems engineer responsible for recovering GhostGraph's accuracy and delivering the strongest possible HackerRank Orchestrate submission.
+
+Repository:
+https://github.com/ABhattacharya-dev/hackerrank-orchestrate-october26
+
+**This is not a greenfield task. Do not rebuild the project unnecessarily.**
+
+You have autonomy to investigate, modify, refactor, test, and optimize the existing implementation. Make decisions from actual evidence and measured performance, not from assumptions about what a sophisticated system should look like.
+
+## Critical discovery: The implementation has regressed
+
+The development transcript establishes these historical results:
+
+| Stage | Exact public sample matches | Unresolved cases |
+|---|---|---|
+| Initial implementation (`34465f9`) | 9/32 | 335 |
+| Milestone 3 (`cded062`) | 7/32 | 457 |
+| Milestone 4 (`ee0914f`) | 1/32 | 490 |
+| Current implementation | 2/32 | 490 |
+
+Exact step recall declined from 159/193 to 111/193.
+
+The system now has 171 structural violations across 98 cases and 490 cases with proof gaps.
+
+**Your highest-priority task is to investigate why correctness against the public canonical outputs declined while internal tests and proof restrictions increased.**
+
+Do not assume newer code is automatically better.
+
+## Phase 1 — Inspect and reproduce
+
+Read the complete root `AGENTS.md`, `code/AGENTS.md`, problem statement, official README, architecture decisions, and evaluation reports.
+
+Inspect the current Git state, including uncommitted changes.
+
+Reproduce the current public-sample evaluation, full candidate generation, structural validation, and unit tests.
+
+Preserve the current implementation as a recovery checkpoint before making substantial changes.
+
+Do not modify participant-facing datasets, reference outputs, or root competition instructions.
+
+## Phase 2 — Historical regression investigation
+
+Analyze the previous implementation using the historical commits:
+
+- `34465f9`
+- `cded062`
+- `ee0914f`
+- The latest working commit
+
+Use isolated Git checkouts or temporary worktrees where necessary. You are explicitly authorized to create temporary comparison worktrees, provided they do not modify the main checkout or contaminate the submission.
+
+For each historical version:
+
+1. Reproduce the public-sample evaluation if dependencies permit.
+2. Compare exact matches, status accuracy, step recall, precision, and citation accuracy.
+3. Identify operations that were emitted previously but are now missing.
+4. Trace each lost operation to the responsible code change.
+5. Determine whether the earlier operation was supported by available evidence.
+6. Distinguish justified corrections from unnecessary restrictions.
+7. Identify reusable implementation logic worth restoring.
+
+Pay particular attention to changes introduced in `temporal.py`, `policy.py`, `engine.py`, and `planner.py`.
+
+Build a regression report showing which changes helped and which harmed canonical accuracy.
+
+Do not blindly revert safeguards. Restore earlier behavior only where it is supported by the official requirements and participant-facing evidence.
+
+## Phase 3 — Audit requirements versus assumptions
+
+Separate all validation requirements into three categories:
+
+**A. Official mandatory requirements**
+
+Requirements directly specified by the challenge, including statuses, step ordering, operations, citations, preservation rules, and output format.
+
+**B. Evidence-grounded inference rules**
+
+Rules reasonably justified by the supplied data, policies, or observed system behavior.
+
+**C. Additional engineering assumptions**
+
+Stricter restrictions introduced by our architecture but not explicitly required or sufficiently established by the supplied evidence.
+
+Investigate whether these checks are overrestrictive:
+
+- `NO_PRIMARY_PROFILE_PROOF`
+- `COPY_COVERAGE_UNPROVEN`
+- `POLICY_CONDITION_UNKNOWN`
+- `UNVERIFIED_MUTATION_AFTER_OBSERVATION`
+- `NO_SUPPORTED_STEPS`
+- `MISSING_REQUIRED_VERIFICATION`
+
+Do not remove a valid requirement merely because it reduces accuracy.
+
+However, do not treat hypothetical unseen copies or unsupported global completeness assumptions as mandatory evidence unless the official rules require that interpretation.
+
+For each restriction, document its authoritative basis, observed benefit, false-positive rate, and effect on canonical accuracy.
+
+Preserve uncertainty in internal diagnostics without automatically converting every uncertainty into INCOMPLETE.
+
+## Phase 4 — Recover missing canonical operations
+
+Focus on the current 82 missing sample operations, particularly:
+
+- `VERIFY_RECORD_ABSENT`
+- `VERIFY_RECORD_PRESENT`
+- `VERIFY_RECORD_REDACTED`
+- `VERIFY_RECORD_ANONYMIZED`
+- Missing policy-required remediation
+- Missing restore controls
+
+Investigate identity and resource relationships before changing serialization.
+
+Recover missing information from:
+
+- Historical identity transitions
+- Resource catalogs and activity references
+- SQL snapshot scopes
+- Service readbacks
+- Structured document relationships
+- Retained-record references
+- Process and restore histories
+
+Revisit evidence extraction only when a specific observed deficiency justifies the work.
+
+Do not assume a document is irrelevant merely because it lacks an explicit email field.
+
+Do not construct ownership links from numeric suffixes or sample labels.
+
+For every recovered operation, preserve legitimate evidence provenance.
+
+## Phase 5 — Repair conditional policy and planning
+
+Investigate why conditional policy evaluation introduced large coverage regressions.
+
+Distinguish between:
+
+- A condition that is satisfied
+- A condition that is false
+- A condition that is not applicable
+- A condition whose required facts are unavailable
+
+Unknown conditions should remain diagnosable, but must not automatically block unrelated proven operations.
+
+Avoid globally suppressing findings because one record's remediation capability is uncertain.
+
+For a known affected record, separate the evidence supporting its current state from the evidence supporting its remediation action.
+
+Fix incomplete remediation/verification pairs wherever the official rules and available evidence support them.
+
+Reconsider blanket primary-profile requirements that prevent otherwise supported cases from being represented correctly.
+
+Preserve retained security data, legal holds, archives, and compliant tombstones.
+
+Do not invent deletion actions or model successful remediation that has not occurred.
+
+## Phase 6 — Optimize by measured accuracy
+
+Establish a reproducible evaluation loop.
+
+Before and after every significant change, measure:
+
+- Status accuracy
+- Exact-row accuracy
+- Step precision, recall, and F1
+- Field accuracy
+- Exact evidence-citation accuracy
+- Sequence accuracy
+- Structural violation counts
+- Unresolved proof obligations
+
+Use public answers only inside evaluation tooling.
+
+Avoid special cases keyed to sample IDs, account suffixes, or expected canonical labels.
+
+Prioritize generalizable fixes demonstrated by independent tests.
+
+Target an improvement over the initial 9/32 exact-row baseline while maintaining legitimate evidence safeguards.
+
+If an earlier implementation has better canonical coverage but unacceptable correctness risks, document the specific risks instead of treating its higher score as sufficient proof.
+
+Use selective LLM-assisted extraction or semantic analysis only where measured experiments show an advantage over existing deterministic techniques.
+
+Avoid spending effort on AI-call reduction unless accuracy and submission readiness are already satisfactory.
+
+## Phase 7 — Separate certification from competition output
+
+The application needs two distinct modes.
+
+### Mode A: Strict evidence certification
+
+Retain the high-assurance mode that rejects unsupported conclusions and exposes every unresolved proof obligation.
+
+Do not weaken this mode to manufacture success.
+
+### Mode B: Competition prediction and export
+
+Generate the strongest evidence-grounded prediction for every authorized request using the official output schema.
+
+This mode must:
+
+1. Produce predictions for all 518 cases.
+2. Keep deterministic step generation and ordering.
+3. Validate official statuses, operation enums, phases, states, and JSON structure.
+4. Preserve citation existence and temporal eligibility.
+5. Avoid fabricated resources, evidence, and unsupported actions.
+6. Report unresolved uncertainty separately.
+7. Clearly label results as predictions rather than certified conclusions.
+
+Do not require the internal certification process to prove facts that the official competition does not require for file generation.
+
+Run official-contract validation independently of extra high-assurance checks.
+
+Where evidence is genuinely insufficient to construct a contract-compliant prediction, identify the precise limitation instead of disguising it as a valid row.
+
+Do not declare full structural compliance while violations remain.
+
+If the official contract cannot be fully satisfied, still produce an explicitly labeled best-effort candidate and record the exact failures. Prioritize improving those failures before final submission.
+
+## Phase 8 — Full recovery and submission
+
+After implementing and evaluating improvements:
+
+- Run the entire test suite.
+- Re-evaluate all 32 public samples.
+- Execute the full 518-case dataset.
+- Validate exact case count and sorting.
+- Validate the entire CSV/JSON schema.
+- Verify citation availability and cutoff rules.
+- Generate a before/after regression report.
+- Generate the root-level `output.csv` when the competition export is ready.
+- Update the actual evaluation and usage reports.
+- Regenerate and inspect `code.zip`.
+- Preserve the official append-only development transcript.
+- Push verified improvements to the existing GitHub repository.
+
+Do not claim hidden-set accuracy or invent model token usage.
+
+Document remaining limitations honestly.
+
+## Execution priorities
+
+Follow this order:
+
+1. Recover lost canonical coverage.
+2. Correct demonstrably overrestrictive assumptions.
+3. Resolve missing evidence links and conditional policy facts.
+4. Eliminate official structural violations.
+5. Improve full-step and citation accuracy.
+6. Produce the competition deliverables.
+7. Prepare the AI interview explanation.
+
+Do not add a frontend, new orchestration framework, graph database, or unrelated features.
+
+Do not repeat already successful exploratory work unless needed for regression verification.
+
+Prioritize the changes with the highest measurable scoring impact.
+
+## Autonomy and progress
+
+Work autonomously in small, tested recovery phases.
+
+You may use temporary branches, comparison worktrees, automated ablations, and internal debugging tools.
+
+For each phase report:
+
+- Root cause
+- Changes made
+- Tests actually run
+- Before/after accuracy
+- Structural and proof-gap changes
+- Risks introduced
+- Next action
+
+Do not stop after diagnosing the problem. Continue implementing and testing the corrections.
+
+If a proposed change produces worse results without a compelling correctness justification, revert it.
+
+Keep the main implementation runnable throughout recovery.
+
+## Final goal
+
+Recover as much legitimate canonical accuracy as possible, preserve correct policy and temporal behavior, and deliver the strongest achievable 518-case HackerRank submission.
+
+The objective is not to maximize the number of passing self-authored tests.
+
+The objective is to build a correct, evidence-grounded system that performs well against the official evaluation contract.
+
+**Begin with the historical regression comparison. Do not start by adding more proof requirements.**
+
+Agent Response Summary:
+Reproduced historical public evaluations and preserved checkpoint a0437e3. Implemented separate prediction/certification paths and restored policy/scoped-observation predictions with explicit assumptions and uncertainty. Exact rows improved from 2 to 9/32, matching initial baseline; matching steps improved 111 to 159/193. Full structural violations fell from 171 across 98 cases to 2 in case_55; 517/518 rows pass but root output.csv remains blocked. All 107 tests pass. Strict certification remains unchanged with 490 uncertainty-bearing cases. No stronger baseline or hidden accuracy is claimed.
+
+Actions:
+* Archived historical code in isolated temporary comparison directories and ran evaluations.
+* Added prediction.py, --mode selection, recovery evaluator and three independent prediction tests.
+* Added historical regression/lost-operation report and updated actual evaluation/usage documentation.
+* Generated explicitly labeled output.prediction.candidate.csv, rebuilt code.zip and preserved root/data.
+
+Context:
+tool=Codex
+Model metadata limitation: exact engineering runtime identifier remains inaccessible; no value was fabricated. Exact-model logging compliance remains incomplete.
+branch=work
+repo_root=/workspace/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none

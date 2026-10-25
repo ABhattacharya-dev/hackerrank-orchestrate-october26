@@ -175,3 +175,9 @@ authoritative linkage may resolve some gaps. OCR fidelity, conditional policy
 coverage, anonymous attribution and exact reference selection remain risks.
 Public sample recall and exact-row accuracy are materially below complete
 correctness. The candidate is **not submission-ready**.
+
+
+## Recovery V2 prediction mode
+
+See recovery_report.md for separately measured prediction results and assumptions. The existing figures above describe certification-mode candidates. Recovery prediction is not certification.
+Status 90.62%; exact rows 28.12%; step precision/recall/F1 97.55%/82.38%/89.33%; field 79.05%; citation 78.67%; exact sequence 28.12%. 517/518 prediction rows pass structure; one fails with two violations.
